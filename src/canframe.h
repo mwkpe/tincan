@@ -20,4 +20,4 @@ struct CanFrame
 }  // namespace tin
 
 
-#endif // TIN_CAN_FRAME_H
+#endif  // TIN_CAN_FRAME_H
