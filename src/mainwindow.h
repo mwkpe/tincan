@@ -21,7 +21,7 @@ public:
 
 private:
   Ui::MainWindow* ui;
-  tin::CanReceiver can_receiver_;
+  can::receiver can_receiver_;
   tin::CanFrameTableModel data_model_;
 };
 

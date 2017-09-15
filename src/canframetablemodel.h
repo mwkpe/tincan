@@ -17,7 +17,7 @@ static constexpr std::size_t AVG_COUNT = 10;
 
 struct RowData
 {
-  CanFrame can_frame;
+  can::frame can_frame;
   std::uint64_t receive_time;
   std::array<std::int32_t, AVG_COUNT> cycle_times;
   std::size_t cycle_index;
@@ -40,7 +40,7 @@ public:
   void reset();
 
 public slots:
-  void add_frame(std::uint64_t time, CanFrame frame);
+  void add_frame(std::uint64_t time, can::frame frame);
 
 private:
   std::vector<RowData> rows_;

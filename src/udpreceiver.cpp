@@ -5,7 +5,7 @@
 #include <QNetworkDatagram>
 
 
-bool UdpReceiver::open(const QString& ip, std::uint16_t port)
+bool udp::receiver::open(const QString& ip, std::uint16_t port)
 {
   if (socket_)
     close();
@@ -16,7 +16,7 @@ bool UdpReceiver::open(const QString& ip, std::uint16_t port)
   {
     if (socket_->bind(QHostAddress{ip}, port))
     {
-      connect(socket_, &QUdpSocket::readyRead, this, &UdpReceiver::process_read);
+      connect(socket_, &QUdpSocket::readyRead, this, &udp::receiver::process_read);
       return true;
     }
   }
@@ -26,14 +26,14 @@ bool UdpReceiver::open(const QString& ip, std::uint16_t port)
 }
 
 
-void UdpReceiver::close()
+void udp::receiver::close()
 {
   socket_->deleteLater();
   socket_ = nullptr;
 }
 
 
-void UdpReceiver::process_read()
+void udp::receiver::process_read()
 {
   while (socket_ && socket_->hasPendingDatagrams())
   {
@@ -43,7 +43,7 @@ void UdpReceiver::process_read()
 }
 
 
-bool UdpReceiver::is_open() const
+bool udp::receiver::is_open() const
 {
   return socket_ != nullptr;
 }

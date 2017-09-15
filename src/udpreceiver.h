@@ -11,16 +11,20 @@ class QNetworkDatagram;
 class QUdpSocket;
 
 
-class UdpReceiver : public QObject
+namespace udp
+{
+
+
+class receiver : public QObject
 {
   Q_OBJECT
 
 public:
-  UdpReceiver() = default;
-  UdpReceiver(const UdpReceiver&) = delete;
-  UdpReceiver(UdpReceiver&&) = delete;
-  UdpReceiver& operator=(const UdpReceiver&) = delete;
-  UdpReceiver& operator=(UdpReceiver&&) = delete;
+  receiver() = default;
+  receiver(const receiver&) = delete;
+  receiver(receiver&&) = delete;
+  receiver& operator=(const receiver&) = delete;
+  receiver& operator=(receiver&&) = delete;
 
   bool open(const QString& ip, std::uint16_t port);
   void close();
@@ -33,6 +37,9 @@ private:
   void process_read();
   QUdpSocket* socket_ = nullptr;
 };
+
+
+}  // namespace udp
 
 
 #endif  // UDP_RECEIVER_H

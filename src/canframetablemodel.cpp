@@ -106,7 +106,7 @@ void tin::CanFrameTableModel::reset()
 }
 
 
-void tin::CanFrameTableModel::add_frame(uint64_t time, CanFrame frame)
+void tin::CanFrameTableModel::add_frame(uint64_t time, can::frame frame)
 {
   auto it = std::find_if(std::begin(rows_), std::end(rows_), [&frame](const auto& row) {
     return row.can_frame.id == frame.id;

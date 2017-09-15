@@ -1,10 +1,8 @@
-#ifndef TIN_CAN_RECEIVER_H
-#define TIN_CAN_RECEIVER_H
+#ifndef CAN_RECEIVER_H
+#define CAN_RECEIVER_H
 
 
 #include <cstdint>
-#include <string>
-#include <fstream>
 
 class QNetworkDatagram;
 
@@ -12,29 +10,29 @@ class QNetworkDatagram;
 #include "udpreceiver.h"
 
 
-namespace tin
+namespace can
 {
 
 
-class CanReceiver : public UdpReceiver
+class receiver : public udp::receiver
 {
   Q_OBJECT
 
 public:
-  CanReceiver() = default;
-  CanReceiver(const CanReceiver&) = delete;
-  CanReceiver(CanReceiver&&) = delete;
-  CanReceiver& operator=(const CanReceiver&) = delete;
-  CanReceiver& operator=(CanReceiver&&) = delete;
+  receiver() = default;
+  receiver(const receiver&) = delete;
+  receiver(receiver&&) = delete;
+  receiver& operator=(const receiver&) = delete;
+  receiver& operator=(receiver&&) = delete;
 
   void handle_received_datagram(const QNetworkDatagram* datagram) override;
 
 signals:
-  void received_frame(std::uint64_t, CanFrame);
+  void received_frame(std::uint64_t, can::frame);
 };
 
 
-}  // namespace tin
+}  // namespace can
 
 
-#endif  // TIN_CAN_RECEIVER_H
+#endif  // CAN_RECEIVER_H

@@ -1,15 +1,15 @@
-#ifndef TIN_CAN_FRAME_H
-#define TIN_CAN_FRAME_H
+#ifndef CAN_FRAME_H
+#define CAN_FRAME_H
 
 
 #include <cstdint>
 
 
-namespace tin
+namespace can
 {
 
 
-struct CanFrame
+struct frame
 {
   std::uint32_t id;
   std::uint8_t dlc;
@@ -17,7 +17,7 @@ struct CanFrame
 };
 
 
-}  // namespace tin
+}  // namespace can
 
 
-#endif  // TIN_CAN_FRAME_H
+#endif  // CAN_FRAME_H

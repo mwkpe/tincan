@@ -2,13 +2,16 @@
 #include "ui_mainwindow.h"
 
 
+#include <iostream>
+
 #include "canframe.h"
+#include "dbcparser.h"
 
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWindow}
 {
   ui->setupUi(this);
-  setWindowTitle("TinCAN");
+  setWindowTitle("tincan");
 
   ui->tableCanData->setModel(&data_model_);
   ui->tableCanData->setAlternatingRowColors(true);
@@ -34,8 +37,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWi
     }
   });
 
-  connect(&can_receiver_, &tin::CanReceiver::received_frame,
+  connect(&can_receiver_, &can::receiver::received_frame,
       &data_model_, &tin::CanFrameTableModel::add_frame);
+
+  try {
+    dbc::parse("");
+  }
+  catch (const dbc::parse_error& e) {
+    std::cerr << e.what() << std::endl;
+  }
 }
 
 
