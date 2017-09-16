@@ -2,7 +2,6 @@
 
 
 #include <fstream>
-#include <iostream>
 #include <boost/spirit/home/x3.hpp>
 
 
@@ -68,7 +67,6 @@ dbc::signal parse_signal(std::string_view line)
 
 dbc::message parse_message(std::string_view line)
 { 
-  std::cout << line << std::endl;
   dbc::message message;
   if (!x3::phrase_parse(std::begin(line), std::end(line), parsers::message, latin1::space,
           static_cast<dbc::message_base&>(message)))
