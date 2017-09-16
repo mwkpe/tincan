@@ -53,6 +53,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineIp">
+        <property name="maximumSize">
+         <size>
+          <width>160</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>192.168.1.175</string>
         </property>
@@ -70,6 +76,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="linePort">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>30001</string>
         </property>
@@ -97,6 +109,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushLoadDbc">
+        <property name="text">
+         <string>DBC</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -136,7 +155,7 @@
      <x>0</x>
      <y>0</y>
      <width>686</width>
-     <height>20</height>
+     <height>17</height>
     </rect>
    </property>
   </widget>

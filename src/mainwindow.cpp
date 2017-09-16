@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include <QFileDialog>
+
 #include "canframe.h"
 #include "dbcparser.h"
 
@@ -28,11 +30,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWi
     if (can_receiver_.is_open()) {
       can_receiver_.close();
       ui->pushOpenClose->setText("Open");
+      ui->pushLoadDbc->setEnabled(true);
     }
     else {
       if (can_receiver_.open(ui->lineIp->text(), ui->linePort->text().toUShort())) {
         data_model_.reset();
         ui->pushOpenClose->setText("Close");
+        ui->pushLoadDbc->setEnabled(false);
       }
     }
   });
@@ -40,12 +44,17 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWi
   connect(&can_receiver_, &can::receiver::received_frame,
       &data_model_, &tin::CanFrameTableModel::add_frame);
 
-  try {
-    dbc::parse("");
-  }
-  catch (const dbc::parse_error& e) {
-    std::cerr << e.what() << std::endl;
-  }
+  connect(ui->pushLoadDbc, &QPushButton::clicked, this, [this] {
+    auto filename = QFileDialog::getOpenFileName(this, tr("Open DBC file"), QString{},
+      tr("DBC (*.dbc)"));
+    try {
+     auto dbc_file = dbc::parse(filename.toStdString());
+     std::cout << dbc_file.messages.size() << std::endl;
+    }
+    catch (const dbc::parse_error& e) {
+      std::cerr << e.what() << std::endl;
+    }
+  });
 }
 
 
