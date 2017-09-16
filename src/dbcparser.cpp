@@ -22,16 +22,16 @@ using latin1::space;
 x3::rule<class signal, dbc::signal> const signal = "signal";
 auto const signal_def =
   x3::lit("SG_")
-  >> +latin1::char_("a-zA-Z0-9_") >> ':'
+  >> +char_("a-zA-Z0-9_") >> ':'
   >> int_ >> '|' >> int_ >> '@'
-  >> int_ >> latin1::char_("+-")
+  >> int_ >> char_("+-")
   >> '(' >> float_ >> ',' >> float_ >> ')'
   >> '[' >> float_ >> '|' >> float_ >> ']'
   ;
 BOOST_SPIRIT_DEFINE(signal);
 
 x3::rule<class message, dbc::message_base> const message = "message";
-auto const message_def = x3::lit("BO_") >> ulong_ >> +latin1::char_("a-zA-Z0-9_") >> ':' >> int_ ;
+auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> int_ ;
 BOOST_SPIRIT_DEFINE(message);
 
 
