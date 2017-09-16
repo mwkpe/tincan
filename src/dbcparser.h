@@ -32,7 +32,6 @@ struct signal
 struct message_base
 {
   std::uint32_t id;
-  std::int32_t cycle_time;
   std::string name;
   std::uint8_t dlc;
 };
@@ -80,7 +79,6 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
   dbc::message_base,
   (std::uint32_t, id)
-  (std::int32_t, cycle_time)
   (std::string, name)
   (std::uint8_t, dlc)
 )
