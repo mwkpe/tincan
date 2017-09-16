@@ -2,6 +2,7 @@
 
 
 #include <fstream>
+#include <iostream>
 #include <boost/spirit/home/x3.hpp>
 
 
@@ -31,7 +32,7 @@ auto const signal_def =
 BOOST_SPIRIT_DEFINE(signal);
 
 x3::rule<class message, dbc::message_base> const message = "message";
-auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> int_ ;
+auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> int_;
 BOOST_SPIRIT_DEFINE(message);
 
 
@@ -44,13 +45,15 @@ namespace
 
 inline bool is_signal(std::string_view line)
 {
-  return x3::phrase_parse(std::begin(line), std::end(line), x3::lit("SG_"), latin1::space);
+  using latin1::space;
+  return x3::parse(std::begin(line), std::end(line), *space >> x3::lit("SG_") >> space);
 }
 
 
 inline bool is_message(std::string_view line)
 {
-  return x3::phrase_parse(std::begin(line), std::end(line), x3::lit("BO_"), latin1::space);
+  using latin1::space;
+  return x3::parse(std::begin(line), std::end(line), *space >> x3::lit("BO_") >> space);
 }
 
 
@@ -58,17 +61,18 @@ dbc::signal parse_signal(std::string_view line)
 {
   dbc::signal signal;
   if (!x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, latin1::space, signal))
-    throw dbc::parse_error{"Format error"};
+    throw dbc::parse_error{"Signal format error"};
   return signal;
 }
 
 
 dbc::message parse_message(std::string_view line)
-{
+{ 
+  std::cout << line << std::endl;
   dbc::message message;
   if (!x3::phrase_parse(std::begin(line), std::end(line), parsers::message, latin1::space,
           static_cast<dbc::message_base&>(message)))
-    throw dbc::parse_error{"Format error"};
+    throw dbc::parse_error{"Message format error"};
   return message;
 }
 
