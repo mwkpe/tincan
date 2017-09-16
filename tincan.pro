@@ -13,6 +13,8 @@ CONFIG += c++1z
 TARGET = tincan
 TEMPLATE = app
 
+INCLUDEPATH += C:/dev/boost_1_65_1
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -29,12 +31,14 @@ SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/udpreceiver.cpp \
     src/canreceiver.cpp \
-    src/canframetablemodel.cpp
+    src/canframetablemodel.cpp \
+    src/dbcparser.cpp
 
 HEADERS += src/mainwindow.h \
     src/udpreceiver.h \
     src/canreceiver.h \
     src/canframe.h \
-    src/canframetablemodel.h
+    src/canframetablemodel.h \
+    src/dbcparser.h
 
 FORMS += ui/mainwindow.ui
