@@ -14,25 +14,31 @@ namespace parsers
 {
 
 
-using x3::int_;
 using x3::ulong_;
-using x3::float_;
+using x3::double_;
 using latin1::char_;
 using latin1::space;
+
+
+auto as_sign = [](auto& ctx){ _val(ctx).sign = _attr(ctx) == '-' ? dbc::value_sign::signed_ :
+    dbc::value_sign::unsigned_; };
+auto as_order = [](auto& ctx){ _val(ctx).order = static_cast<dbc::byte_order>(_attr(ctx)); };
+
 
 x3::rule<class signal, dbc::signal> const signal = "signal";
 auto const signal_def =
   x3::lit("SG_")
   >> +char_("a-zA-Z0-9_") >> ':'
-  >> int_ >> '|' >> int_ >> '@'
-  >> int_ >> char_("+-")
-  >> '(' >> float_ >> ',' >> float_ >> ')'
-  >> '[' >> float_ >> '|' >> float_ >> ']'
+  >> ulong_ >> '|' >> ulong_ >> '@'
+  >> ulong_[as_order] >> char_("+-")[as_sign]
+  >> '(' >> double_ >> ',' >> double_ >> ')'
+  >> '[' >> double_ >> '|' >> double_ >> ']'
   ;
 BOOST_SPIRIT_DEFINE(signal);
 
+
 x3::rule<class message, dbc::message_base> const message = "message";
-auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> int_;
+auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_;
 BOOST_SPIRIT_DEFINE(message);
 
 

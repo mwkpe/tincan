@@ -15,17 +15,21 @@ namespace dbc
 {
 
 
+enum class byte_order { moto, intel };
+enum class value_sign { signed_, unsigned_ };
+
+
 struct signal
 {
   std::string name;
-  std::int8_t pos;
-  std::int8_t len;
-  std::int8_t order;
-  char sign;
-  float factor;
-  float offset;
-  float minimum;
-  float maximum;
+  std::uint32_t pos;
+  std::uint32_t len;
+  byte_order order;
+  value_sign sign;
+  double factor;
+  double offset;
+  double minimum;
+  double maximum;
 };
 
 
@@ -33,7 +37,7 @@ struct message_base
 {
   std::uint32_t id;
   std::string name;
-  std::uint8_t dlc;
+  std::uint32_t dlc;
 };
 
 
@@ -66,21 +70,21 @@ file parse(std::string_view filename);
 BOOST_FUSION_ADAPT_STRUCT(
   dbc::signal,
   (std::string, name)
-  (std::int8_t, pos)
-  (std::int8_t, len)
-  (std::int8_t, order)
-  (char, sign)
-  (float, factor)
-  (float, offset)
-  (float, minimum)
-  (float, maximum)
+  (std::uint32_t, pos)
+  (std::uint32_t, len)
+  (dbc::byte_order, order)
+  (dbc::value_sign, sign)
+  (double, factor)
+  (double, offset)
+  (double, minimum)
+  (double, maximum)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
   dbc::message_base,
   (std::uint32_t, id)
   (std::string, name)
-  (std::uint8_t, dlc)
+  (std::uint32_t, dlc)
 )
 
 
