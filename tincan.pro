@@ -32,13 +32,15 @@ SOURCES += src/main.cpp \
     src/udpreceiver.cpp \
     src/canreceiver.cpp \
     src/canframetablemodel.cpp \
-    src/dbcparser.cpp
+    src/dbcparser.cpp \
+    src/util.cpp
 
 HEADERS += src/mainwindow.h \
     src/udpreceiver.h \
     src/canreceiver.h \
     src/canframe.h \
     src/canframetablemodel.h \
-    src/dbcparser.h
+    src/dbcparser.h \
+    src/util.h
 
 FORMS += ui/mainwindow.ui

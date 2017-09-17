@@ -6,6 +6,7 @@
 
 #include <QFileDialog>
 
+#include "util.h"
 #include "canframe.h"
 #include "dbcparser.h"
 
@@ -48,8 +49,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWi
     auto filename = QFileDialog::getOpenFileName(this, tr("Open DBC file"), QString{},
       tr("DBC (*.dbc)"));
     try {
-     auto dbc_file = dbc::parse(filename.toStdString());
-     std::cout << dbc_file.messages.size() << std::endl;
+      util::timer timer{true};
+      auto dbc_file = dbc::parse(filename.toStdString());
+      std::cout << dbc_file.messages.size();
+      std::cout << '\n' << timer.stop_seconds() << std::endl;
     }
     catch (const dbc::parse_error& e) {
       std::cerr << e.what() << std::endl;
