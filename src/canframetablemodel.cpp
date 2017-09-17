@@ -103,6 +103,13 @@ void tin::CanFrameTableModel::reset()
   beginResetModel();
   rows_.clear();
   endResetModel();
+  dbc_file_ = dbc::file{};
+}
+
+
+void tin::CanFrameTableModel::add_dbc(dbc::file&& dbc_file)
+{
+  dbc_file_ = std::move(dbc_file);
 }
 
 

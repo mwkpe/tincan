@@ -6,6 +6,7 @@
 #include <vector>
 #include <QAbstractTableModel>
 #include "canframe.h"
+#include "dbcparser.h"
 
 
 namespace tin
@@ -38,12 +39,14 @@ public:
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
   void reset();
+  void add_dbc(dbc::file&& dbc_file);
 
 public slots:
   void add_frame(std::uint64_t time, can::frame frame);
 
 private:
   std::vector<RowData> rows_;
+  dbc::file dbc_file_;
 };
 
 
