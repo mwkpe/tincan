@@ -1,6 +1,7 @@
 #include "dbcparser.h"
 
 
+#include <tuple>
 #include <fstream>
 #include <boost/spirit/home/x3.hpp>
 
@@ -42,36 +43,31 @@ namespace
 {
 
 
-inline bool is_signal(std::string_view line)
+inline bool messages_block_done(std::string_view line)
 {
+  // We're not interested in comments, etc.
   using latin1::space;
-  return x3::parse(std::begin(line), std::end(line), *space >> x3::lit("SG_") >> space);
+  using x3::lit;
+  return x3::parse(std::begin(line), std::end(line), *space
+      >> (lit("CM_") | lit("BA_DEF_") | lit("BA_")) >> space);
 }
 
 
-inline bool is_message(std::string_view line)
-{
-  using latin1::space;
-  return x3::parse(std::begin(line), std::end(line), *space >> x3::lit("BO_") >> space);
-}
-
-
-dbc::signal parse_signal(std::string_view line)
+std::tuple<bool, dbc::signal> parse_signal(std::string_view line)
 {
   dbc::signal signal;
-  if (!x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, latin1::space, signal))
-    throw dbc::parse_error{"Signal format error"};
-  return signal;
+  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, latin1::space,
+      signal);
+  return {success, signal};
 }
 
 
-dbc::message parse_message(std::string_view line)
+std::tuple<bool, dbc::message> parse_message(std::string_view line)
 { 
   dbc::message message;
-  if (!x3::phrase_parse(std::begin(line), std::end(line), parsers::message, latin1::space,
-          static_cast<dbc::message_base&>(message)))
-    throw dbc::parse_error{"Message format error"};
-  return message;
+  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::message, latin1::space,
+      static_cast<dbc::message_base&>(message));
+  return {success, message};
 }
 
 
@@ -88,13 +84,17 @@ dbc::file dbc::parse(std::string_view filename)
 
   std::string line;
   while (std::getline(fs, line)) {
-    if (is_message(line))
-      dbc_file.messages.push_back(parse_message(line));
-    if (is_signal(line)) {
+    if (auto [success, signal] = parse_signal(line); success) {
       if (dbc_file.messages.empty())
         throw parse_error{"Format error"};
       else
-        dbc_file.messages.back().signals_.push_back(parse_signal(line));
+        dbc_file.messages.back().signals_.push_back(signal);
+    }
+    else if (auto [success, message] = parse_message(line); success) {
+      dbc_file.messages.push_back(message);
+    }
+    else if (messages_block_done(line)) {
+      return dbc_file;
     }
   }
 
