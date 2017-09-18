@@ -8,8 +8,6 @@
 #include <vector>
 #include <stdexcept>
 
-#include <boost/fusion/include/adapt_struct.hpp>
-
 
 namespace dbc
 {
@@ -65,27 +63,6 @@ file parse(std::string_view filename);
 
 
 }  // namespace dbc
-
-
-BOOST_FUSION_ADAPT_STRUCT(
-  dbc::signal,
-  (std::string, name)
-  (std::uint32_t, pos)
-  (std::uint32_t, len)
-  (dbc::byte_order, order)
-  (dbc::value_sign, sign)
-  (double, factor)
-  (double, offset)
-  (double, minimum)
-  (double, maximum)
-)
-
-BOOST_FUSION_ADAPT_STRUCT(
-  dbc::message_base,
-  (std::uint32_t, id)
-  (std::string, name)
-  (std::uint32_t, dlc)
-)
 
 
 #endif  // DBC_PARSER_H

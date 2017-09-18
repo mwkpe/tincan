@@ -3,7 +3,30 @@
 
 #include <tuple>
 #include <fstream>
+
 #include <boost/spirit/home/x3.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+  dbc::signal,
+  (std::string, name)
+  (std::uint32_t, pos)
+  (std::uint32_t, len)
+  (dbc::byte_order, order)
+  (dbc::value_sign, sign)
+  (double, factor)
+  (double, offset)
+  (double, minimum)
+  (double, maximum)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+  dbc::message_base,
+  (std::uint32_t, id)
+  (std::string, name)
+  (std::uint32_t, dlc)
+)
 
 
 namespace x3 = boost::spirit::x3;
