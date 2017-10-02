@@ -1,0 +1,5 @@
+BO_ 201 MESSAGE: 4 DEVICE
+ SG_ CRC : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ ALIV : 8|4@1+ (1,0) [0|12] "" Vector__XXX
+ SG_ VEL : 12|14@1+ (0.01220703125,0) [0|250] "km/h" Vector__XXX
+ SG_ MODE : 26|6@1+ (1,0) [10|50] "" Vector__XXX
