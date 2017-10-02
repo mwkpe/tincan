@@ -1,6 +1,7 @@
 #include "dbcparser.h"
 
 
+#include <cstdint>
 #include <tuple>
 #include <fstream>
 
@@ -33,6 +34,29 @@ namespace x3 = boost::spirit::x3;
 namespace latin1 = boost::spirit::x3::iso8859_1;
 
 
+struct signs_ : x3::symbols<dbc::value_sign>
+{
+  signs_()
+  {
+    add
+      ("+", dbc::value_sign::unsigned_)
+      ("-", dbc::value_sign::signed_)
+    ;
+  }
+} signs;
+
+struct oders_ : x3::symbols<dbc::byte_order>
+{
+  oders_()
+  {
+    add
+      ("0", dbc::byte_order::moto)
+      ("1", dbc::byte_order::intel)
+    ;
+  }
+} orders;
+
+
 namespace parsers
 {
 
@@ -43,17 +67,12 @@ using latin1::char_;
 using latin1::space;
 
 
-auto as_sign = [](auto& ctx){ _val(ctx).sign = _attr(ctx) == '-' ? dbc::value_sign::signed_ :
-    dbc::value_sign::unsigned_; };
-auto as_order = [](auto& ctx){ _val(ctx).order = static_cast<dbc::byte_order>(_attr(ctx)); };
-
-
 x3::rule<class signal, dbc::signal> const signal = "signal";
 auto const signal_def =
   x3::lit("SG_")
   >> +char_("a-zA-Z0-9_") >> ':'
   >> ulong_ >> '|' >> ulong_ >> '@'
-  >> ulong_[as_order] >> char_("+-")[as_sign]
+  >> orders >> signs
   >> '(' >> double_ >> ',' >> double_ >> ')'
   >> '[' >> double_ >> '|' >> double_ >> ']'
   ;
