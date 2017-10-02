@@ -41,6 +41,7 @@ HEADERS += src/mainwindow.h \
     src/canframe.h \
     src/canframetablemodel.h \
     src/dbcparser.h \
-    src/util.h
+    src/util.h \
+    src/dbcfile.h
 
 FORMS += ui/mainwindow.ui
