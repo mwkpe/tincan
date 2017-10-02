@@ -79,9 +79,9 @@ auto const signal_def =
   >> orders >> signs
   >> '(' >> double_ >> ',' >> double_ >> ')'
   >> '[' >> double_ >> '|' >> double_ >> ']'
+  >> quoted_string
   ;
 BOOST_SPIRIT_DEFINE(signal);
-  >> quoted_string
 
 x3::rule<class message, dbc::message_base> const message = "message";
 auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_;
