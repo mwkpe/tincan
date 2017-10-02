@@ -20,6 +20,7 @@ BOOST_FUSION_ADAPT_STRUCT(
   (double, offset)
   (double, minimum)
   (double, maximum)
+  (std::string, unit)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -67,6 +68,9 @@ using latin1::char_;
 using latin1::space;
 
 
+const auto quoted_string = x3::lexeme['"' >> *(char_ - '"') >> '"'];
+
+
 x3::rule<class signal, dbc::signal> const signal = "signal";
 auto const signal_def =
   x3::lit("SG_")
@@ -77,7 +81,7 @@ auto const signal_def =
   >> '[' >> double_ >> '|' >> double_ >> ']'
   ;
 BOOST_SPIRIT_DEFINE(signal);
-
+  >> quoted_string
 
 x3::rule<class message, dbc::message_base> const message = "message";
 auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_;

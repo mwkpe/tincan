@@ -28,6 +28,7 @@ struct signal
   double offset;
   double minimum;
   double maximum;
+  std::string unit;
 };
 
 
