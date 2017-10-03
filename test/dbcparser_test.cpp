@@ -12,6 +12,7 @@ using doctest::Approx;
 TEST_CASE("DBC file parser")
 {
   auto file = dbc::parse("test.dbc");
+  CHECK(file.name == "test.dbc");
 
   auto message_it = dbc::find_message(file, "MESSAGE");
   REQUIRE(message_it != std::end(file.messages));

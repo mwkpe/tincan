@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <tuple>
 #include <fstream>
+#include <experimental/filesystem>
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -32,6 +33,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 
+namespace fs = std::experimental::filesystem;
 namespace x3 = boost::spirit::x3;
 namespace latin1 = boost::spirit::x3::iso8859_1;
 
@@ -128,13 +130,15 @@ std::tuple<bool, dbc::message> parse_message(std::string_view line)
 }  // namespace
 
 
-dbc::file dbc::parse(std::string_view filename)
+dbc::file dbc::parse(std::string_view filepath)
 {
   file dbc_file;
 
-  std::ifstream fs{std::string{filename}};
+  std::ifstream fs{std::string{filepath}};
   if (!fs.is_open())
     throw parse_error{"Could not open file"};
+
+  dbc_file.name = fs::path{filepath}.filename().string();
 
   std::string line;
   while (std::getline(fs, line)) {

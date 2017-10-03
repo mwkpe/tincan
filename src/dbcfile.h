@@ -41,6 +41,7 @@ struct message
 
 struct file
 {
+  std::string name;
   std::vector<message> messages;
 };
 

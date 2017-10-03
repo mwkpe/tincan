@@ -21,7 +21,7 @@ public:
 };
 
 
-file parse(std::string_view filename);
+file parse(std::string_view filepath);
 
 
 }  // namespace dbc
