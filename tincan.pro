@@ -14,6 +14,7 @@ TARGET = tincan
 TEMPLATE = app
 
 INCLUDEPATH += C:/dev/boost_1_65_1
+LIBS += -lstdc++fs
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings

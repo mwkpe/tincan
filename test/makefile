@@ -1,5 +1,6 @@
 CXX=g++
-CXXFLAGS=-std=c++1z -O2 -Wall
+CXXFLAGS=-std=c++17 -O2 -Wall
+LIBS=-lstdc++fs
 INC=-IC:/dev/boost_1_65_1
 
 
@@ -7,7 +8,7 @@ all: dbcparser_test
 
 
 dbcparser_test: dbcparser.o ../src/dbcfile.h
-	$(CXX) $(CXXFLAGS) dbcparser.o dbcparser_test.cpp -o dbcparser_test
+	$(CXX) $(CXXFLAGS) dbcparser.o dbcparser_test.cpp $(LIBS) -o dbcparser_test
 	@echo "Build finished"
 
 
