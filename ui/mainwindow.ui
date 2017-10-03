@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>686</width>
-    <height>402</height>
+    <width>800</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -60,7 +60,7 @@
          </size>
         </property>
         <property name="text">
-         <string>192.168.1.175</string>
+         <string>0.0.0.0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -154,7 +154,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>686</width>
+     <width>800</width>
      <height>17</height>
     </rect>
    </property>
