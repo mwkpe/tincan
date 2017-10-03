@@ -24,10 +24,11 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
-  dbc::message_base,
+  dbc::message,
   (std::uint32_t, id)
   (std::string, name)
   (std::uint32_t, dlc)
+  (std::vector<dbc::signal>, signals_)
 )
 
 
@@ -72,7 +73,7 @@ const auto quoted_string = x3::lexeme['"' >> *(char_ - '"') >> '"'];
 
 
 x3::rule<class signal, dbc::signal> const signal = "signal";
-auto const signal_def =
+const auto signal_def =
   x3::lit("SG_")
   >> +char_("a-zA-Z0-9_") >> ':'
   >> ulong_ >> '|' >> ulong_ >> '@'
@@ -83,8 +84,9 @@ auto const signal_def =
   ;
 BOOST_SPIRIT_DEFINE(signal);
 
-x3::rule<class message, dbc::message_base> const message = "message";
-auto const message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_;
+x3::rule<class message, dbc::message> const message = "message";
+const auto message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_
+    >> x3::attr(std::vector<dbc::signal>());
 BOOST_SPIRIT_DEFINE(message);
 
 
@@ -118,7 +120,7 @@ std::tuple<bool, dbc::message> parse_message(std::string_view line)
 { 
   dbc::message message;
   bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::message, latin1::space,
-      static_cast<dbc::message_base&>(message));
+      message);
   return {success, message};
 }
 

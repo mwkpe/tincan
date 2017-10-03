@@ -31,20 +31,13 @@ struct signal
   std::string unit;
 };
 
-
-struct message_base
+struct message
 {
   std::uint32_t id;
   std::string name;
   std::uint32_t dlc;
-};
-
-
-struct message : public message_base
-{
   std::vector<signal> signals_;
 };
-
 
 struct file
 {
