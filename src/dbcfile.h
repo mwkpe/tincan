@@ -17,7 +17,7 @@ enum class byte_order { moto, intel };
 enum class value_sign { signed_, unsigned_ };
 
 
-struct signal
+struct Signal_def
 {
   std::string name;
   std::uint32_t pos;
@@ -31,37 +31,46 @@ struct signal
   std::string unit;
 };
 
-struct message
+struct Frame_def
 {
   std::uint32_t id;
   std::string name;
   std::uint32_t dlc;
-  std::vector<signal> signals_;
+  std::vector<Signal_def> signal_defs;
 };
 
-struct file
+struct File
 {
   std::string name;
-  std::vector<message> messages;
+  std::vector<Frame_def> frame_defs;
 };
 
 
-inline auto find_message(const file& f, std::uint32_t id)
+inline const Frame_def* find_frame(const File& f, std::uint32_t id)
 {
-  return std::find_if(std::begin(f.messages), std::end(f.messages),
+  auto it = std::find_if(std::begin(f.frame_defs), std::end(f.frame_defs),
       [id](const auto& m){ return m.id == id; });
+  if (it != std::end(f.frame_defs))
+    return &*it;
+  return nullptr;
 }
 
-inline auto find_message(const file& f, std::string_view name)
+inline const Frame_def* find_frame(const File& f, std::string_view name)
 {
-  return std::find_if(std::begin(f.messages), std::end(f.messages),
+  auto it = std::find_if(std::begin(f.frame_defs), std::end(f.frame_defs),
       [name](const auto& m){ return m.name == name; });
+  if (it != std::end(f.frame_defs))
+    return &*it;
+  return nullptr;
 }
 
-inline auto find_signal(const message& m, std::string_view name)
+inline const Signal_def* find_signal(const Frame_def& m, std::string_view name)
 {
-  return std::find_if(std::begin(m.signals_), std::end(m.signals_),
+  auto it = std::find_if(std::begin(m.signal_defs), std::end(m.signal_defs),
       [name](const auto& s){ return s.name == name; });
+  if (it != std::end(m.signal_defs))
+    return &*it;
+  return nullptr;
 }
 
 
