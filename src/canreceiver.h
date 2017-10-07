@@ -4,31 +4,32 @@
 
 #include <cstdint>
 
-class QNetworkDatagram;
-
 #include "canframe.h"
 #include "udpreceiver.h"
+
+class QNetworkDatagram;
 
 
 namespace can
 {
 
 
-class receiver : public udp::receiver
+class Receiver : public udp::Receiver
 {
   Q_OBJECT
 
 public:
-  receiver() = default;
-  receiver(const receiver&) = delete;
-  receiver(receiver&&) = delete;
-  receiver& operator=(const receiver&) = delete;
-  receiver& operator=(receiver&&) = delete;
+  Receiver() = default;
+  Receiver(const Receiver&) = delete;
+  Receiver(Receiver&&) = delete;
+  Receiver& operator=(const Receiver&) = delete;
+  Receiver& operator=(Receiver&&) = delete;
 
   void handle_received_datagram(const QNetworkDatagram* datagram) override;
 
 signals:
-  void received_frame(std::uint64_t, can::frame);
+  void received_frame(std::uint64_t, can::Frame);
+  void received_frame_id(std::uint32_t);
 };
 
 

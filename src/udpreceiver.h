@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QString>
+
 class QNetworkDatagram;
 class QUdpSocket;
 
@@ -15,16 +16,16 @@ namespace udp
 {
 
 
-class receiver : public QObject
+class Receiver : public QObject
 {
   Q_OBJECT
 
 public:
-  receiver() = default;
-  receiver(const receiver&) = delete;
-  receiver(receiver&&) = delete;
-  receiver& operator=(const receiver&) = delete;
-  receiver& operator=(receiver&&) = delete;
+  Receiver() = default;
+  Receiver(const Receiver&) = delete;
+  Receiver(Receiver&&) = delete;
+  Receiver& operator=(const Receiver&) = delete;
+  Receiver& operator=(Receiver&&) = delete;
 
   bool open(const QString& ip, std::uint16_t port);
   void close();

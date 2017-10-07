@@ -9,7 +9,7 @@ namespace can
 {
 
 
-struct frame
+struct Frame
 {
   std::uint32_t id;
   std::uint8_t dlc;

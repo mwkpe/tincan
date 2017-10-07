@@ -9,12 +9,12 @@ namespace util
 {
 
 
-class timer
+class Timer
 {
 public:
-  timer() = default;
-  timer(bool start_running);
-  ~timer() = default;
+  Timer() = default;
+  Timer(bool start_running);
+  ~Timer() = default;
 
   void start();
   void stop();

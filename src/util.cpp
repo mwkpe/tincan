@@ -1,33 +1,33 @@
 #include "util.h"
 
 
-util::timer::timer(bool start_running)
+util::Timer::Timer(bool start_running)
 {
   if (start_running)
     start();
 }
 
 
-void util::timer::start()
+void util::Timer::start()
 {
   start_time = std::chrono::high_resolution_clock::now();
 }
 
 
-void util::timer::stop()
+void util::Timer::stop()
 {
   stop_time = std::chrono::high_resolution_clock::now();
 }
 
 
-float util::timer::stop_seconds()
+float util::Timer::stop_seconds()
 {
   stop();
   return seconds();
 }
 
 
-float util::timer::seconds()
+float util::Timer::seconds()
 {
   return std::chrono::duration<float>(stop_time - start_time).count();
 }

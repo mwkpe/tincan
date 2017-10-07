@@ -11,7 +11,7 @@
 
 
 BOOST_FUSION_ADAPT_STRUCT(
-  dbc::signal,
+  dbc::Signal_def,
   (std::string, name)
   (std::uint32_t, pos)
   (std::uint32_t, len)
@@ -25,11 +25,11 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
-  dbc::message,
+  dbc::Frame_def,
   (std::uint32_t, id)
   (std::string, name)
   (std::uint32_t, dlc)
-  (std::vector<dbc::signal>, signals_)
+  (std::vector<dbc::Signal_def>, signal_defs)
 )
 
 
@@ -74,22 +74,22 @@ using latin1::space;
 const auto quoted_string = x3::lexeme['"' >> *(char_ - '"') >> '"'];
 
 
-x3::rule<class signal, dbc::signal> const signal = "signal";
+x3::rule<class signal, dbc::Signal_def> const signal = "signal";
 const auto signal_def =
-  x3::lit("SG_")
-  >> +char_("a-zA-Z0-9_") >> ':'
-  >> ulong_ >> '|' >> ulong_ >> '@'
-  >> orders >> signs
-  >> '(' >> double_ >> ',' >> double_ >> ')'
-  >> '[' >> double_ >> '|' >> double_ >> ']'
-  >> quoted_string
-  ;
+    x3::lit("SG_")
+    >> +char_("a-zA-Z0-9_") >> ':'
+    >> ulong_ >> '|' >> ulong_ >> '@'
+    >> orders >> signs
+    >> '(' >> double_ >> ',' >> double_ >> ')'
+    >> '[' >> double_ >> '|' >> double_ >> ']'
+    >> quoted_string
+    ;
 BOOST_SPIRIT_DEFINE(signal);
 
-x3::rule<class message, dbc::message> const message = "message";
-const auto message_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_
-    >> x3::attr(std::vector<dbc::signal>());
-BOOST_SPIRIT_DEFINE(message);
+x3::rule<class message, dbc::Frame_def> const frame = "frame";
+const auto frame_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_
+    >> x3::attr(std::vector<dbc::Signal_def>());
+BOOST_SPIRIT_DEFINE(frame);
 
 
 }  // namespace parsers
@@ -109,19 +109,19 @@ inline bool messages_block_done(std::string_view line)
 }
 
 
-std::tuple<bool, dbc::signal> parse_signal(std::string_view line)
+std::tuple<bool, dbc::Signal_def> parse_signal_def(std::string_view line)
 {
-  dbc::signal signal;
+  dbc::Signal_def signal;
   bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, latin1::space,
       signal);
   return {success, signal};
 }
 
 
-std::tuple<bool, dbc::message> parse_message(std::string_view line)
+std::tuple<bool, dbc::Frame_def> parse_frame_def(std::string_view line)
 { 
-  dbc::message message;
-  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::message, latin1::space,
+  dbc::Frame_def message;
+  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::frame, latin1::space,
       message);
   return {success, message};
 }
@@ -130,26 +130,26 @@ std::tuple<bool, dbc::message> parse_message(std::string_view line)
 }  // namespace
 
 
-dbc::file dbc::parse(std::string_view filepath)
+dbc::File dbc::parse(std::string_view filepath)
 {
-  file dbc_file;
+  File dbc_file;
 
   std::ifstream fs{std::string{filepath}};
   if (!fs.is_open())
-    throw parse_error{"Could not open file"};
+    throw Parse_error{"Could not open file"};
 
   dbc_file.name = fs::path{filepath}.filename().string();
 
   std::string line;
   while (std::getline(fs, line)) {
-    if (auto [success, signal] = parse_signal(line); success) {
-      if (dbc_file.messages.empty())
-        throw parse_error{"Format error"};
+    if (auto [success, Signal_def] = parse_signal_def(line); success) {
+      if (dbc_file.frame_defs.empty())
+        throw Parse_error{"Format error"};
       else
-        dbc_file.messages.back().signals_.push_back(signal);
+        dbc_file.frame_defs.back().signal_defs.push_back(Signal_def);
     }
-    else if (auto [success, message] = parse_message(line); success) {
-      dbc_file.messages.push_back(message);
+    else if (auto [success, Frame_def] = parse_frame_def(line); success) {
+      dbc_file.frame_defs.push_back(Frame_def);
     }
     else if (messages_block_done(line)) {
       return dbc_file;

@@ -13,15 +13,15 @@ namespace dbc
 {
 
 
-class parse_error : public std::runtime_error
+class Parse_error : public std::runtime_error
 {
 public:
-  parse_error(const std::string& s) : std::runtime_error{s} {}
-  parse_error(const char* s) : std::runtime_error{s} {}
+  Parse_error(const std::string& s) : std::runtime_error{s} {}
+  Parse_error(const char* s) : std::runtime_error{s} {}
 };
 
 
-file parse(std::string_view filepath);
+File parse(std::string_view filepath);
 
 
 }  // namespace dbc
