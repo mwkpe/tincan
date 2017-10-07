@@ -32,17 +32,28 @@ SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     src/udpreceiver.cpp \
     src/canreceiver.cpp \
-    src/canframetablemodel.cpp \
     src/dbcparser.cpp \
-    src/util.cpp
+    src/util.cpp \
+    src/treeitem.cpp \
+    src/frameitem.cpp \
+    src/signalitem.cpp \
+    src/framemodel.cpp \
+    src/treemodel.cpp \
+    src/canbus.cpp
 
 HEADERS += src/mainwindow.h \
     src/udpreceiver.h \
     src/canreceiver.h \
-    src/canframe.h \
-    src/canframetablemodel.h \
     src/dbcparser.h \
     src/util.h \
-    src/dbcfile.h
+    src/dbcfile.h \
+    src/treeitem.h \
+    src/frameitem.h \
+    src/signalitem.h \
+    src/framemodel.h \
+    src/treemodel.h \
+    candata.h \
+    src/canbus.h \
+    src/canframe.h
 
 FORMS += ui/mainwindow.ui

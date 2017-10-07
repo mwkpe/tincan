@@ -5,24 +5,28 @@
 #include <QMainWindow>
 
 #include "canreceiver.h"
-#include "canframetablemodel.h"
+#include "canbus.h"
+#include "dbcfile.h"
+#include "framemodel.h"
 
 
 namespace Ui { class MainWindow; }
 
 
-class MainWindow : public QMainWindow
+class Main_window : public QMainWindow
 {
   Q_OBJECT
 
 public:
-  explicit MainWindow(QWidget* parent = nullptr);
-  ~MainWindow();
+  explicit Main_window(QWidget* parent = nullptr);
+  ~Main_window();
 
 private:
   Ui::MainWindow* ui;
-  can::receiver can_receiver_;
-  tin::CanFrameTableModel data_model_;
+  can::Receiver can_receiver_;
+  can::Bus can_bus_;
+  dbc::File dbc_file_;
+  tin::Frame_model frame_model_;
 };
 
 

@@ -11,21 +11,13 @@
 #include "dbcparser.h"
 
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWindow}
+Main_window::Main_window(QWidget* parent)
+    : QMainWindow{parent}, ui{new Ui::MainWindow}, frame_model_{&can_bus_, &dbc_file_}
 {
   ui->setupUi(this);
   setWindowTitle("tincan");
 
-  ui->tableCanData->setModel(&data_model_);
-  ui->tableCanData->setAlternatingRowColors(true);
-
-  if (auto* h = ui->tableCanData->verticalHeader(); h) {
-    h->setSectionResizeMode(QHeaderView::Fixed);
-    h->setDefaultSectionSize(26);
-  }
-  if (auto* h = ui->tableCanData->horizontalHeader(); h) {
-    h->setStretchLastSection(true);
-  }
+  ui->treeViewFrames->setModel(&frame_model_);
 
   connect(ui->pushOpenClose, &QPushButton::clicked, this, [this] {
     if (can_receiver_.is_open()) {
@@ -35,33 +27,32 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWi
     }
     else {
       if (can_receiver_.open(ui->lineIp->text(), ui->linePort->text().toUShort())) {
-        data_model_.reset();
         ui->pushOpenClose->setText("Close");
         ui->pushLoadDbc->setEnabled(false);
       }
     }
   });
 
-  connect(&can_receiver_, &can::receiver::received_frame,
-      &data_model_, &tin::CanFrameTableModel::add_frame);
+  connect(&can_receiver_, &can::Receiver::received_frame, &can_bus_, &can::Bus::add_frame);
+  connect(&can_receiver_, &can::Receiver::received_frame_id,
+      &frame_model_, &tin::Frame_model::update_frame);
 
   connect(ui->pushLoadDbc, &QPushButton::clicked, this, [this] {
     auto filename = QFileDialog::getOpenFileName(this, tr("Open DBC file"), QString{},
       tr("DBC (*.dbc)"));
     try {
-      util::timer timer{true};
-      auto dbc_file = dbc::parse(filename.toStdString());
-      std::cout << dbc_file.messages.size() << '\n' << timer.stop_seconds() << std::endl;
-      data_model_.add_dbc(std::move(dbc_file));
+      util::Timer timer{true};
+      dbc_file_ = dbc::parse(filename.toStdString());
+      std::cout << dbc_file_.frame_defs.size() << '\n' << timer.stop_seconds() << std::endl;
     }
-    catch (const dbc::parse_error& e) {
+    catch (const dbc::Parse_error& e) {
       std::cerr << e.what() << std::endl;
     }
   });
 }
 
 
-MainWindow::~MainWindow()
+Main_window::~Main_window()
 {
   delete ui;
 }
