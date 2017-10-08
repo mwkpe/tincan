@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-#include "canframe.h"
+#include "canrawframe.h"
 #include "udpreceiver.h"
 
 class QNetworkDatagram;
@@ -28,7 +28,7 @@ public:
   void handle_received_datagram(const QNetworkDatagram* datagram) override;
 
 signals:
-  void received_frame(std::uint64_t, can::Frame);
+  void received_frame(std::uint64_t, can::Raw_frame);
   void received_frame_id(std::uint32_t);
 };
 

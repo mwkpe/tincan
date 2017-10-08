@@ -30,30 +30,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += src/main.cpp \
     src/mainwindow.cpp \
-    src/udpreceiver.cpp \
-    src/canreceiver.cpp \
-    src/dbcparser.cpp \
+    src/canbus.cpp \
     src/util.cpp \
-    src/treeitem.cpp \
-    src/frameitem.cpp \
-    src/signalitem.cpp \
-    src/framemodel.cpp \
-    src/treemodel.cpp \
-    src/canbus.cpp
+    src/file/dbcparser.cpp \
+    src/models/canbusmodel.cpp \
+    src/models/canframeitem.cpp \
+    src/models/treeitem.cpp \
+    src/models/treemodel.cpp \
+    src/network/canreceiver.cpp \
+    src/network/udpreceiver.cpp \
+    src/models/bussignalitem.cpp
 
 HEADERS += src/mainwindow.h \
-    src/udpreceiver.h \
-    src/canreceiver.h \
-    src/dbcparser.h \
-    src/util.h \
-    src/dbcfile.h \
-    src/treeitem.h \
-    src/frameitem.h \
-    src/signalitem.h \
-    src/framemodel.h \
-    src/treemodel.h \
-    candata.h \
+    src/bussignal.h \
     src/canbus.h \
-    src/canframe.h
+    src/canframe.h \
+    src/util.h \
+    src/file/dbcfile.h \
+    src/file/dbcparser.h \
+    src/models/canbusmodel.h \
+    src/models/canframeitem.h \
+    src/models/treeitem.h \
+    src/models/treemodel.h \
+    src/network/canrawframe.h \
+    src/network/canreceiver.h \
+    src/network/udpreceiver.h \
+    src/models/bussignalitem.h
+
 
 FORMS += ui/mainwindow.ui

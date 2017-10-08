@@ -46,7 +46,7 @@ struct File
 };
 
 
-inline const Frame_def* find_frame(const File& f, std::uint32_t id)
+inline const Frame_def* find_frame_def(const File& f, std::uint32_t id)
 {
   auto it = std::find_if(std::begin(f.frame_defs), std::end(f.frame_defs),
       [id](const auto& m){ return m.id == id; });
@@ -55,7 +55,7 @@ inline const Frame_def* find_frame(const File& f, std::uint32_t id)
   return nullptr;
 }
 
-inline const Frame_def* find_frame(const File& f, std::string_view name)
+inline const Frame_def* find_frame_def(const File& f, std::string_view name)
 {
   auto it = std::find_if(std::begin(f.frame_defs), std::end(f.frame_defs),
       [name](const auto& m){ return m.name == name; });
@@ -64,7 +64,7 @@ inline const Frame_def* find_frame(const File& f, std::string_view name)
   return nullptr;
 }
 
-inline const Signal_def* find_signal(const Frame_def& m, std::string_view name)
+inline const Signal_def* find_signal_def(const Frame_def& m, std::string_view name)
 {
   auto it = std::find_if(std::begin(m.signal_defs), std::end(m.signal_defs),
       [name](const auto& s){ return s.name == name; });
