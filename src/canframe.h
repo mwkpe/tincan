@@ -1,23 +1,30 @@
-#ifndef CAN_FRAME_H
-#define CAN_FRAME_H
+#ifndef TIN_CANFRAME_H
+#define TIN_CANFRAME_H
 
 
 #include <cstdint>
+#include <array>
+#include <vector>
+
+#include "bussignal.h"
+#include "file/dbcfile.h"
 
 
-namespace can
+namespace tin
 {
 
 
-struct Frame
+struct Can_frame
 {
   std::uint32_t id;
-  std::uint8_t dlc;
-  alignas(8) std::uint8_t data[8];
+  std::uint64_t receive_time;
+  std::array<std::uint8_t, 8> raw_data;
+  std::vector<Bus_signal> bus_signals;
+  const dbc::Frame_def* frame_def = nullptr;
 };
 
 
-}  // namespace can
+}  // namespace tin
 
 
-#endif  // CAN_FRAME_H
+#endif  // TIN_CANFRAME_H
