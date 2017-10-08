@@ -2,8 +2,8 @@
 
 
 #include "../ext/doctest.h"
-#include "../src/dbcfile.h"
-#include "../src/dbcparser.h"
+#include "../src/file/dbcfile.h"
+#include "../src/file/dbcparser.h"
 
 
 using doctest::Approx;
@@ -14,42 +14,39 @@ TEST_CASE("DBC file parser")
   auto file = dbc::parse("test.dbc");
   CHECK(file.name == "test.dbc");
 
-  auto message_it = dbc::find_message(file, "MESSAGE");
-  REQUIRE(message_it != std::end(file.messages));
-  auto& m = *message_it;
-  CHECK(m.dlc == 4);
-  CHECK(m.id == 0xC9);
-  CHECK(m.signals_.size() == 4);
+  const auto* frame_def = dbc::find_frame_def(file, "MESSAGE");
+  REQUIRE(frame_def != nullptr);
+  CHECK(frame_def->dlc == 4);
+  CHECK(frame_def->id == 0xC9);
+  CHECK(frame_def->signal_defs.size() == 4);
 
   SUBCASE("signal VEL")
   {
-    auto signal_it = dbc::find_signal(m, "VEL");
-    REQUIRE(signal_it != std::end(m.signals_));
-    auto signal = *signal_it;
-    CHECK(signal.pos == 12);
-    CHECK(signal.len == 14);
-    CHECK(signal.order == dbc::byte_order::intel);
-    CHECK(signal.sign == dbc::value_sign::unsigned_);
-    CHECK(Approx(signal.factor) == 0.01220703125);
-    CHECK(Approx(signal.offset) == 0);
-    CHECK(Approx(signal.minimum) == 0);
-    CHECK(Approx(signal.maximum) == 250);
-    CHECK(signal.unit == "km/h");
+    const auto* signal_def = dbc::find_signal_def(*frame_def, "VEL");
+    REQUIRE(signal_def != nullptr);
+    CHECK(signal_def->pos == 12);
+    CHECK(signal_def->len == 14);
+    CHECK(signal_def->order == dbc::byte_order::intel);
+    CHECK(signal_def->sign == dbc::value_sign::unsigned_);
+    CHECK(Approx(signal_def->factor) == 0.01220703125);
+    CHECK(Approx(signal_def->offset) == 0);
+    CHECK(Approx(signal_def->minimum) == 0);
+    CHECK(Approx(signal_def->maximum) == 250);
+    CHECK(signal_def->unit == "km/h");
   }
 
   SUBCASE("signal MODE")
   {
-    auto signal_it = dbc::find_signal(m, "MODE");
-    REQUIRE(signal_it != std::end(m.signals_));
-    auto signal = *signal_it;
-    CHECK(signal.pos == 26);
-    CHECK(signal.len == 6);
-    CHECK(signal.order == dbc::byte_order::intel);
-    CHECK(signal.sign == dbc::value_sign::unsigned_);
-    CHECK(Approx(signal.factor) == 1);
-    CHECK(Approx(signal.offset) == 0);
-    CHECK(Approx(signal.minimum) == 10);
-    CHECK(Approx(signal.maximum) == 50);
-    CHECK(signal.unit == "");
+    const auto* signal_def = dbc::find_signal_def(*frame_def, "MODE");
+    REQUIRE(signal_def != nullptr);
+    CHECK(signal_def->pos == 26);
+    CHECK(signal_def->len == 6);
+    CHECK(signal_def->order == dbc::byte_order::intel);
+    CHECK(signal_def->sign == dbc::value_sign::unsigned_);
+    CHECK(Approx(signal_def->factor) == 1);
+    CHECK(Approx(signal_def->offset) == 0);
+    CHECK(Approx(signal_def->minimum) == 10);
+    CHECK(Approx(signal_def->maximum) == 50);
+    CHECK(signal_def->unit == "");
   }
 }
