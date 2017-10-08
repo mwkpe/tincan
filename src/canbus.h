@@ -1,5 +1,5 @@
-#ifndef CANBUS_H
-#define CANBUS_H
+#ifndef TIN_CANBUS_H
+#define TIN_CANBUS_H
 
 
 #include <cstdint>
@@ -9,28 +9,35 @@
 #include <QObject>
 
 #include "canframe.h"
+#include "network/canrawframe.h"
 
 
-namespace can
+namespace dbc { struct File; }
+
+
+namespace tin
 {
 
 
-class Bus : public QObject
+class Can_bus : public QObject
 {
   Q_OBJECT
 
 public:
-  std::tuple<std::uint64_t, can::Frame> frame(std::uint32_t id) const;
+  void set_description(const dbc::File* file) { dbc_file_ = file; };
+  void reset_frames() { frames_.clear(); }
+  std::tuple<bool, tin::Can_frame> frame(std::uint32_t id) const;
 
 public slots:
-  void add_frame(std::uint64_t time, can::Frame Frame);
+  void add_frame(std::uint64_t time, can::Raw_frame bus_frame);
 
 private:
-  std::unordered_map<std::uint32_t, std::tuple<std::uint64_t, can::Frame>> frames_;
+  const dbc::File* dbc_file_ = nullptr;
+  std::unordered_map<std::uint32_t, Can_frame> frames_;
 };
 
 
-}  // namespace can
+}  // namespace tin
 
 
-#endif  // CANBUS_H
+#endif  // TIN_CANBUS_H
