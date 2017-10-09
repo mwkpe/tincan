@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include "../bussignal.h"
-#include "../canframe.h"
-#include "../canbus.h"
+#include "tincan/bussignal.h"
+#include "tincan/canframe.h"
+#include "tincan/canbus.h"
 #include "treeitem.h"
 #include "bussignalitem.h"
 #include "canframeitem.h"
@@ -46,7 +46,7 @@ void tin::Can_bus_model::update_frame(std::uint32_t id)
     else {  // Add new frame
       auto frame_item = std::make_unique<Can_frame_item>(frame, root_item_.get());
       if (frame.frame_def) {
-        for (const auto& signal_def : frame.frame_def->signal_defs) {
+        for (const auto& signal_def : frame.frame_def->bus_signal_defs) {
           frame_item->add_child(std::make_unique<Bus_signal_item>(
               Bus_signal{0ull, 0ull, &signal_def}, frame_item.get()));
         }

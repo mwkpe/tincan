@@ -4,7 +4,7 @@
 
 #include <QVariant>
 
-#include "../canframe.h"
+#include "tincan/canframe.h"
 #include "treeitem.h"
 
 

@@ -4,7 +4,7 @@
 
 #include <QVariant>
 
-#include "../bussignal.h"
+#include "tincan/bussignal.h"
 #include "treeitem.h"
 
 
