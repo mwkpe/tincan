@@ -5,7 +5,8 @@
 #include <QMainWindow>
 
 #include "network/canreceiver.h"
-#include "canbus.h"
+#include "tincan/canbus.h"
+#include "tincan/canbusdef.h"
 #include "file/dbcfile.h"
 #include "models/canbusmodel.h"
 
@@ -26,6 +27,7 @@ private:
   can::Receiver can_receiver_;
   dbc::File dbc_file_;
   tin::Can_bus can_bus_;
+  tin::Can_bus_def can_bus_def_;
   tin::Can_bus_model can_bus_model_;
 };
 

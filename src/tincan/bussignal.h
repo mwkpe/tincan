@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <variant>
 
-#include "file/dbcfile.h"
+#include "bussignaldef.h"
 
 
 namespace tin
@@ -16,7 +16,7 @@ struct Bus_signal
 {
   std::variant<std::uint64_t, std::int64_t> raw;
   std::variant<std::uint64_t, std::int64_t, double> phys;
-  const dbc::Signal_def* signal_def;
+  const Bus_signal_def* signal_def;
 };
 
 

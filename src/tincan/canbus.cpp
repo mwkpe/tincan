@@ -1,7 +1,7 @@
 #include "canbus.h"
 
 
-#include "file/dbcfile.h"
+#include "canbusdef.h"
 
 
 std::tuple<bool, tin::Can_frame> tin::Can_bus::frame(std::uint32_t id) const
@@ -25,8 +25,8 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
     frame.id = raw_frame.id;
     frame.raw_data = raw_frame.data;
     frame.receive_time = time;
-    if (dbc_file_)
-      frame.frame_def = dbc::find_frame_def(*dbc_file_, raw_frame.id);
+    if (bus_def_)
+      frame.frame_def = find_frame_def(*bus_def_, raw_frame.id);
     frames_[frame.id] = frame;
   }
 }

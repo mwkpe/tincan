@@ -12,11 +12,11 @@
 #include "network/canrawframe.h"
 
 
-namespace dbc { struct File; }
-
-
 namespace tin
 {
+
+
+struct Can_bus_def;
 
 
 class Can_bus : public QObject
@@ -24,7 +24,7 @@ class Can_bus : public QObject
   Q_OBJECT
 
 public:
-  void set_description(const dbc::File* file) { dbc_file_ = file; };
+  void set_definition(const Can_bus_def* bus_def) { bus_def_ = bus_def; };
   void reset_frames() { frames_.clear(); }
   std::tuple<bool, tin::Can_frame> frame(std::uint32_t id) const;
 
@@ -32,7 +32,7 @@ public slots:
   void add_frame(std::uint64_t time, can::Raw_frame bus_frame);
 
 private:
-  const dbc::File* dbc_file_ = nullptr;
+  const Can_bus_def* bus_def_ = nullptr;
   std::unordered_map<std::uint32_t, Can_frame> frames_;
 };
 

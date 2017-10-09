@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "bussignal.h"
-#include "file/dbcfile.h"
+#include "canframedef.h"
 
 
 namespace tin
@@ -20,7 +20,7 @@ struct Can_frame
   std::uint64_t receive_time;
   std::array<std::uint8_t, 8> raw_data;
   std::vector<Bus_signal> bus_signals;
-  const dbc::Frame_def* frame_def = nullptr;
+  const Can_frame_def* frame_def = nullptr;
 };
 
 

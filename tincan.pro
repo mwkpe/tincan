@@ -13,7 +13,8 @@ CONFIG += c++1z
 TARGET = tincan
 TEMPLATE = app
 
-INCLUDEPATH += C:/dev/boost_1_65_1
+INCLUDEPATH += $$PWD/src \
+    C:/dev/boost_1_65_1
 LIBS += -lstdc++fs
 
 # The following define makes your compiler emit warnings if you use
@@ -27,10 +28,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
 SOURCES += src/main.cpp \
-    src/mainwindow.cpp \
-    src/canbus.cpp \
+    src/ui/mainwindow.cpp \
     src/util.cpp \
     src/file/dbcparser.cpp \
     src/models/canbusmodel.cpp \
@@ -39,12 +38,11 @@ SOURCES += src/main.cpp \
     src/models/treemodel.cpp \
     src/network/canreceiver.cpp \
     src/network/udpreceiver.cpp \
-    src/models/bussignalitem.cpp
+    src/models/bussignalitem.cpp \
+    src/tincan/canbus.cpp \
+    src/tincan/translate.cpp
 
-HEADERS += src/mainwindow.h \
-    src/bussignal.h \
-    src/canbus.h \
-    src/canframe.h \
+HEADERS += src/ui/mainwindow.h \
     src/util.h \
     src/file/dbcfile.h \
     src/file/dbcparser.h \
@@ -55,7 +53,13 @@ HEADERS += src/mainwindow.h \
     src/network/canrawframe.h \
     src/network/canreceiver.h \
     src/network/udpreceiver.h \
-    src/models/bussignalitem.h
-
+    src/models/bussignalitem.h \
+    src/tincan/bussignal.h \
+    src/tincan/bussignaldef.h \
+    src/tincan/canbus.h \
+    src/tincan/canbusdef.h \
+    src/tincan/canframe.h \
+    src/tincan/canframedef.h \
+    src/tincan/translate.h
 
 FORMS += ui/mainwindow.ui

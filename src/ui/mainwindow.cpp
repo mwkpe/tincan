@@ -9,6 +9,7 @@
 #include "util.h"
 #include "network/canrawframe.h"
 #include "file/dbcparser.h"
+#include "tincan/translate.h"
 
 
 Main_window::Main_window(QWidget* parent)
@@ -46,7 +47,8 @@ Main_window::Main_window(QWidget* parent)
       util::Timer timer{true};
       dbc_file_ = dbc::parse(filename.toStdString());
       std::cout << dbc_file_.frame_defs.size() << '\n' << timer.stop_seconds() << std::endl;
-      can_bus_.set_description(&dbc_file_);
+      can_bus_def_ = tin::translate(dbc_file_);
+      can_bus_.set_definition(&can_bus_def_);
     }
     catch (const dbc::Parse_error& e) {
       std::cerr << e.what() << std::endl;
