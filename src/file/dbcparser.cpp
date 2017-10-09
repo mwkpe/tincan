@@ -15,8 +15,8 @@ BOOST_FUSION_ADAPT_STRUCT(
   (std::string, name)
   (std::uint32_t, pos)
   (std::uint32_t, len)
-  (dbc::byte_order, order)
-  (dbc::value_sign, sign)
+  (dbc::Byte_order, order)
+  (dbc::Value_sign, sign)
   (double, factor)
   (double, offset)
   (double, minimum)
@@ -38,24 +38,24 @@ namespace x3 = boost::spirit::x3;
 namespace latin1 = boost::spirit::x3::iso8859_1;
 
 
-struct signs_ : x3::symbols<dbc::value_sign>
+struct signs_ : x3::symbols<dbc::Value_sign>
 {
   signs_()
   {
     add
-      ("+", dbc::value_sign::unsigned_)
-      ("-", dbc::value_sign::signed_)
+      ("+", dbc::Value_sign::Unsigned)
+      ("-", dbc::Value_sign::Signed)
     ;
   }
 } signs;
 
-struct oders_ : x3::symbols<dbc::byte_order>
+struct oders_ : x3::symbols<dbc::Byte_order>
 {
   oders_()
   {
     add
-      ("0", dbc::byte_order::moto)
-      ("1", dbc::byte_order::intel)
+      ("0", dbc::Byte_order::Moto)
+      ("1", dbc::Byte_order::Intel)
     ;
   }
 } orders;

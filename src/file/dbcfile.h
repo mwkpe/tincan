@@ -13,8 +13,8 @@ namespace dbc
 {
 
 
-enum class byte_order { moto, intel };
-enum class value_sign { signed_, unsigned_ };
+enum class Byte_order { Moto, Intel };
+enum class Value_sign { Signed, Unsigned };
 
 
 struct Signal_def
@@ -22,8 +22,8 @@ struct Signal_def
   std::string name;
   std::uint32_t pos;
   std::uint32_t len;
-  byte_order order;
-  value_sign sign;
+  Byte_order order;
+  Value_sign sign;
   double factor;
   double offset;
   double minimum;
