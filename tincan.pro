@@ -7,6 +7,7 @@
 QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 QT += network
+QT += charts
 
 CONFIG += c++1z
 
