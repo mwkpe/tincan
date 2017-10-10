@@ -38,7 +38,7 @@ Main_window::Main_window(QWidget* parent)
 
   connect(&can_receiver_, &can::Receiver::received_frame, &can_bus_, &tin::Can_bus::add_frame);
   connect(&can_receiver_, &can::Receiver::received_frame_id,
-      &can_bus_model_, &tin::Can_bus_model::update_frame);
+      &can_bus_model_, &tin::Can_bus_model::update_data);
 
   connect(ui->pushLoadDbc, &QPushButton::clicked, this, [this] {
     auto filename = QFileDialog::getOpenFileName(this, tr("Open DBC file"), QString{},

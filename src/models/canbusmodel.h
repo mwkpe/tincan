@@ -26,7 +26,7 @@ public:
   void reset();
 
 public slots:
-  void update_frame(std::uint32_t id);
+  void update_data(std::uint32_t frame_id);
 
 private:
   Can_frame_item* find_item(std::uint32_t frame_id);
