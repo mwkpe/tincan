@@ -26,7 +26,7 @@ class Can_bus : public QObject
 public:
   void set_definition(const Can_bus_def* bus_def) { bus_def_ = bus_def; };
   void reset_frames() { frames_.clear(); }
-  std::tuple<bool, tin::Can_frame> frame(std::uint32_t id) const;
+  const tin::Can_frame* frame(std::uint32_t id) const;
 
 public slots:
   void add_frame(std::uint64_t time, can::Raw_frame bus_frame);

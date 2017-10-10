@@ -15,12 +15,12 @@ namespace tin
 class Bus_signal_item final : public Tree_item
 {
 public:
-  Bus_signal_item(Bus_signal bus_signal_, Tree_item* parent = nullptr)
+  Bus_signal_item(const Bus_signal* bus_signal_, Tree_item* parent = nullptr)
       : Tree_item{parent}, bus_signal_{bus_signal_} {}
   virtual QVariant data(int column) const override;
 
 private:
-  Bus_signal bus_signal_;
+  const Bus_signal* bus_signal_;
 };
 
 

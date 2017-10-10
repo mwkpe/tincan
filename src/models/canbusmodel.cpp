@@ -34,24 +34,19 @@ void tin::Can_bus_model::reset()
 }
 
 
-void tin::Can_bus_model::update_frame(std::uint32_t id)
+void tin::Can_bus_model::update_data(std::uint32_t frame_id)
 {
-  if (auto [b, frame] = can_bus_->frame(id); b) {
-    if (auto* item = find_item(id); item) {  // Update existing frame
-      item->update_frame(frame);
-      auto row = item->row();
-      if (row >= 0)
-        dataChanged(index(row, 0), index(row, columnCount()));
-    }
-    else {  // Add new frame
+  if (auto* item = find_item(frame_id); item) {  // Update existing frame
+    auto row = item->row();
+    if (row >= 0)
+      dataChanged(index(row, 0), index(row, columnCount()));
+  }
+  else {  // Add new frame
+    if (auto* frame = can_bus_->frame(frame_id); frame) {
       auto frame_item = std::make_unique<Can_frame_item>(frame, root_item_.get());
-      if (frame.frame_def) {
-        for (const auto& signal_def : frame.frame_def->bus_signal_defs) {
-          frame_item->add_child(std::make_unique<Bus_signal_item>(
-              Bus_signal{0ull, 0ull, &signal_def}, frame_item.get()));
-        }
-      }
-      frame_items_.insert({id, frame_item.get()});
+      for (const auto& signal : frame->bus_signals)
+        frame_item->add_child(std::make_unique<Bus_signal_item>(&signal, frame_item.get()));
+      frame_items_.insert({frame_id, frame_item.get()});
       beginInsertRows(QModelIndex{}, rowCount(), rowCount());
       root_item_->add_child(std::move(frame_item));
       endInsertRows();
