@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <tuple>
 #include <fstream>
+#include <algorithm>
 #include <experimental/filesystem>
 
 #include <boost/spirit/home/x3.hpp>
@@ -127,6 +128,13 @@ std::tuple<bool, dbc::Frame_def> parse_frame_def(std::string_view line)
 }
 
 
+void sort_signals(dbc::Frame_def& frame_def)
+{
+  std::sort(std::begin(frame_def.signal_defs), std::end(frame_def.signal_defs),
+      [](const auto& a, const auto& b){ return a.pos < b.pos; });
+}
+
+
 }  // namespace
 
 
@@ -142,19 +150,22 @@ dbc::File dbc::parse(std::string_view filepath)
 
   std::string line;
   while (std::getline(fs, line)) {
-    if (auto [success, Signal_def] = parse_signal_def(line); success) {
+    if (auto [success, signal_def] = parse_signal_def(line); success) {
       if (dbc_file.frame_defs.empty())
         throw Parse_error{"Format error"};
       else
-        dbc_file.frame_defs.back().signal_defs.push_back(Signal_def);
+        dbc_file.frame_defs.back().signal_defs.push_back(signal_def);
     }
-    else if (auto [success, Frame_def] = parse_frame_def(line); success) {
-      dbc_file.frame_defs.push_back(Frame_def);
+    else if (auto [success, frame_def] = parse_frame_def(line); success) {
+      dbc_file.frame_defs.push_back(frame_def);
     }
     else if (messages_block_done(line)) {
-      return dbc_file;
+      break;
     }
   }
+
+  for (auto& frame_def : dbc_file.frame_defs)
+    sort_signals(frame_def);
 
   return dbc_file;
 }
