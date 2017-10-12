@@ -10,11 +10,15 @@ QT += network
 QT += charts
 
 CONFIG += c++1z
+CONFIG(release, debug|release) {
+    CONFIG += optimize_full
+}
 
 TARGET = tincan
 TEMPLATE = app
 
 INCLUDEPATH += $$PWD/src \
+    $$PWD/ext \
     C:/dev/boost_1_65_1
 LIBS += -lstdc++fs
 
@@ -41,7 +45,13 @@ SOURCES += src/main.cpp \
     src/network/udpreceiver.cpp \
     src/models/bussignalitem.cpp \
     src/tincan/canbus.cpp \
-    src/tincan/translate.cpp
+    src/tincan/translate.cpp \
+    ext/fmt/fmtlib.cc \
+    src/models/bussignaldefitem.cpp \
+    src/models/canbusdefmodel.cpp \
+    src/models/canframedefitem.cpp \
+    src/tincan/busdefreader.cpp \
+    src/tincan/busdefwriter.cpp
 
 HEADERS += src/ui/mainwindow.h \
     src/util.h \
@@ -61,6 +71,13 @@ HEADERS += src/ui/mainwindow.h \
     src/tincan/canbusdef.h \
     src/tincan/canframe.h \
     src/tincan/canframedef.h \
-    src/tincan/translate.h
+    src/tincan/translate.h \
+    ext/fmt/fmtlib.h \
+    src/models/bussignaldefitem.h \
+    src/models/canbusdefmodel.h \
+    src/models/canframedefitem.h \
+    src/tincan/busdefreader.h \
+    src/tincan/busdefwriter.h \
+    src/tincan/errors.h
 
 FORMS += ui/mainwindow.ui
