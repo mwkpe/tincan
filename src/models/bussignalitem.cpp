@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <QString>
+#include "tincan/bussignal.h"
 
 
 QVariant tin::Bus_signal_item::data(int column) const

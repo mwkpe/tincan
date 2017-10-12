@@ -16,7 +16,7 @@ namespace tin
 class Can_bus;
 
 
-class Can_bus_model : public Tree_model
+class Can_bus_model final : public Tree_model
 {
   Q_OBJECT
 

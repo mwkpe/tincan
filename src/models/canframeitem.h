@@ -3,8 +3,6 @@
 
 
 #include <QVariant>
-
-#include "tincan/canframe.h"
 #include "treeitem.h"
 
 
@@ -12,15 +10,18 @@ namespace tin
 {
 
 
+struct Can_frame;
+
+
 class Can_frame_item final : public Tree_item
 {
 public:
-  Can_frame_item(const Can_frame* frame, Tree_item* parent = nullptr)
-      : Tree_item{parent}, frame_{frame} {}
+  Can_frame_item(const Can_frame* can_frame, Tree_item* parent = nullptr)
+      : Tree_item{parent}, can_frame_{can_frame} {}
   virtual QVariant data(int column) const override;
 
 private:
-  const Can_frame* frame_;
+  const Can_frame* can_frame_;
 };
 
 

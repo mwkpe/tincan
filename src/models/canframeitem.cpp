@@ -2,17 +2,18 @@
 
 
 #include <QString>
+#include "tincan/canframe.h"
 
 
 QVariant tin::Can_frame_item::data(int column) const
 {
   switch (column) {
-    case 0: return frame_->frame_def ? QString::fromStdString(frame_->frame_def->name) : "FRAME";
-    case 1: return frame_->id;
-    case 2: return frame_->receive_time;
+    case 0: return can_frame_->frame_def ? QString::fromStdString(can_frame_->frame_def->name) : "FRAME";
+    case 1: return can_frame_->id;
+    case 2: return can_frame_->receive_time;
     case 3: {
       QString hex_data;
-      for (auto it = std::rbegin(frame_->raw_data); it != std::rend(frame_->raw_data); ++it) {
+      for (auto it = std::rbegin(can_frame_->raw_data); it != std::rend(can_frame_->raw_data); ++it) {
         hex_data += QString::number(*it, 16).rightJustified(2, '0');
         hex_data += " ";
       }
