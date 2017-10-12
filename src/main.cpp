@@ -1,5 +1,6 @@
 #include "ui/mainwindow.h"
 #include <QApplication>
+#include <QLocale>
 #include <QStyleFactory>
 
 
@@ -7,6 +8,8 @@ int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
   a.setStyle(QStyleFactory::create("Fusion"));
+
+  QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
 
   QPalette dark;
   dark.setColor(QPalette::Window, QColor(53, 53, 53));
@@ -20,7 +23,7 @@ int main(int argc, char *argv[])
   dark.setColor(QPalette::ButtonText, Qt::white);
   dark.setColor(QPalette::BrightText, Qt::red);
   dark.setColor(QPalette::Link, QColor(42, 130, 218));
-  dark.setColor(QPalette::Highlight, QColor(254,165,0));
+  dark.setColor(QPalette::Highlight, QColor(51,231,247));
   dark.setColor(QPalette::HighlightedText, Qt::black);
   a.setPalette(dark);
 
