@@ -19,8 +19,13 @@ TEMPLATE = app
 
 INCLUDEPATH += $$PWD/src \
     $$PWD/ext \
-    C:/dev/boost_1_65_1
-LIBS += -lstdc++fs
+    C:/dev/boost_1_65_1 \
+    C:/dev/asio-1.10.6/include
+
+LIBS += -lstdc++fs \
+    -lws2_32
+
+DEFINES += ASIO_STANDALONE
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -42,7 +47,6 @@ SOURCES += src/main.cpp \
     src/models/treeitem.cpp \
     src/models/treemodel.cpp \
     src/network/canreceiver.cpp \
-    src/network/udpreceiver.cpp \
     src/models/bussignalitem.cpp \
     src/tincan/canbus.cpp \
     src/tincan/translate.cpp \
@@ -51,7 +55,8 @@ SOURCES += src/main.cpp \
     src/models/canbusdefmodel.cpp \
     src/models/canframedefitem.cpp \
     src/tincan/busdefreader.cpp \
-    src/tincan/busdefwriter.cpp
+    src/tincan/busdefwriter.cpp \
+    src/network/udpasyncreceiver.cpp
 
 HEADERS += src/ui/mainwindow.h \
     src/util.h \
@@ -63,7 +68,6 @@ HEADERS += src/ui/mainwindow.h \
     src/models/treemodel.h \
     src/network/canrawframe.h \
     src/network/canreceiver.h \
-    src/network/udpreceiver.h \
     src/models/bussignalitem.h \
     src/tincan/bussignal.h \
     src/tincan/bussignaldef.h \
@@ -78,6 +82,8 @@ HEADERS += src/ui/mainwindow.h \
     src/models/canframedefitem.h \
     src/tincan/busdefreader.h \
     src/tincan/busdefwriter.h \
-    src/tincan/errors.h
+    src/tincan/errors.h \
+    src/network/udpasyncreceiver.h \
+    src/network/udpsocketguard.h
 
 FORMS += ui/mainwindow.ui
