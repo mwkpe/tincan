@@ -11,6 +11,11 @@ Status
 ---
 WIP
 
+Features
+---
+* Live view of received frames
+* Import of frame and signal definitions from DBC files for a more detailed view
+
 Acknowledgements
 ---
 Tincan is using a rubenvb [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds) build, [Qt](http://https://www.qt.io), [Spirit X3](http://boost-spirit.com), [ASIO](https://think-async.com/), [GSL](https://github.com/Microsoft/GSL), [fmt](https://github.com/fmtlib/fmt), [JSON](https://github.com/nlohmann/json) and [doctest](https://github.com/onqtam/doctest).
