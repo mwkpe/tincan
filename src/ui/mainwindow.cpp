@@ -3,11 +3,14 @@
 
 
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 #include <QFileDialog>
 #include <QChart>
 #include <QLineSeries>
 #include <QPainter>
+#include <QFont>
 #include <QGraphicsLayout>
 #include <QMargins>
 
@@ -20,11 +23,16 @@
 #include "tincan/busdefwriter.h"
 
 
+Q_DECLARE_METATYPE(can::Raw_frame)
+
+
 Main_window::Main_window(QWidget* parent)
     : QMainWindow{parent}, ui{new Ui::MainWindow}, can_bus_model_{&can_bus_}
 {
   ui->setupUi(this);
   setWindowTitle("tincan");
+
+  qRegisterMetaType<can::Raw_frame>("Raw_frame");
 
   // Qt Designer bug keeps setting this false
   ui->treeViewFrames->header()->setVisible(true);
@@ -33,26 +41,27 @@ Main_window::Main_window(QWidget* parent)
   ui->treeViewBusDef->setModel(&can_bus_def_model_);
   ui->treeViewFrames->setAlternatingRowColors(true);
   ui->treeViewBusDef->setAlternatingRowColors(true);
+  ui->treeViewBusDef->setFont(QFont{"Consolas"});
+  ui->treeViewFrames->setFont(QFont{"Consolas"});
 
   connect(ui->pushOpenClose, &QPushButton::clicked, this, [this] {
-    if (can_receiver_.is_open()) {
-      can_receiver_.close();
+    if (can_receiver_.is_running()) {
+      can_receiver_.stop();
       can_bus_.reset_frames();
       can_bus_model_.reset();
       ui->pushOpenClose->setText("Open");
-      ui->pushImportBusDef->setEnabled(true);
     }
     else {
-      if (can_receiver_.open(ui->lineIp->text(), ui->linePort->text().toUShort())) {
-        ui->pushOpenClose->setText("Close");
-        ui->pushImportBusDef->setEnabled(false);
-      }
+      std::thread{&can::Receiver::start, &can_receiver_, ui->lineIp->text().toStdString(),
+          ui->linePort->text().toUShort()}.detach();
+      ui->pushOpenClose->setText("Close");
     }
   });
 
-  connect(&can_receiver_, &can::Receiver::received_frame, &can_bus_, &tin::Can_bus::add_frame);
+  connect(&can_receiver_, &can::Receiver::received_frame,
+      &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
   connect(&can_receiver_, &can::Receiver::received_frame_id,
-      &can_bus_model_, &tin::Can_bus_model::update_data);
+      &can_bus_model_, &tin::Can_bus_model::update_data, Qt::QueuedConnection);
 
   connect(ui->pushSaveAsBusDef, &QPushButton::clicked, this, [this]{
     auto filepath = QFileDialog::getSaveFileName(this, tr("Save bus definition"), QString{},
@@ -100,6 +109,9 @@ Main_window::Main_window(QWidget* parent)
       &can_bus_def_model_, &tin::Can_bus_def_model::reset);
   connect(ui->pushClearBusDef, &QPushButton::clicked, ui->lineBusDefFile, &QLineEdit::clear);
 
+  connect(ui->pushClearBusFrames, &QPushButton::clicked,
+      &can_bus_model_, &tin::Can_bus_model::reset);
+
   chart_view_.setChart(new QtCharts::QChart{});  // QChartView takes ownership
   //chart_view_.setRenderHint(QPainter::Antialiasing, true);
   QtCharts::QChart* chart = chart_view_.chart();
@@ -136,5 +148,13 @@ Main_window::Main_window(QWidget* parent)
 
 Main_window::~Main_window()
 {
+  using namespace std::chrono_literals;
+
+  // Stop receiver
+  if (can_receiver_.is_running()) {
+    can_receiver_.stop();
+    std::this_thread::sleep_for(100ms);
+  }
+
   delete ui;
 }
