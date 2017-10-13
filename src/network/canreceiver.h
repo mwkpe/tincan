@@ -3,18 +3,19 @@
 
 
 #include <cstdint>
+#include <gsl/gsl>
+#include <QObject>
+#include <QMetaType>
 
 #include "canrawframe.h"
-#include "udpreceiver.h"
-
-class QNetworkDatagram;
+#include "udpasyncreceiver.h"
 
 
 namespace can
 {
 
 
-class Receiver : public udp::Receiver
+class Receiver final : public QObject, public net::udp::Async_receiver
 {
   Q_OBJECT
 
@@ -25,7 +26,7 @@ public:
   Receiver& operator=(const Receiver&) = delete;
   Receiver& operator=(Receiver&&) = delete;
 
-  void handle_received_datagram(const QNetworkDatagram* datagram) override;
+  void handle_receive(gsl::span<std::uint8_t> buffer) override;
 
 signals:
   void received_frame(std::uint64_t, can::Raw_frame);
