@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <gsl/gsl>
 #include <QObject>
-#include <QMetaType>
 
 #include "canrawframe.h"
 #include "udpasyncreceiver.h"
