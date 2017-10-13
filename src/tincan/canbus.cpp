@@ -15,12 +15,13 @@ namespace
 
 std::uint32_t lsbit_intel(std::uint32_t msbit_moto, std::uint32_t len)
 {
-  return 64ul - (msbit_moto / 8 + 1 * 8) + (msbit_moto % 8) - len + 1;
+  // Recalculate position after swapping bytes
+  return 64ul - ((msbit_moto / 8 + 1) * 8) + (msbit_moto % 8) - len + 1;
 }
 
 
-uint64_t unsigned_raw(const std::array<std::uint8_t, 8>& raw_bytes, std::uint32_t pos,
-    std::uint32_t len, tin::Byte_order order)
+std::variant<uint64_t, int64_t> raw_value(const std::array<std::uint8_t, 8>& raw_bytes,
+    std::uint32_t pos, std::uint32_t len, tin::Byte_order order, tin::Value_sign sign)
 {
   std::uint64_t raw;
   std::memcpy(&raw, &raw_bytes, sizeof(raw));
@@ -30,16 +31,18 @@ uint64_t unsigned_raw(const std::array<std::uint8_t, 8>& raw_bytes, std::uint32_
     pos = lsbit_intel(pos, len);
   }
 
+  // Using unsigned since shift operations on signed values aren't well-defined
   raw <<= 64 - (pos + len);
+  if (sign == tin::Value_sign::Signed)
+    raw = ~raw;  // Prepare value for zero-insertions due to right shift
   raw >>= 64 - len;
+  if (sign == tin::Value_sign::Signed) {
+    raw = ~raw;  // Flipping back to proper value (all inserted zeros are now one)
+    std::int64_t raw_signed;
+    std::memcpy(&raw_signed, &raw, sizeof(raw_signed));
+    return raw_signed;
+  }
   return raw;
-}
-
-
-uint64_t signed_raw(const std::array<std::uint8_t, 8>& raw_bytes, std::uint32_t pos,
-    std::uint32_t len, tin::Byte_order order)
-{
-  return static_cast<std::int64_t>(~unsigned_raw(raw_bytes, pos, len, order)) - 1;
 }
 
 
@@ -47,12 +50,8 @@ void calculate_signal_values(tin::Can_frame& frame)
 {
   for (auto& signal : frame.bus_signals) {
     auto* signal_def = signal.signal_def;
-    if (signal_def->sign == tin::Value_sign::Unsigned) {
-      signal.raw = unsigned_raw(frame.raw_data, signal_def->pos, signal_def->len, signal_def->order);
-    }
-    else {
-      signal.raw = signed_raw(frame.raw_data, signal_def->pos, signal_def->len, signal_def->order);
-    }
+    signal.raw = raw_value(frame.raw_data, signal_def->pos, signal_def->len, signal_def->order,
+        signal_def->sign);
   }
 }
 
