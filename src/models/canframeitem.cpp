@@ -11,8 +11,6 @@ void tin::Can_frame_item::update()
 {
   if (cycle_times_pos_ >= cycle_times_.size()) {
     cycle_times_pos_ = 0;
-//    for (auto i : cycle_times_)
-//      std::cout << i << '\n';
   }
 
   auto delta_time = can_frame_->receive_time - last_frame_time_;
