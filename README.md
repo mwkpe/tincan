@@ -14,7 +14,7 @@ WIP
 Features
 ---
 * Live view of received frames
-* Import of frame and signal definitions from DBC files for a more detailed view
+* Import of frame and signal definitions from DBC files
 
 Acknowledgements
 ---
