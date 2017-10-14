@@ -56,7 +56,8 @@ SOURCES += src/main.cpp \
     src/models/canframedefitem.cpp \
     src/tincan/busdefreader.cpp \
     src/tincan/busdefwriter.cpp \
-    src/network/udpasyncreceiver.cpp
+    src/network/udpasyncreceiver.cpp \
+    src/tincan/signalutil.cpp
 
 HEADERS += src/ui/mainwindow.h \
     src/util.h \
@@ -84,6 +85,7 @@ HEADERS += src/ui/mainwindow.h \
     src/tincan/busdefwriter.h \
     src/tincan/errors.h \
     src/network/udpasyncreceiver.h \
-    src/network/udpsocketguard.h
+    src/network/udpsocketguard.h \
+    src/tincan/signalutil.h
 
 FORMS += ui/mainwindow.ui
