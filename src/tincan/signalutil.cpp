@@ -31,8 +31,8 @@ template<typename T> tin::phys_val calc_phys(T val, double factor, double offset
   // Let's squeeze the result into an integer and hope it fits (sue me)
   return static_cast<std::int64_t>(val * factor + offset);
 }
-template tin::phys_val calc_phys(uint64_t, double, double);
-template tin::phys_val calc_phys(int64_t, double, double);
+template tin::phys_val calc_phys(std::uint64_t, double, double);
+template tin::phys_val calc_phys(std::int64_t, double, double);
 
 
 }
