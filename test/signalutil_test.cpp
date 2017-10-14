@@ -46,7 +46,7 @@ TEST_CASE("pswap64")
 }
 
 
-TEST_CASE("raw_value")
+TEST_CASE("build_raw_value")
 {
   std::array<std::uint8_t, 8> buffer{0};
   buffer[1] = 0b1100'0000;
@@ -111,7 +111,7 @@ TEST_CASE("raw_value")
 }
 
 
-TEST_CASE("phys_value")
+TEST_CASE("calc_phys_value")
 {
   CHECK(Approx(std::get<double>(tin::calc_phys_value(237ull, 0.1, -10))) == 13.7);
   CHECK(Approx(std::get<double>(tin::calc_phys_value(123456789ull, -0.1337, 0))) == -16506172.6893);
