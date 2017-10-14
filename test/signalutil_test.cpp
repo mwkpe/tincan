@@ -58,27 +58,27 @@ TEST_CASE("raw_value")
     auto order = tin::Byte_order::Intel;
     auto sign = tin::Value_sign::Unsigned;
 
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 14, 15, order, sign)) == 28219);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 14, 15, order, sign)) == 28219);
     // Zero in the least significant bit
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 13, 16, order, sign)) == 56438);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 13, 16, order, sign)) == 56438);
     // Zero in more significant bits
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 14, 16, order, sign)) == 28219);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 14, 16, order, sign)) == 28219);
     // Single-byte
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 0, 8, order, sign)) == 0);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 8, 6, order, sign)) == 0);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 8, 7, order, sign)) == 64);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 8, 8, order, sign)) == 192);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 10, 6, order, sign)) == 48);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 18, 6, order, sign)) == 35);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 24, 8, order, sign)) == 27);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 0, 8, order, sign)) == 0);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 8, 6, order, sign)) == 0);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 8, 7, order, sign)) == 64);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 8, 8, order, sign)) == 192);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 10, 6, order, sign)) == 48);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 18, 6, order, sign)) == 35);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 24, 8, order, sign)) == 27);
     // Multi-byte
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 0, 16, order, sign)) == 49152);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 0, 24, order, sign)) == 9355264);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 0, 32, order, sign)) == 462340096);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 16, 24, order, sign)) == 7054);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 19, 5, order, sign)) == 17);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 17, 8, order, sign)) == 199);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 22, 9, order, sign)) == 110);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 0, 16, order, sign)) == 49152);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 0, 24, order, sign)) == 9355264);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 0, 32, order, sign)) == 462340096);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 16, 24, order, sign)) == 7054);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 19, 5, order, sign)) == 17);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 17, 8, order, sign)) == 199);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 22, 9, order, sign)) == 110);
   }
 
   SUBCASE("signed values")
@@ -86,12 +86,14 @@ TEST_CASE("raw_value")
     auto order = tin::Byte_order::Intel;
     auto sign = tin::Value_sign::Signed;
 
-    CHECK(std::get<std::int64_t>(raw_value(buffer, 0, 8, order, sign)) == -256);
-    CHECK(std::get<std::int64_t>(raw_value(buffer, 8, 8, order, sign)) == -64);
-    CHECK(std::get<std::int64_t>(raw_value(buffer, 16, 8, order, sign)) == -114);
-    CHECK(std::get<std::int64_t>(raw_value(buffer, 17, 3, order, sign)) == -1);
-    CHECK(std::get<std::int64_t>(raw_value(buffer, 16, 4, order, sign)) == -2);
-    CHECK(std::get<std::int64_t>(raw_value(buffer, 0, 27, order, sign)) == -74530816);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 0, 8, order, sign)) == 0);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 8, 8, order, sign)) == -64);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 16, 8, order, sign)) == -114);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 17, 3, order, sign)) == -1);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 16, 4, order, sign)) == -2);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 0, 27, order, sign)) == 59686912);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 17, 4, order, sign)) == 7);
+    CHECK(std::get<std::int64_t>(tin::build_raw_value(buffer, 28, 4, order, sign)) == 1);
   }
 
   SUBCASE("moto byte order")
@@ -99,11 +101,27 @@ TEST_CASE("raw_value")
     auto order = tin::Byte_order::Moto;
     auto sign = tin::Value_sign::Unsigned;
 
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 7, 8, order, sign)) == 0);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 15, 8, order, sign)) == 192);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 11, 9, order, sign)) == 17);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 14, 10, order, sign)) == 516);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 15, 22, order, sign)) == 3154822);
-    CHECK(std::get<std::uint64_t>(raw_value(buffer, 17, 3, order, sign)) == 4);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 7, 8, order, sign)) == 0);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 15, 8, order, sign)) == 192);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 11, 9, order, sign)) == 17);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 14, 10, order, sign)) == 516);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 15, 22, order, sign)) == 3154822);
+    CHECK(std::get<std::uint64_t>(tin::build_raw_value(buffer, 17, 3, order, sign)) == 4);
   }
+}
+
+
+TEST_CASE("phys_value")
+{
+  CHECK(Approx(std::get<double>(tin::calc_phys_value(237ull, 0.1, -10))) == 13.7);
+  CHECK(Approx(std::get<double>(tin::calc_phys_value(123456789ull, -0.1337, 0))) == -16506172.6893);
+  CHECK(Approx(std::get<double>(tin::calc_phys_value(1000ull, 0.0001, -0.1))) == 0);
+  CHECK(Approx(std::get<double>(tin::calc_phys_value(1001ull, 0.0001, -0.1))) == 0.0001);
+  CHECK(Approx(std::get<double>(tin::calc_phys_value(999ull, 0.0001, -0.1))) == -0.0001);
+  CHECK(std::get<uint64_t>(tin::calc_phys_value(237ull, 1, 0)) == 237);
+  CHECK(std::get<int64_t>(tin::calc_phys_value(237ull, 10, -1000)) == 1370);
+  CHECK(std::get<int64_t>(tin::calc_phys_value(123456789ull, 1000000000, 0)) == 123456789000000000);
+  CHECK(std::get<int64_t>(tin::calc_phys_value(-1500ll, 1, 0)) == -1500);
+  CHECK(std::get<int64_t>(tin::calc_phys_value(-1500ll, 1, 1500)) == 0);
+  CHECK(std::get<int64_t>(tin::calc_phys_value(1500ll, 3, -3000)) == 1500);
 }

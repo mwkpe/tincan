@@ -13,7 +13,8 @@ void calculate_signal_values(tin::Can_frame& frame)
 {
   for (auto& signal : frame.bus_signals) {
     const auto* def = signal.signal_def;
-    signal.raw = tin::raw_value(frame.raw_data, def->pos, def->len, def->order, def->sign);
+    signal.raw = tin::build_raw_value(frame.raw_data, def->pos, def->len, def->order, def->sign);
+    signal.phys = tin::calc_phys_value(signal.raw, def->factor, def->offset);
   }
 }
 

@@ -21,7 +21,7 @@ tin::Can_bus_model::Can_bus_model(const Can_bus* can_bus, QObject* parent)
 void tin::Can_bus_model::construct()
 {
   root_item_ = std::make_unique<Tree_item>();
-  column_headers_ = {"Object", "ID", "Time", "Cycle", "Data"};
+  column_headers_ = {"Object", "ID / Phys", "Time / Raw", "Cycle", "Data"};
 }
 
 
