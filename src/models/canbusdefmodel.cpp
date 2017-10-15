@@ -20,7 +20,7 @@ tin::Can_bus_def_model::Can_bus_def_model(QObject* parent) : Tree_model{parent}
 void tin::Can_bus_def_model::construct()
 {
   root_item_ = std::make_unique<Tree_item>();
-  column_headers_ = {"Object", "ID / Pos", "Len", "Multiplex", "Value", "Order", "Factor", "Offset",
+  column_headers_ = {"Object", "ID / Pos", "Len", "Mplex", "Value", "Order", "Factor", "Offset",
       "Min", "Max", "Unit"};
 }
 

@@ -21,7 +21,7 @@ tin::Can_bus_model::Can_bus_model(const Can_bus* can_bus, QObject* parent)
 void tin::Can_bus_model::construct()
 {
   root_item_ = std::make_unique<Tree_item>();
-  column_headers_ = {"Object", "ID / Phys", "Time / Raw", "Cycle", "Data"};
+  column_headers_ = {"Object", "ID / Phys", "Time / Unit", "Cycle", "Data"};
 }
 
 
@@ -40,7 +40,7 @@ void tin::Can_bus_model::update_data(std::uint32_t frame_id)
     item->update();
     auto row = item->row();
     if (row >= 0)
-      dataChanged(index(row, 0), index(row, columnCount()));
+      dataChanged(index(row, 0), index(row, columnCount()), QVector<int>{Qt::DisplayRole});
   }
   else {  // Add new frame
     if (auto* frame = can_bus_->frame(frame_id); frame) {

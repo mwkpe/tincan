@@ -16,7 +16,8 @@ QVariant tin::Bus_signal_item::data(int column) const
       else if (std::holds_alternative<std::int64_t>(bus_signal_->phys))
         return std::get<std::int64_t>(bus_signal_->phys);
       return std::get<double>(bus_signal_->phys);
-    case 2:
+    case 2: return QString::fromStdString(bus_signal_->signal_def->unit);
+    case 4:
       if (std::holds_alternative<std::uint64_t>(bus_signal_->raw))
         return std::get<std::uint64_t>(bus_signal_->raw);
       return std::get<std::int64_t>(bus_signal_->raw);
