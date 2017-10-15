@@ -1,5 +1,10 @@
-BO_ 201 MESSAGE: 4 DEVICE
+BO_ 201 VEHICLE: 4 DEVICE
  SG_ CRC : 0|8@1+ (1,0) [0|255] "" Vector__XXX
  SG_ ALIV : 8|4@1+ (1,0) [0|12] "" Vector__XXX
  SG_ VEL : 12|14@1+ (0.01220703125,0) [0|250] "km/h" Vector__XXX
  SG_ MODE : 26|6@1+ (1,0) [10|50] "" Vector__XXX
+
+BO_ 202 RADAR: 4 DEVICE
+ SG_ OBJ_DIST_X : 9|14@0+ (0.01,0) [0|150] "m" Vector__XXX
+ SG_ OBJ_DIST_Y : 7|14@0+ (0.01,0) [0|150] "m" Vector__XXX
+ SG_ OBJ_COLOR : 27|4@0+ (1,0) [0|0] "" Vector__XXX
