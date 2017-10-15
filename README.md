@@ -1,4 +1,4 @@
-# tincan
+# Tincan
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org)
 [![GCC 7.1](https://img.shields.io/badge/GCC-7.1-blue.svg)](https://gcc.gnu.org)
 [![Qt 5.8](https://img.shields.io/badge/Qt-5.8-brightgreen.svg)](http://https://www.qt.io)
