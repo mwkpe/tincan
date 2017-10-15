@@ -34,11 +34,13 @@ void tin::write_can_bus_def(const tin::Can_bus_def& bus_def, std::string_view fi
       signal["value_sign"] = static_cast<int>(signal_def.sign);
       signal["pos"] = signal_def.pos;
       signal["len"] = signal_def.len;
+      signal["multiplex_switch"] = signal_def.multiplex_switch;
+      signal["multiplex_value"] = signal_def.multiplex_value;
       signal["factor"] = signal_def.factor;
       signal["offset"] = signal_def.offset;
       signal["minimum"] = signal_def.minimum;
       signal["maximum"] = signal_def.maximum;
-      //signal["unit"] = signal_def.unit;  // UTF-8 error
+      //signal["unit"] = signal_def.unit;  // TODO: UTF-8 error
       signal["name"] = signal_def.name;
       bus_signals.push_back(signal);
     }

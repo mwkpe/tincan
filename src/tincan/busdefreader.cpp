@@ -45,11 +45,13 @@ tin::Can_bus_def tin::read_can_bus_def(std::string_view filepath)
       signal_def.sign = static_cast<tin::Value_sign>(s["value_sign"]);
       signal_def.pos = s["pos"];
       signal_def.len = s["len"];
+      signal_def.multiplex_switch = s["multiplex_switch"];
+      signal_def.multiplex_value = s["multiplex_value"];
       signal_def.factor = s["factor"];
       signal_def.offset = s["offset"];
       signal_def.minimum = s["minimum"];
       signal_def.maximum = s["maximum"];
-      //signal_def.unit = s["unit"];  // UTF-8 error
+      //signal_def.unit = s["unit"];  // TODO: UTF-8 error
       signal_def.name = s["name"];
     }
   }
