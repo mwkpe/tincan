@@ -30,7 +30,9 @@ Main_window::Main_window(QWidget* parent)
     : QMainWindow{parent}, ui{new Ui::MainWindow}, can_bus_model_{&can_bus_}
 {
   ui->setupUi(this);
-  setWindowTitle("tincan");
+  setWindowTitle("Tincan");
+  ui->tabWidgetMain->setCurrentIndex(0);
+  ui->tabWidgetDetail->setCurrentIndex(0);
 
   qRegisterMetaType<can::Raw_frame>("Raw_frame");
 
