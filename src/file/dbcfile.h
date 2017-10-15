@@ -20,6 +20,8 @@ enum class Value_sign { Signed, Unsigned };
 struct Signal_def
 {
   std::string name;
+  bool multiplex_switch;
+  std::int32_t multiplex_value;
   std::uint32_t pos;
   std::uint32_t len;
   Byte_order order;

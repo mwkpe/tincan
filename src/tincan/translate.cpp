@@ -20,10 +20,12 @@ tin::Can_bus_def tin::translate(const dbc::File& file)
     for (const dbc::Signal_def& sd : fd.signal_defs) {
       frame_def.bus_signal_defs.emplace_back();
       tin::Bus_signal_def& signal_def = frame_def.bus_signal_defs.back();
+      signal_def.multiplex_switch = sd.multiplex_switch;
       signal_def.order = sd.order == dbc::Byte_order::Intel ? tin::Byte_order::Intel :
           tin::Byte_order::Moto;
       signal_def.sign = sd.sign == dbc::Value_sign::Signed ? tin::Value_sign::Signed :
           tin::Value_sign::Unsigned;
+      signal_def.multiplex_value = sd.multiplex_value;
       signal_def.pos = sd.pos;
       signal_def.len = sd.len;
       signal_def.factor = sd.factor;

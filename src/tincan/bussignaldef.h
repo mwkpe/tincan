@@ -10,14 +10,16 @@ namespace tin
 {
 
 
-enum class Byte_order { Intel, Moto };
-enum class Value_sign { Signed, Unsigned };
+enum class Byte_order : std::uint8_t { Intel, Moto };
+enum class Value_sign : std::uint8_t { Signed, Unsigned };
 
 
 struct Bus_signal_def
 {
+  bool multiplex_switch;
   Byte_order order;
   Value_sign sign;
+  std::int32_t multiplex_value;
   std::uint32_t pos;
   std::uint32_t len;
   double factor;

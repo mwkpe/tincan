@@ -14,6 +14,8 @@
 BOOST_FUSION_ADAPT_STRUCT(
   dbc::Signal_def,
   (std::string, name)
+  (bool, multiplex_switch)
+  (std::int32_t, multiplex_value)
   (std::uint32_t, pos)
   (std::uint32_t, len)
   (dbc::Byte_order, order)
@@ -66,19 +68,24 @@ namespace parsers
 {
 
 
+using x3::long_;
 using x3::ulong_;
 using x3::double_;
+using x3::attr;
+using x3::lexeme;
 using latin1::char_;
 using latin1::space;
 
 
-const auto quoted_string = x3::lexeme['"' >> *(char_ - '"') >> '"'];
+const auto multiplexing_info = (('M' >> attr(true)) | attr(false)) >> (('m' >> long_) | attr(-1));
+const auto signal_name = lexeme[+char_("a-zA-Z0-9_")];
+const auto quoted_string = lexeme['"' >> *(char_ - '"') >> '"'];
 
 
 x3::rule<class signal, dbc::Signal_def> const signal = "signal";
 const auto signal_def =
     x3::lit("SG_")
-    >> +char_("a-zA-Z0-9_") >> ':'
+    >> signal_name >> multiplexing_info >> ':'
     >> ulong_ >> '|' >> ulong_ >> '@'
     >> orders >> signs
     >> '(' >> double_ >> ',' >> double_ >> ')'
