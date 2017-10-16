@@ -8,6 +8,7 @@
 #include "network/canreceiver.h"
 #include "tincan/canbus.h"
 #include "tincan/canbusdef.h"
+#include "tincan/cantracer.h"
 #include "file/dbcfile.h"
 #include "models/canbusmodel.h"
 #include "models/canbusdefmodel.h"
@@ -33,6 +34,7 @@ private:
   tin::Can_bus_def can_bus_def_;
   tin::Can_bus_model can_bus_model_;
   tin::Can_bus_def_model can_bus_def_model_;
+  tin::Can_tracer can_tracer_;
 };
 
 
