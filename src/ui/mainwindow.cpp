@@ -13,6 +13,8 @@
 #include <QFont>
 #include <QGraphicsLayout>
 #include <QMargins>
+#include <QMenu>
+#include <QAction>
 
 #include "util.h"
 #include "network/canrawframe.h"
@@ -21,6 +23,7 @@
 #include "tincan/translate.h"
 #include "tincan/busdefreader.h"
 #include "tincan/busdefwriter.h"
+#include "models/treeitemid.h"
 
 
 Q_DECLARE_METATYPE(can::Raw_frame)
@@ -45,8 +48,52 @@ Main_window::Main_window(QWidget* parent)
   ui->treeViewBusDef->setAlternatingRowColors(true);
   ui->treeViewBusDef->setFont(QFont{"Consolas"});
   ui->treeViewFrames->setFont(QFont{"Consolas"});
+  ui->treeViewBusDef->setUniformRowHeights(true);
+  ui->treeViewFrames->setUniformRowHeights(true);
+  ui->treeViewFrames->setContextMenuPolicy(Qt::CustomContextMenu);
 
-  connect(ui->pushOpenClose, &QPushButton::clicked, this, [this] {
+  ui->plainTrace->setLineWrapMode(QPlainTextEdit::NoWrap);
+  ui->plainTrace->setMaximumBlockCount(256);
+  ui->plainTrace->setFont(QFont{"Consolas", 10});
+  //ui->plainTrace->setCenterOnScroll(true);
+
+  connect(ui->treeViewFrames, &QTreeView::customContextMenuRequested, this, [this]{
+    auto index = ui->treeViewFrames->currentIndex();
+    if (!index.isValid())
+      return;
+    auto* item = static_cast<tin::Tree_item*>(index.internalPointer());
+
+    QMenu menu;
+    QAction trace_frame{"Trace frame"};
+    QAction trace_signal{"Trace signal"};
+    QAction plot_signal{"Plot signal"};
+    switch (item->id()) {
+      case tin::Item_id::Can_frame: {
+        menu.addAction(&trace_frame);
+      }
+      break;
+      case tin::Item_id::Bus_signal: {
+        menu.addAction(&trace_signal);
+        menu.addAction(&plot_signal);
+      }
+      break;
+      default:
+      break;
+    }
+
+    QAction* action = menu.exec(QCursor::pos());
+    if (action == &trace_frame) {
+      can_tracer_.set_frame(static_cast<const tin::Can_frame_item*>(item)->frame());
+      std::cout << "Tracing frame" << std::endl;
+    }
+    else if (action == &trace_signal) {
+      std::cout << "Tracing signal" << std::endl;
+    }
+  });
+
+  connect(&can_tracer_, &tin::Can_tracer::line_ready, ui->plainTrace, &QPlainTextEdit::appendHtml);
+
+  connect(ui->pushOpenClose, &QPushButton::clicked, this, [this]{
     if (can_receiver_.is_running()) {
       can_receiver_.stop();
       can_bus_.reset_frames();
@@ -63,7 +110,9 @@ Main_window::Main_window(QWidget* parent)
   connect(&can_receiver_, &can::Receiver::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
   connect(&can_receiver_, &can::Receiver::received_frame_id,
-      &can_bus_model_, &tin::Can_bus_model::update_data, Qt::QueuedConnection);
+      &can_tracer_, &tin::Can_tracer::update_data, Qt::QueuedConnection);
+  connect(&can_receiver_, &can::Receiver::received_frame_id,
+      &can_bus_model_, &tin::Can_bus_model::update_data_deferred, Qt::QueuedConnection);
 
   connect(ui->pushSaveAsBusDef, &QPushButton::clicked, this, [this]{
     auto filepath = QFileDialog::getSaveFileName(this, tr("Save bus definition"), QString{},
