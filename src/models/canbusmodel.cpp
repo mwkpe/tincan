@@ -2,7 +2,7 @@
 
 
 #include <memory>
-
+#include <QTimer>
 #include "tincan/bussignal.h"
 #include "tincan/canframe.h"
 #include "tincan/canbus.h"
@@ -15,6 +15,16 @@ tin::Can_bus_model::Can_bus_model(const Can_bus* can_bus, QObject* parent)
     : Tree_model{parent}, can_bus_{can_bus}
 {
   construct();
+
+  // Deferred update of tree items since multiple frames with low cycle times
+  // cause a CPU usage spike due to an excessive amount of data update calls
+  QTimer* update_timer = new QTimer{this};
+  connect(update_timer, &QTimer::timeout, this, [this]{
+    for (auto id : updated_frames_)
+      update_data(id);
+    updated_frames_.clear();
+  });
+  update_timer->start(100);
 }
 
 
@@ -31,6 +41,12 @@ void tin::Can_bus_model::reset()
   frame_items_.clear();
   root_item_ = std::make_unique<Tree_item>();
   endResetModel();
+}
+
+
+void tin::Can_bus_model::update_data_deferred(std::uint32_t frame_id)
+{
+  updated_frames_.insert(frame_id);
 }
 
 
