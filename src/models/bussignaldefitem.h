@@ -4,6 +4,7 @@
 
 #include <QVariant>
 #include "treeitem.h"
+#include "treeitemid.h"
 
 
 namespace tin
@@ -17,7 +18,7 @@ class Bus_signal_def_item final : public Tree_item
 {
 public:
   Bus_signal_def_item(const Bus_signal_def* bus_signal_def, Tree_item* parent = nullptr)
-      : Tree_item{parent}, bus_signal_def_{bus_signal_def} {}
+      : Tree_item{Item_id::Bus_signal_def, parent}, bus_signal_def_{bus_signal_def} {}
   virtual QVariant data(int column) const override;
 
 private:
