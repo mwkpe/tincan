@@ -18,11 +18,11 @@ tin::Can_bus_model::Can_bus_model(const Can_bus* can_bus, QObject* parent)
 
   // Deferred update of tree items since multiple frames with low cycle times
   // cause a CPU usage spike due to an excessive amount of data update calls
-  QTimer* update_timer = new QTimer{this};
+  auto* update_timer = new QTimer{this};
   connect(update_timer, &QTimer::timeout, this, [this]{
-    for (auto id : updated_frames_)
+    for (auto id : deferred_updates_)
       update_data(id);
-    updated_frames_.clear();
+    deferred_updates_.clear();
   });
   update_timer->start(100);
 }
@@ -46,7 +46,7 @@ void tin::Can_bus_model::reset()
 
 void tin::Can_bus_model::update_data_deferred(std::uint32_t frame_id)
 {
-  updated_frames_.insert(frame_id);
+  deferred_updates_.insert(frame_id);
 }
 
 

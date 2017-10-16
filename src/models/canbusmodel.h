@@ -35,7 +35,7 @@ private:
 
   const Can_bus* can_bus_;
   std::unordered_map<std::uint32_t, Can_frame_item*> frame_items_;
-  std::unordered_set<std::uint32_t> updated_frames_;
+  std::unordered_set<std::uint32_t> deferred_updates_;
 };
 
 
