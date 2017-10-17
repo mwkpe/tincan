@@ -6,6 +6,8 @@
 #include <chrono>
 #include <thread>
 
+#include <pthread.h>
+
 #include <QFileDialog>
 #include <QChart>
 #include <QLineSeries>
@@ -24,6 +26,8 @@
 #include "tincan/busdefreader.h"
 #include "tincan/busdefwriter.h"
 #include "models/treeitemid.h"
+#include "models/bussignalitem.h"
+#include "models/canframeitem.h"
 
 
 Q_DECLARE_METATYPE(can::Raw_frame)
@@ -40,25 +44,28 @@ Main_window::Main_window(QWidget* parent)
   qRegisterMetaType<can::Raw_frame>("Raw_frame");
 
   // Qt Designer bug keeps setting this false
-  ui->treeViewFrames->header()->setVisible(true);
+  ui->treeFrameView->header()->setVisible(true);
 
-  ui->treeViewFrames->setModel(&can_bus_model_);
+  ui->treeFrameView->setModel(&can_bus_model_);
   ui->treeViewBusDef->setModel(&can_bus_def_model_);
-  ui->treeViewFrames->setAlternatingRowColors(true);
+  ui->treeFrameView->setAlternatingRowColors(true);
   ui->treeViewBusDef->setAlternatingRowColors(true);
   ui->treeViewBusDef->setFont(QFont{"Consolas"});
-  ui->treeViewFrames->setFont(QFont{"Consolas"});
+  ui->treeFrameView->setFont(QFont{"Consolas"});
   ui->treeViewBusDef->setUniformRowHeights(true);
-  ui->treeViewFrames->setUniformRowHeights(true);
-  ui->treeViewFrames->setContextMenuPolicy(Qt::CustomContextMenu);
+  ui->treeFrameView->setUniformRowHeights(true);
+  ui->treeFrameView->setContextMenuPolicy(Qt::CustomContextMenu);
 
   ui->plainTrace->setLineWrapMode(QPlainTextEdit::NoWrap);
   ui->plainTrace->setMaximumBlockCount(256);
   ui->plainTrace->setFont(QFont{"Consolas", 10});
   //ui->plainTrace->setCenterOnScroll(true);
 
-  connect(ui->treeViewFrames, &QTreeView::customContextMenuRequested, this, [this]{
-    auto index = ui->treeViewFrames->currentIndex();
+  ui->splitter->setStretchFactor(0, 3);
+  ui->splitter->setStretchFactor(1, 1);
+
+  connect(ui->treeFrameView, &QTreeView::customContextMenuRequested, this, [this]{
+    auto index = ui->treeFrameView->currentIndex();
     if (!index.isValid())
       return;
     auto* item = static_cast<tin::Tree_item*>(index.internalPointer());
@@ -87,22 +94,42 @@ Main_window::Main_window(QWidget* parent)
       std::cout << "Tracing frame" << std::endl;
     }
     else if (action == &trace_signal) {
+      can_tracer_.set_signal(static_cast<const tin::Bus_signal_item*>(item)->signal(),
+          static_cast<const tin::Can_frame_item*>(item->parent())->frame());
       std::cout << "Tracing signal" << std::endl;
     }
   });
 
   connect(&can_tracer_, &tin::Can_tracer::line_ready, ui->plainTrace, &QPlainTextEdit::appendHtml);
+  connect(ui->pushClearTrace, &QPushButton::clicked, ui->plainTrace, &QPlainTextEdit::clear);
+  connect(ui->pushResetTrace, &QPushButton::clicked, &can_tracer_, &tin::Can_tracer::reset);
+  connect(ui->pushResetTrace, &QPushButton::clicked, ui->plainTrace, &QPlainTextEdit::clear);
+  connect(ui->checkPauseTrace, &QCheckBox::toggled, &can_tracer_, &tin::Can_tracer::set_paused);
+  connect(ui->checkPauseTrace, &QCheckBox::toggled, this, [this](bool paused){
+      if (paused) ui->plainTrace->appendHtml("Paused"); });
 
   connect(ui->pushOpenClose, &QPushButton::clicked, this, [this]{
     if (can_receiver_.is_running()) {
       can_receiver_.stop();
+      using namespace std::chrono_literals;
+      std::this_thread::sleep_for(50ms);
       can_bus_.reset_frames();
       can_bus_model_.reset();
+      can_tracer_.set_frame(nullptr);
+      ui->plainTrace->clear();
       ui->pushOpenClose->setText("Open");
     }
     else {
-      std::thread{&can::Receiver::start, &can_receiver_, ui->lineIp->text().toStdString(),
-          ui->linePort->text().toUShort()}.detach();
+      std::thread can_receiver{&can::Receiver::start, &can_receiver_,
+          ui->lineIp->text().toStdString(), ui->linePort->text().toUShort()};
+/*    sched_param sch;
+      int policy;
+      pthread_getschedparam(can_receiver.native_handle(), &policy, &sch);
+      sch.sched_priority = 2;
+      pthread_setschedparam(can_receiver.native_handle(), SCHED_OTHER, &sch);
+      pthread_getschedparam(can_receiver.native_handle(), &policy, &sch);
+      std::cout << "Receiver running at priority: " << sch.sched_priority << std::endl;*/
+      can_receiver.detach();
       ui->pushOpenClose->setText("Close");
     }
   });
@@ -191,19 +218,15 @@ Main_window::Main_window(QWidget* parent)
   chart->axisX()->setMax(128);
   chart->axisY()->setMax(64);
   ui->verticalChartLayout->addWidget(&chart_view_);
-
-  ui->splitter->setStretchFactor(0, 3);
-  ui->splitter->setStretchFactor(1, 1);
 }
 
 
 Main_window::~Main_window()
 {
-  using namespace std::chrono_literals;
-
   // Stop receiver
   if (can_receiver_.is_running()) {
     can_receiver_.stop();
+    using namespace std::chrono_literals;
     std::this_thread::sleep_for(100ms);
   }
 
