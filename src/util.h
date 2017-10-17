@@ -3,6 +3,10 @@
 
 
 #include <chrono>
+#include <numeric>
+#include <iterator>
+#include <array>
+#include <algorithm>
 
 
 namespace util
@@ -25,6 +29,19 @@ private:
   std::chrono::high_resolution_clock::time_point start_time;
   std::chrono::high_resolution_clock::time_point stop_time;
 };
+
+
+namespace math
+{
+
+
+template<typename T> int mean(T collection)
+{
+  return std::accumulate(std::begin(collection), std::end(collection), 0) / std::size(collection);
+}
+
+
+}  // namespace math
 
 
 }  // namespace util
