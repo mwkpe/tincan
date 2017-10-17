@@ -38,6 +38,9 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
     auto& frame = it->second;
     frame.raw_data = raw_frame.data;
     frame.receive_time = time;
+    auto& prev_time = prev_frame_time_[frame.id];
+    frame.cycle_times.push_back(time - prev_time);
+    prev_time = time;
     if (frame.frame_def)
       calculate_signal_values(frame);
   }
@@ -46,6 +49,7 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
     frame.id = raw_frame.id;
     frame.raw_data = raw_frame.data;
     frame.receive_time = time;
+    prev_frame_time_[frame.id] = time;
     if (bus_def_) {
       if (frame.frame_def = find_frame_def(*bus_def_, raw_frame.id); frame.frame_def) {
         for (const auto& signal_def : frame.frame_def->bus_signal_defs) {

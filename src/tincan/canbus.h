@@ -34,6 +34,7 @@ public slots:
 private:
   const Can_bus_def* bus_def_ = nullptr;
   std::unordered_map<std::uint32_t, Can_frame> frames_;
+  std::unordered_map<std::uint32_t, std::uint64_t> prev_frame_time_;
 };
 
 

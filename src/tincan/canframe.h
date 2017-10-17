@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <array>
 #include <vector>
-
+#include <boost/circular_buffer.hpp>
 #include "bussignal.h"
 #include "canframedef.h"
 
@@ -21,6 +21,7 @@ struct Can_frame
   std::array<std::uint8_t, 8> raw_data;
   std::vector<Bus_signal> bus_signals;
   const Can_frame_def* frame_def = nullptr;
+  boost::circular_buffer<int> cycle_times{32};  // For average calculation
 };
 
 
