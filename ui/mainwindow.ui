@@ -350,9 +350,9 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabFrames">
+       <widget class="QWidget" name="tabFrameView">
         <attribute name="title">
-         <string>Frames</string>
+         <string>Frame  view</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
@@ -398,7 +398,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTreeView" name="treeViewFrames">
+          <widget class="QTreeView" name="treeFrameView">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -411,35 +411,6 @@
            <attribute name="headerVisible">
             <bool>false</bool>
            </attribute>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="tabSignals">
-        <attribute name="title">
-         <string>Signals</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <property name="spacing">
-          <number>4</number>
-         </property>
-         <property name="leftMargin">
-          <number>6</number>
-         </property>
-         <property name="topMargin">
-          <number>6</number>
-         </property>
-         <property name="rightMargin">
-          <number>6</number>
-         </property>
-         <property name="bottomMargin">
-          <number>6</number>
-         </property>
-         <item>
-          <widget class="QTreeView" name="treeViewSignals">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
           </widget>
          </item>
         </layout>
@@ -482,6 +453,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="pushClearTrace">
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="horizontalSpacer_9">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -495,23 +473,35 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushClearTrace">
+            <widget class="QCheckBox" name="checkPauseTrace">
              <property name="text">
-              <string>Clear</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushPauseResumeTrace">
-             <property name="text">
-              <string>Pause</string>
+              <string>Paused</string>
              </property>
             </widget>
            </item>
           </layout>
          </item>
          <item>
-          <widget class="QPlainTextEdit" name="plainTrace"/>
+          <widget class="QPlainTextEdit" name="plainTrace">
+           <property name="contextMenuPolicy">
+            <enum>Qt::NoContextMenu</enum>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
+           </property>
+           <property name="undoRedoEnabled">
+            <bool>false</bool>
+           </property>
+           <property name="lineWrapMode">
+            <enum>QPlainTextEdit::NoWrap</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="plainText">
+            <string/>
+           </property>
+          </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_10">
@@ -559,6 +549,9 @@
             <widget class="QRadioButton" name="radioLogTraceCsv">
              <property name="text">
               <string>CSV</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
