@@ -6,6 +6,7 @@
 #include "tincan/bussignaldef.h"
 #include "tincan/canframedef.h"
 #include "tincan/canbusdef.h"
+#include "treeitemid.h"
 #include "treeitem.h"
 #include "bussignaldefitem.h"
 #include "canframedefitem.h"
@@ -19,7 +20,7 @@ tin::Can_bus_def_model::Can_bus_def_model(QObject* parent) : Tree_model{parent}
 
 void tin::Can_bus_def_model::construct()
 {
-  root_item_ = std::make_unique<Tree_item>();
+  root_item_ = std::make_unique<Tree_item>(Item_id::Root);
   column_headers_ = {"Object", "ID / Pos", "Len", "Mplex", "Value", "Order", "Factor", "Offset",
       "Min", "Max", "Unit"};
 }

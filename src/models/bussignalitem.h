@@ -18,6 +18,7 @@ class Bus_signal_item final : public Tree_item
 public:
   Bus_signal_item(const Bus_signal* bus_signal, Tree_item* parent = nullptr)
       : Tree_item{Item_id::Bus_signal, parent}, bus_signal_{bus_signal} {}
+  const Bus_signal* signal() const { return bus_signal_; }
   virtual QVariant data(int column) const override;
 
 private:
