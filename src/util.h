@@ -37,6 +37,8 @@ namespace math
 
 template<typename T> int mean(T collection)
 {
+  if (std::size(collection) == 0)
+    return 0;
   return std::accumulate(std::begin(collection), std::end(collection), 0) / std::size(collection);
 }
 
