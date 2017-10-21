@@ -1,10 +1,10 @@
-#include "canreceiver.h"
+#include "canudpreceiver.h"
 
 
 #include <chrono>
 
 
-void can::Receiver::handle_receive(gsl::span<std::uint8_t> buffer)
+void can::Udp_receiver::handle_receive(gsl::span<std::uint8_t> buffer)
 {
   if (buffer.size() == sizeof(std::uint64_t) + sizeof(can::Raw_frame)) {
     // Received CAN frame with a timestamp from the CAN receiver

@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QChartView>
 
-#include "network/canreceiver.h"
+#include "network/canudpreceiver.h"
 #include "tincan/canbus.h"
 #include "tincan/canbusdef.h"
 #include "tincan/cantracer.h"
@@ -28,7 +28,7 @@ public:
 private:
   Ui::MainWindow* ui;
   QtCharts::QChartView chart_view_;
-  can::Receiver can_receiver_;
+  can::Udp_receiver can_udp_receiver_;
   dbc::File dbc_file_;
   tin::Can_bus can_bus_;
   tin::Can_bus_def can_bus_def_;

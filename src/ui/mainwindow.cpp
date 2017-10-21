@@ -109,8 +109,8 @@ Main_window::Main_window(QWidget* parent)
       if (paused) ui->plainTrace->appendHtml("Paused"); });
 
   connect(ui->pushOpenClose, &QPushButton::clicked, this, [this]{
-    if (can_receiver_.is_running()) {
-      can_receiver_.stop();
+    if (can_udp_receiver_.is_running()) {
+      can_udp_receiver_.stop();
       using namespace std::chrono_literals;
       std::this_thread::sleep_for(50ms);
       can_bus_.reset_frames();
@@ -120,7 +120,7 @@ Main_window::Main_window(QWidget* parent)
       ui->pushOpenClose->setText("Open");
     }
     else {
-      std::thread can_receiver{&can::Receiver::start, &can_receiver_,
+      std::thread can_receiver{&can::Udp_receiver::start, &can_udp_receiver_,
           ui->lineIp->text().toStdString(), ui->linePort->text().toUShort()};
 /*    sched_param sch;
       int policy;
@@ -134,11 +134,11 @@ Main_window::Main_window(QWidget* parent)
     }
   });
 
-  connect(&can_receiver_, &can::Receiver::received_frame,
+  connect(&can_udp_receiver_, &can::Udp_receiver::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
-  connect(&can_receiver_, &can::Receiver::received_frame_id,
+  connect(&can_udp_receiver_, &can::Udp_receiver::received_frame_id,
       &can_tracer_, &tin::Can_tracer::update_data, Qt::QueuedConnection);
-  connect(&can_receiver_, &can::Receiver::received_frame_id,
+  connect(&can_udp_receiver_, &can::Udp_receiver::received_frame_id,
       &can_bus_model_, &tin::Can_bus_model::update_data_deferred, Qt::QueuedConnection);
 
   connect(ui->pushSaveAsBusDef, &QPushButton::clicked, this, [this]{
@@ -224,8 +224,8 @@ Main_window::Main_window(QWidget* parent)
 Main_window::~Main_window()
 {
   // Stop receiver
-  if (can_receiver_.is_running()) {
-    can_receiver_.stop();
+  if (can_udp_receiver_.is_running()) {
+    can_udp_receiver_.stop();
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(100ms);
   }

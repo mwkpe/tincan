@@ -46,7 +46,6 @@ SOURCES += src/main.cpp \
     src/models/canframeitem.cpp \
     src/models/treeitem.cpp \
     src/models/treemodel.cpp \
-    src/network/canreceiver.cpp \
     src/models/bussignalitem.cpp \
     src/tincan/canbus.cpp \
     src/tincan/translate.cpp \
@@ -58,7 +57,8 @@ SOURCES += src/main.cpp \
     src/tincan/busdefwriter.cpp \
     src/network/udpasyncreceiver.cpp \
     src/tincan/signalutil.cpp \
-    src/tincan/cantracer.cpp
+    src/tincan/cantracer.cpp \
+    src/network/canudpreceiver.cpp
 
 HEADERS += src/ui/mainwindow.h \
     src/util.h \
@@ -69,7 +69,6 @@ HEADERS += src/ui/mainwindow.h \
     src/models/treeitem.h \
     src/models/treemodel.h \
     src/network/canrawframe.h \
-    src/network/canreceiver.h \
     src/models/bussignalitem.h \
     src/tincan/bussignal.h \
     src/tincan/bussignaldef.h \
@@ -88,6 +87,7 @@ HEADERS += src/ui/mainwindow.h \
     src/network/udpasyncreceiver.h \
     src/network/udpsocketguard.h \
     src/tincan/signalutil.h \
-    src/tincan/cantracer.h
+    src/tincan/cantracer.h \
+    src/network/canudpreceiver.h
 
 FORMS += ui/mainwindow.ui
