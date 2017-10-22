@@ -26,6 +26,8 @@ public:
   ~Main_window();
 
 private:
+  void reset();
+
   Ui::MainWindow* ui;
   QtCharts::QChartView chart_view_;
   can::Udp_receiver can_udp_receiver_;
