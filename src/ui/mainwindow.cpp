@@ -113,33 +113,22 @@ Main_window::Main_window(QWidget* parent)
       can_udp_receiver_.stop();
       using namespace std::chrono_literals;
       std::this_thread::sleep_for(50ms);
-      can_bus_.reset_frames();
-      can_bus_model_.reset();
-      can_tracer_.set_frame(nullptr);
-      ui->plainTrace->clear();
       ui->pushOpenClose->setText("Open");
+      reset();
     }
     else {
-      std::thread can_receiver{&can::Udp_receiver::start, &can_udp_receiver_,
-          ui->lineIp->text().toStdString(), ui->linePort->text().toUShort()};
-/*    sched_param sch;
-      int policy;
-      pthread_getschedparam(can_receiver.native_handle(), &policy, &sch);
-      sch.sched_priority = 2;
-      pthread_setschedparam(can_receiver.native_handle(), SCHED_OTHER, &sch);
-      pthread_getschedparam(can_receiver.native_handle(), &policy, &sch);
-      std::cout << "Receiver running at priority: " << sch.sched_priority << std::endl;*/
-      can_receiver.detach();
+      std::thread{&can::Udp_receiver::start, &can_udp_receiver_, ui->lineIp->text().toStdString(),
+          ui->linePort->text().toUShort()}.detach();
       ui->pushOpenClose->setText("Close");
     }
   });
 
   connect(&can_udp_receiver_, &can::Udp_receiver::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
-  connect(&can_udp_receiver_, &can::Udp_receiver::received_frame_id,
-      &can_tracer_, &tin::Can_tracer::update_data, Qt::QueuedConnection);
-  connect(&can_udp_receiver_, &can::Udp_receiver::received_frame_id,
-      &can_bus_model_, &tin::Can_bus_model::update_data_deferred, Qt::QueuedConnection);
+
+  connect(&can_bus_, &tin::Can_bus::data_changed, &can_tracer_, &tin::Can_tracer::update_data);
+  connect(&can_bus_, &tin::Can_bus::data_changed, &can_bus_model_,
+      &tin::Can_bus_model::update_data_deferred);
 
   connect(ui->pushSaveAsBusDef, &QPushButton::clicked, this, [this]{
     auto filepath = QFileDialog::getSaveFileName(this, tr("Save bus definition"), QString{},
@@ -231,4 +220,13 @@ Main_window::~Main_window()
   }
 
   delete ui;
+}
+
+
+void Main_window::reset()
+{
+  can_bus_.reset_frames();
+  can_bus_model_.reset();
+  can_tracer_.set_frame(nullptr);
+  ui->plainTrace->clear();
 }
