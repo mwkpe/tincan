@@ -28,6 +28,9 @@ public:
   void reset_frames() { frames_.clear(); }
   const tin::Can_frame* frame(std::uint32_t id) const;
 
+signals:
+  void data_changed(std::uint32_t);
+
 public slots:
   void add_frame(std::uint64_t time, can::Raw_frame bus_frame);
 

@@ -29,7 +29,6 @@ public:
 
 signals:
   void received_frame(std::uint64_t, can::Raw_frame);
-  void received_frame_id(std::uint32_t);
 };
 
 

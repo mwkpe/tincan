@@ -61,4 +61,6 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
     }
     frames_[frame.id] = frame;
   }
+
+  emit data_changed(raw_frame.id);
 }
