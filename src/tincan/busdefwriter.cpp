@@ -19,16 +19,14 @@ void tin::write_can_bus_def(const tin::Can_bus_def& bus_def, std::string_view fi
   j["format"] = "CAN";
   auto frames = json::array();
 
-  for (const auto& frame_def : bus_def.frame_defs)
-  {
+  for (const auto& frame_def : bus_def.frame_defs) {
     json frame;
     frame["id"] = frame_def.id;
     frame["dlc"] = frame_def.dlc;
     frame["name"] = frame_def.name;
     auto bus_signals = json::array();
 
-    for (const auto& signal_def : frame_def.bus_signal_defs)
-    {
+    for (const auto& signal_def : frame_def.bus_signal_defs) {
       json signal;
       signal["byte_order"] = static_cast<int>(signal_def.order);
       signal["value_sign"] = static_cast<int>(signal_def.sign);
