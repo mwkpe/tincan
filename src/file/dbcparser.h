@@ -16,8 +16,8 @@ namespace dbc
 class Parse_error : public std::runtime_error
 {
 public:
-  Parse_error(const std::string& s) : std::runtime_error{s} {}
-  Parse_error(const char* s) : std::runtime_error{s} {}
+  explicit Parse_error(const std::string& s) : std::runtime_error{s} {}
+  explicit Parse_error(const char* s) : std::runtime_error{s} {}
 };
 
 

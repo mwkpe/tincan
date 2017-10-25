@@ -17,7 +17,7 @@ class Timer
 {
 public:
   Timer() = default;
-  Timer(bool start_running);
+  explicit Timer(bool start_running);
   ~Timer() = default;
 
   void start();
