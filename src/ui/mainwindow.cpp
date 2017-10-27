@@ -21,10 +21,11 @@
 #include "util.h"
 #include "network/canrawframe.h"
 #include "file/dbcparser.h"
+#include "file/dbcwriter.h"
+#include "file/jsonreader.h"
+#include "file/jsonwriter.h"
 #include "tincan/errors.h"
 #include "tincan/translate.h"
-#include "tincan/busdefreader.h"
-#include "tincan/busdefwriter.h"
 #include "models/treeitemid.h"
 #include "models/bussignalitem.h"
 #include "models/canframeitem.h"
@@ -132,26 +133,10 @@ Main_window::Main_window(QWidget* parent)
 
   connect(ui->pushSaveAsBusDef, &QPushButton::clicked, this, [this]{
     auto filepath = QFileDialog::getSaveFileName(this, tr("Save bus definition"), QString{},
-      tr("JSON (*.json)"));
+      tr("DBC (*.dbc)"));
     try {
-      tin::write_can_bus_def(can_bus_def_, filepath.toStdString());
-    } catch (const tin::File_error& e) {
-      std::cerr << e.what() << std::endl;
-    }
-  });
-
-  connect(ui->pushOpenBusDef, &QPushButton::clicked, this, [this]{
-    auto filepath = QFileDialog::getOpenFileName(this, tr("Open bus definition"), QString{},
-      tr("JSON (*.json)"));
-    try {
-      util::Timer timer{true};
-      can_bus_def_ = tin::read_can_bus_def(filepath.toStdString());
-      std::cout << timer.stop_seconds() << std::endl;
-      can_bus_.set_definition(&can_bus_def_);
-      can_bus_def_model_.set(&can_bus_def_);
-      ui->lineBusDefFile->setText(QString::fromStdString(can_bus_def_.source_name));
-    }
-    catch (const tin::File_error& e) {
+      dbc::write(tin::to_dbc_file(can_bus_def_), filepath.toStdString());
+    } catch (const dbc::Write_error& e) {
       std::cerr << e.what() << std::endl;
     }
   });
@@ -163,7 +148,7 @@ Main_window::Main_window(QWidget* parent)
       util::Timer timer{true};
       dbc_file_ = dbc::parse(filepath.toStdString());
       std::cout << dbc_file_.frame_defs.size() << '\n' << timer.stop_seconds() << std::endl;
-      can_bus_def_ = tin::translate(dbc_file_);
+      can_bus_def_ = tin::to_can_bus_def(dbc_file_);
       can_bus_.set_definition(&can_bus_def_);
       can_bus_def_model_.set(&can_bus_def_);
       ui->lineBusDefFile->setText(QString::fromStdString(can_bus_def_.source_name));
