@@ -13,7 +13,8 @@ namespace tin
 {
 
 
-Can_bus_def translate(const dbc::File& file);
+Can_bus_def to_can_bus_def(const dbc::File& file);
+dbc::File to_dbc_file(const tin::Can_bus_def& bus_def);
 
 
 }  // namespace tin
