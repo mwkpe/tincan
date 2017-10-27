@@ -135,7 +135,7 @@ std::tuple<bool, dbc::Frame_def> parse_frame_def(std::string_view line)
 }
 
 
-void sort_signals(dbc::Frame_def& frame_def)
+[[maybe_unused]] void sort_signals(dbc::Frame_def& frame_def)
 {
   std::sort(std::begin(frame_def.signal_defs), std::end(frame_def.signal_defs),
       [](const auto& a, const auto& b){ return a.pos < b.pos; });
@@ -170,9 +170,6 @@ dbc::File dbc::parse(std::string_view filepath)
       break;
     }
   }
-
-  for (auto& frame_def : dbc_file.frame_defs)
-    sort_signals(frame_def);
 
   return dbc_file;
 }
