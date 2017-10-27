@@ -1,3 +1,11 @@
+VERSION ""
+
+NS_:
+
+BS_:
+
+BU_: Vector__XXX, VEHICLE, FLUX_CAPACITOR, TIME_CIRCUITS, RADAR_DEVICE
+
 BO_ 201 VEH_STATE: 8 VEHICLE
   SG_ CRC : 0|8@1+ (1,0) [0|255] "" Vector__XXX
   SG_ ALIV : 8|4@1+ (1,0) [0|15] "" Vector__XXX
