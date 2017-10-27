@@ -1,4 +1,4 @@
-#include "busdefwriter.h"
+#include "jsonwriter.h"
 
 
 #include <fstream>
@@ -12,7 +12,7 @@
 using json = nlohmann::json;
 
 
-void tin::write_can_bus_def(const tin::Can_bus_def& bus_def, std::string_view filepath)
+void tin::write_json(const tin::Can_bus_def& bus_def, std::string_view filepath)
 {
   json j;
   j["version"] = "0.1";

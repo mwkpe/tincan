@@ -1,4 +1,4 @@
-#include "busdefreader.h"
+#include "jsonreader.h"
 
 
 #include <fstream>
@@ -14,7 +14,7 @@ namespace fs = std::experimental::filesystem;
 using json = nlohmann::json;
 
 
-tin::Can_bus_def tin::read_can_bus_def(std::string_view filepath)
+tin::Can_bus_def tin::read_json(std::string_view filepath)
 {
   tin::Can_bus_def bus_def;
 
