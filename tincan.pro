@@ -53,12 +53,13 @@ SOURCES += src/main.cpp \
     src/models/bussignaldefitem.cpp \
     src/models/canbusdefmodel.cpp \
     src/models/canframedefitem.cpp \
-    src/tincan/busdefreader.cpp \
-    src/tincan/busdefwriter.cpp \
     src/network/udpasyncreceiver.cpp \
     src/tincan/signalutil.cpp \
     src/tincan/cantracer.cpp \
-    src/network/canudpreceiver.cpp
+    src/network/canudpreceiver.cpp \
+    src/file/jsonreader.cpp \
+    src/file/jsonwriter.cpp \
+    src/file/dbcwriter.cpp
 
 HEADERS += src/ui/mainwindow.h \
     src/util.h \
@@ -81,13 +82,14 @@ HEADERS += src/ui/mainwindow.h \
     src/models/bussignaldefitem.h \
     src/models/canbusdefmodel.h \
     src/models/canframedefitem.h \
-    src/tincan/busdefreader.h \
-    src/tincan/busdefwriter.h \
     src/tincan/errors.h \
     src/network/udpasyncreceiver.h \
     src/network/udpsocketguard.h \
     src/tincan/signalutil.h \
     src/tincan/cantracer.h \
-    src/network/canudpreceiver.h
+    src/network/canudpreceiver.h \
+    src/file/jsonreader.h \
+    src/file/jsonwriter.h \
+    src/file/dbcwriter.h
 
 FORMS += ui/mainwindow.ui
