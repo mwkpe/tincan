@@ -31,6 +31,7 @@ struct Signal_def
   double minimum;
   double maximum;
   std::string unit;
+  std::vector<std::string> receiver;
 };
 
 struct Frame_def
@@ -38,6 +39,7 @@ struct Frame_def
   std::uint32_t id;
   std::string name;
   std::uint32_t dlc;
+  std::string transmitter;
   std::vector<Signal_def> signal_defs;
 };
 

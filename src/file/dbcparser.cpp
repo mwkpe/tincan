@@ -25,6 +25,7 @@ BOOST_FUSION_ADAPT_STRUCT(
   (double, minimum)
   (double, maximum)
   (std::string, unit)
+  (std::vector<std::string>, receiver)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -32,6 +33,7 @@ BOOST_FUSION_ADAPT_STRUCT(
   (std::uint32_t, id)
   (std::string, name)
   (std::uint32_t, dlc)
+  (std::string, transmitter)
   (std::vector<dbc::Signal_def>, signal_defs)
 )
 
@@ -68,35 +70,37 @@ namespace parsers
 {
 
 
+using x3::char_;
 using x3::long_;
 using x3::ulong_;
 using x3::double_;
+using x3::lit;
 using x3::attr;
 using x3::lexeme;
-using latin1::char_;
-using latin1::space;
 
 
+const auto c_identifier = +char_("a-zA-Z0-9_");
 const auto multiplexing_info = (('M' >> attr(true)) | attr(false)) >> (('m' >> long_) | attr(-1));
-const auto signal_name = lexeme[+char_("a-zA-Z0-9_")];
-const auto quoted_string = lexeme['"' >> *(char_ - '"') >> '"'];
+const auto signal_name = lexeme[c_identifier];
+const auto quoted_string = lexeme['"' >> *(latin1::char_ - '"') >> '"'];
 
 
 x3::rule<class signal, dbc::Signal_def> const signal = "signal";
 const auto signal_def =
-    x3::lit("SG_")
+    lit("SG_")
     >> signal_name >> multiplexing_info >> ':'
     >> ulong_ >> '|' >> ulong_ >> '@'
     >> orders >> signs
     >> '(' >> double_ >> ',' >> double_ >> ')'
     >> '[' >> double_ >> '|' >> double_ >> ']'
     >> quoted_string
+    >> c_identifier % ','
     ;
 BOOST_SPIRIT_DEFINE(signal);
 
 x3::rule<class message, dbc::Frame_def> const frame = "frame";
-const auto frame_def = x3::lit("BO_") >> ulong_ >> +char_("a-zA-Z0-9_") >> ':' >> ulong_
-    >> x3::attr(std::vector<dbc::Signal_def>());
+const auto frame_def = lit("BO_") >> ulong_ >> c_identifier >> ':' >> ulong_ >> c_identifier
+  >> attr(std::vector<dbc::Signal_def>{});
 BOOST_SPIRIT_DEFINE(frame);
 
 
