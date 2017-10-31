@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 
 namespace tin
@@ -12,6 +13,15 @@ namespace tin
 
 enum class Byte_order : std::uint8_t { Intel, Moto };
 enum class Value_sign : std::uint8_t { Signed, Unsigned };
+
+
+struct Bus_signal_meta_data
+{
+  std::int8_t factor_precision = 7;
+  std::int8_t offset_precision = 7;
+  std::int8_t minimum_precision = 7;
+  std::int8_t maximum_precision = 7;
+};
 
 
 struct Bus_signal_def
@@ -28,6 +38,8 @@ struct Bus_signal_def
   double maximum;
   std::string unit;
   std::string name;
+  std::vector<std::string> receiver;
+  Bus_signal_meta_data meta_data;
 };
 
 
