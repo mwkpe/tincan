@@ -74,7 +74,8 @@ std::string to_string(const tin::Can_frame* frame, const tin::Can_frame* prev_fr
   else if (std::holds_alternative<std::int64_t>(signal->phys))
     physical_value = fmt::format("{:>10}", std::get<std::int64_t>(signal->phys));
   else
-    physical_value = fmt::format("{:>10f}", std::get<double>(signal->phys));
+    physical_value = fmt::format("{:>10.{}f}", std::get<double>(signal->phys),
+        signal->signal_def->meta_data.factor_precision);
 
   return fmt::format(signal_format,
       frame->receive_time,
