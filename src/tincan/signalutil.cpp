@@ -3,6 +3,11 @@
 
 #include <cstring>
 #include <cmath>
+
+#ifdef _MSC_VER
+  #include <stdlib.h>
+#endif
+
 #include "bussignaldef.h"
 
 
@@ -35,7 +40,7 @@ template tin::phys_val calc_phys(std::uint64_t, double, double);
 template tin::phys_val calc_phys(std::int64_t, double, double);
 
 
-}
+}  // namespace
 
 
 tin::raw_val tin::build_raw_value(const std::array<std::uint8_t, 8>& buffer, std::uint32_t pos,
@@ -45,7 +50,13 @@ tin::raw_val tin::build_raw_value(const std::array<std::uint8_t, 8>& buffer, std
   std::memcpy(&raw, &buffer, sizeof(raw));
 
   if (order == tin::Byte_order::Moto) {
+#ifdef __GNUC__
     raw = __builtin_bswap64(raw);
+#elif _MSC_VER
+    raw = _byteswap_uint64(raw);
+#else
+    #error "Byte swap required"
+#endif
     pos = pswap64(pos) - len + 1;  // Set position to least significant bit
   }
 
