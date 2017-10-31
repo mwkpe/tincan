@@ -10,6 +10,8 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
+#include "dbcmetaparser.h"
+
 
 BOOST_FUSION_ADAPT_STRUCT(
   dbc::Signal_def,
@@ -26,6 +28,7 @@ BOOST_FUSION_ADAPT_STRUCT(
   (double, maximum)
   (std::string, unit)
   (std::vector<std::string>, receiver)
+  (dbc::Signal_meta_data, meta_data)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -41,6 +44,10 @@ BOOST_FUSION_ADAPT_STRUCT(
 namespace fs = std::experimental::filesystem;
 namespace x3 = boost::spirit::x3;
 namespace latin1 = boost::spirit::x3::iso8859_1;
+
+
+namespace
+{
 
 
 struct signs_ : x3::symbols<dbc::Value_sign>
@@ -64,6 +71,9 @@ struct oders_ : x3::symbols<dbc::Byte_order>
     ;
   }
 } orders;
+
+
+}  // namspace
 
 
 namespace parsers
@@ -95,6 +105,7 @@ const auto signal_def =
     >> '[' >> double_ >> '|' >> double_ >> ']'
     >> quoted_string
     >> c_identifier % ','
+    >> attr(dbc::Signal_meta_data{})
     ;
 BOOST_SPIRIT_DEFINE(signal);
 
@@ -126,6 +137,9 @@ std::tuple<bool, dbc::Signal_def> parse_signal_def(std::string_view line)
   dbc::Signal_def signal;
   bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, latin1::space,
       signal);
+  if (success) {
+    signal.meta_data = dbc::meta::parse_signal(line);
+  }
   return {success, signal};
 }
 
