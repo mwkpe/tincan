@@ -59,7 +59,8 @@ SOURCES += src/main.cpp \
     src/network/canudpreceiver.cpp \
     src/file/jsonreader.cpp \
     src/file/jsonwriter.cpp \
-    src/file/dbcwriter.cpp
+    src/file/dbcwriter.cpp \
+    src/file/dbcmetaparser.cpp
 
 HEADERS += src/ui/mainwindow.h \
     src/util.h \
@@ -90,6 +91,7 @@ HEADERS += src/ui/mainwindow.h \
     src/network/canudpreceiver.h \
     src/file/jsonreader.h \
     src/file/jsonwriter.h \
-    src/file/dbcwriter.h
+    src/file/dbcwriter.h \
+    src/file/dbcmetaparser.h
 
 FORMS += ui/mainwindow.ui
