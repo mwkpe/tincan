@@ -53,9 +53,9 @@ dbc::Signal_meta_data dbc::meta::parse_signal(std::string_view line)
       return meta_data;
     }
     catch (const std::logic_error& e) {
-      return Signal_meta_data{};
+      return {};
     }
   }
 
-  return Signal_meta_data{};
+  return {};
 }
