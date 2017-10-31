@@ -12,13 +12,13 @@ WIP
 
 Features
 ---
-* Live view of received frames
+* Live view of received frames and signals in a tree view
 * Trace view of frame data and signal values
 * Import of frame and signal definitions from DBC files
 
 Build
 ---
-Building Tincan requires a C++17 compliant GCC version and a recent Qt framework build from source using said compiler. The project file must me modified where absolute paths to boost and Asio were used. The other libs are part of the repo.
+Building Tincan requires a C++17 compliant GCC version and a recent Qt framework build from source using said compiler. The project file must be modified where absolute paths to boost and Asio were used. The other libs are part of the repo.
 
 Acknowledgements
 ---
