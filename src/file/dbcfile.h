@@ -17,6 +17,14 @@ enum class Byte_order { Moto, Intel };
 enum class Value_sign { Signed, Unsigned };
 
 
+struct Signal_meta_data
+{
+  std::int8_t factor_precision = 7;
+  std::int8_t offset_precision = 7;
+  std::int8_t minimum_precision = 7;
+  std::int8_t maximum_precision = 7;
+};
+
 struct Signal_def
 {
   std::string name;
@@ -32,6 +40,7 @@ struct Signal_def
   double maximum;
   std::string unit;
   std::vector<std::string> receiver;
+  Signal_meta_data meta_data;
 };
 
 struct Frame_def
@@ -46,6 +55,7 @@ struct Frame_def
 struct File
 {
   std::string name;
+  std::vector<std::string> nodes;
   std::vector<Frame_def> frame_defs;
 };
 
