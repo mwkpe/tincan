@@ -29,7 +29,7 @@ sregex decimal = +_d >> !('.' >> (fractional = +_d)) >> !((set='e','E')
 }  // namespace
 
 
-dbc::Signal_meta_data dbc::meta::parse_signal(std::string_view line)
+dbc::Signal_meta_data dbc::meta::parse_signal(const std::string& line)
 {
   // Calculate required decimal places for correct reproduction (not significant digits)
   auto fractional_precision = [](auto&& match) -> std::int8_t {
@@ -43,7 +43,7 @@ dbc::Signal_meta_data dbc::meta::parse_signal(std::string_view line)
   };
 
   xpr::smatch values;
-  if (xpr::regex_search(std::string{line}, values, decimal_values)) {
+  if (xpr::regex_search(line, values, decimal_values)) {
     try {
       Signal_meta_data meta_data;
       meta_data.factor_precision = fractional_precision(values[factor]);

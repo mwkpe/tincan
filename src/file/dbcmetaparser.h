@@ -5,7 +5,7 @@
 // Parse additional data, e.g. required decimal precision of factor and offset
 
 
-#include <string_view>
+#include <string>
 #include "dbcfile.h"
 
 
@@ -13,7 +13,7 @@ namespace dbc::meta
 {
 
 
-Signal_meta_data parse_signal(std::string_view line);
+Signal_meta_data parse_signal(const std::string& line);
 
 
 }  // namespace dbc::meta

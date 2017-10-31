@@ -137,9 +137,6 @@ std::tuple<bool, dbc::Signal_def> parse_signal_def(std::string_view line)
   dbc::Signal_def signal;
   bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, latin1::space,
       signal);
-  if (success) {
-    signal.meta_data = dbc::meta::parse_signal(line);
-  }
   return {success, signal};
 }
 
@@ -176,10 +173,13 @@ dbc::File dbc::parse(std::string_view filepath)
   std::string line;
   while (std::getline(fs, line)) {
     if (auto [success, signal_def] = parse_signal_def(line); success) {
-      if (dbc_file.frame_defs.empty())
+      if (dbc_file.frame_defs.empty()) {
         throw Parse_error{"Format error"};
-      else
+      }
+      else {
         dbc_file.frame_defs.back().signal_defs.push_back(signal_def);
+        dbc_file.frame_defs.back().signal_defs.back().meta_data = dbc::meta::parse_signal(line);
+      }
     }
     else if (auto [success, frame_def] = parse_frame_def(line); success) {
       dbc_file.frame_defs.push_back(frame_def);
