@@ -20,7 +20,8 @@ mark_tag factor{1}, offset{2}, minimum{3}, maximum{4}, fractional{1}, exponent{2
 
 sregex decimal_values = '(' >> (factor = -+_) >> ',' >> (offset = -+_) >> ')' >> blank
     >> '[' >> (minimum = -+_) >> '|' >> (maximum = -+_) >> ']';
-sregex decimal = +_d >> !('.' >> (fractional = +_d)) >> !('e' >> (exponent = +_d));
+sregex decimal = +_d >> !('.' >> (fractional = +_d)) >> !((set='e','E')
+    >> (exponent = !(set='-','+') >> +_d));
 
 
 }  // namespace
@@ -32,7 +33,8 @@ dbc::Signal_meta_data dbc::meta::parse_signal(std::string_view line)
     xpr::smatch number;
     if (xpr::regex_match(match.str(), number, decimal)) {
       auto exp = number[exponent].length() > 0 ? stoi(number[exponent].str()) : 0;
-      return number[fractional].length() + exp;
+      auto prec = number[fractional].length() - exp;
+      return prec < 0 ? 0 : prec;
     }
     return 0;
   };
