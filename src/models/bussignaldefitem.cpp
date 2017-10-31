@@ -7,24 +7,25 @@
 
 QVariant tin::Bus_signal_def_item::data(int column) const
 {
+  const auto* signal = bus_signal_def_;
   switch (column) {
-    case 0: return QString::fromStdString(bus_signal_def_->name);
-    case 1: return bus_signal_def_->pos;
-    case 2: return bus_signal_def_->len;
+    case 0: return QString::fromStdString(signal->name);
+    case 1: return signal->pos;
+    case 2: return signal->len;
     case 3: {
-      if (bus_signal_def_->multiplex_switch)
+      if (signal->multiplex_switch)
         return "switch";
-      else if (bus_signal_def_->multiplex_value != -1)
-        return bus_signal_def_->multiplex_value;
+      else if (signal->multiplex_value != -1)
+        return signal->multiplex_value;
       return "";
     }
-    case 4: return bus_signal_def_->sign == tin::Value_sign::Unsigned ? "unsigned" : "signed";
-    case 5: return bus_signal_def_->order == tin::Byte_order::Intel ? "intel" : "moto";
-    case 6: return bus_signal_def_->factor;
-    case 7: return bus_signal_def_->offset;
-    case 8: return bus_signal_def_->minimum;
-    case 9: return bus_signal_def_->maximum;
-    case 10: return QString::fromLocal8Bit(bus_signal_def_->unit.c_str());
+    case 4: return signal->sign == tin::Value_sign::Unsigned ? "unsigned" : "signed";
+    case 5: return signal->order == tin::Byte_order::Intel ? "intel" : "moto";
+    case 6: return QString::number(signal->factor, 'f', signal->meta_data.factor_precision);
+    case 7: return QString::number(signal->offset, 'f', signal->meta_data.offset_precision);
+    case 8: return QString::number(signal->minimum, 'f', signal->meta_data.minimum_precision);
+    case 9: return QString::number(signal->maximum, 'f', signal->meta_data.maximum_precision);
+    case 10: return QString::fromLocal8Bit(signal->unit.c_str());
   }
 
   return QVariant{};
