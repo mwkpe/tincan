@@ -17,15 +17,15 @@ BO_ 233 FLUX_STATE: 6 FLUX_CAPACITOR
   SG_ DISPERSAL_RATE : 32|13@1+ (0.01220703125,0) [0|100] "%" Vector__XXX
 
 BO_ 245 DATE_TIME: 5 TIME_CIRCUITS
-  SG_ TIME_TYPE : 0|2@1+ (1,0) [0|3] "" Vector__XXX
-  SG_ YEAR : 2|14@1+ (1,0) [0|9999] "" Vector__XXX
-  SG_ MONTH : 16|4@1+ (1,0) [1|12] "" Vector__XXX
-  SG_ DAY : 20|5@1+ (1,0) [1|31] "" Vector__XXX
-  SG_ AM_PM : 25|1@1+ (1,0) [0|1] "" Vector__XXX
-  SG_ HOUR : 26|4@1+ (1,0) [0|12] "" Vector__XXX
-  SG_ MINUTE : 30|6 @1+ (1,0) [0|60] "" Vector__XXX
+  SG_ TIME_TYPE : 0|2@1+ (1,0) [0|3] "" VEHICLE,FLUX_CAPACITOR
+  SG_ YEAR : 2|14@1+ (1,0) [0|9999] "" VEHICLE,FLUX_CAPACITOR
+  SG_ MONTH : 16|4@1+ (1,0) [1|12] "" VEHICLE,FLUX_CAPACITOR
+  SG_ DAY : 20|5@1+ (1,0) [1|31] "" VEHICLE,FLUX_CAPACITOR
+  SG_ AM_PM : 25|1@1+ (1,0) [0|1] "" VEHICLE,FLUX_CAPACITOR
+  SG_ HOUR : 26|4@1+ (1,0) [0|12] "" VEHICLE,FLUX_CAPACITOR
+  SG_ MINUTE : 30|6@1+ (1,0) [0|60] "" VEHICLE,FLUX_CAPACITOR
 
 BO_ 402 RADAR_OBJ_01: 4 RADAR_DEVICE
- SG_ OBJ_DIST_X : 9|14@0+ (0.01,0) [0|150] "m" Vector__XXX
- SG_ OBJ_DIST_Y : 7|14@0+ (0.01,0) [0|150] "m" Vector__XXX
- SG_ OBJ_COLOR : 27|4@0+ (1,0) [0|0] "" Vector__XXX
+  SG_ OBJ_DIST_X : 9|14@0+ (0.01,0) [0|150] "m" Vector__XXX
+  SG_ OBJ_DIST_Y : 7|14@0+ (0.01,0) [0|150] "m" Vector__XXX
+  SG_ OBJ_COLOR : 27|4@0+ (1,0) [0|0] "" Vector__XXX
