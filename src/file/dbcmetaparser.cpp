@@ -34,7 +34,7 @@ dbc::Signal_meta_data dbc::meta::parse_signal(const std::string& line)
   // Calculate required decimal places for correct reproduction (not significant digits)
   auto fractional_precision = [](auto&& match) -> std::int8_t {
     xpr::smatch number;
-    if (xpr::regex_match(match.str(), number, decimal)) {
+    if (xpr::regex_match(match.first, match.second, number, decimal)) {
       auto exp = number[exponent].length() > 0 ? std::stoi(number[exponent].str()) : 0;
       auto prec = number[fractional].length() - exp;
       return prec < 0 ? 0 : prec;  // Positive exponent may lead to negative precision, e.g 1.0e9
