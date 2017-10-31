@@ -15,11 +15,13 @@ namespace
 
 
 using namespace xpr;
-
 mark_tag factor{1}, offset{2}, minimum{3}, maximum{4}, fractional{1}, exponent{2};
 
+// Fields in DBC signal definition using double type
 sregex decimal_values = '(' >> (factor = -+_) >> ',' >> (offset = -+_) >> ')' >> blank
     >> '[' >> (minimum = -+_) >> '|' >> (maximum = -+_) >> ']';
+
+// Decimal number with optional fractional part and scientific notation
 sregex decimal = +_d >> !('.' >> (fractional = +_d)) >> !((set='e','E')
     >> (exponent = !(set='-','+') >> +_d));
 
@@ -29,7 +31,8 @@ sregex decimal = +_d >> !('.' >> (fractional = +_d)) >> !((set='e','E')
 
 dbc::Signal_meta_data dbc::meta::parse_signal(std::string_view line)
 {
-  auto precision = [](auto&& match) -> std::int8_t {
+  // Calculate required decimal places for correct reproduction (not significant digits)
+  auto fractional_precision = [](auto&& match) -> std::int8_t {
     xpr::smatch number;
     if (xpr::regex_match(match.str(), number, decimal)) {
       auto exp = number[exponent].length() > 0 ? std::stoi(number[exponent].str()) : 0;
@@ -41,12 +44,12 @@ dbc::Signal_meta_data dbc::meta::parse_signal(std::string_view line)
 
   xpr::smatch values;
   if (xpr::regex_search(std::string{line}, values, decimal_values)) {
-    Signal_meta_data meta_data;
     try {
-      meta_data.factor_precision = precision(values[factor]);
-      meta_data.offset_precision = precision(values[offset]);
-      meta_data.minimum_precision = precision(values[minimum]);
-      meta_data.maximum_precision = precision(values[maximum]);
+      Signal_meta_data meta_data;
+      meta_data.factor_precision = fractional_precision(values[factor]);
+      meta_data.offset_precision = fractional_precision(values[offset]);
+      meta_data.minimum_precision = fractional_precision(values[minimum]);
+      meta_data.maximum_precision = fractional_precision(values[maximum]);
       return meta_data;
     }
     catch (const std::logic_error& e) {
