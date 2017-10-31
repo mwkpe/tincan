@@ -33,6 +33,10 @@ TEST_CASE("DBC file parser")
     CHECK(Approx(crc_def->minimum) == 0);
     CHECK(Approx(crc_def->maximum) == 255);
     CHECK(crc_def->unit == "");
+    CHECK(crc_def->meta_data.factor_precision == 0);
+    CHECK(crc_def->meta_data.offset_precision == 0);
+    CHECK(crc_def->meta_data.minimum_precision == 0);
+    CHECK(crc_def->meta_data.maximum_precision == 0);
   }
 
   SUBCASE("signal ALIV")
@@ -48,6 +52,10 @@ TEST_CASE("DBC file parser")
     CHECK(Approx(aliv_def->minimum) == 0);
     CHECK(Approx(aliv_def->maximum) == 15);
     CHECK(aliv_def->unit == "");
+    CHECK(aliv_def->meta_data.factor_precision == 0);
+    CHECK(aliv_def->meta_data.offset_precision == 0);
+    CHECK(aliv_def->meta_data.minimum_precision == 0);
+    CHECK(aliv_def->meta_data.maximum_precision == 0);
   }
 
   SUBCASE("signal VELOCITY")
@@ -63,6 +71,10 @@ TEST_CASE("DBC file parser")
     CHECK(Approx(velocity_def->minimum) == 0);
     CHECK(Approx(velocity_def->maximum) == 140);
     CHECK(velocity_def->unit == "mph");
+    CHECK(velocity_def->meta_data.factor_precision == 2);
+    CHECK(velocity_def->meta_data.offset_precision == 0);
+    CHECK(velocity_def->meta_data.minimum_precision == 0);
+    CHECK(velocity_def->meta_data.maximum_precision == 0);
   }
 
   SUBCASE("signal WIPER_POSITION")
@@ -78,5 +90,9 @@ TEST_CASE("DBC file parser")
     CHECK(Approx(wiper_position_def->minimum) == 0);
     CHECK(Approx(wiper_position_def->maximum) == 180);
     CHECK(wiper_position_def->unit == "deg");
+    CHECK(wiper_position_def->meta_data.factor_precision == 12);
+    CHECK(wiper_position_def->meta_data.offset_precision == 0);
+    CHECK(wiper_position_def->meta_data.minimum_precision == 0);
+    CHECK(wiper_position_def->meta_data.maximum_precision == 0);
   }
 }
