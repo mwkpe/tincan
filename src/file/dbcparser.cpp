@@ -16,8 +16,8 @@
 BOOST_FUSION_ADAPT_STRUCT(
   dbc::Signal_def,
   (std::string, name)
-  (bool, multiplex_switch)
   (std::int32_t, multiplex_value)
+  (bool, multiplex_switch)
   (std::uint32_t, pos)
   (std::uint32_t, len)
   (dbc::Byte_order, order)
@@ -90,7 +90,7 @@ using x3::lexeme;
 
 
 const auto c_identifier = +char_("a-zA-Z0-9_");
-const auto multiplexing_info = (('M' >> attr(true)) | attr(false)) >> (('m' >> long_) | attr(-1));
+const auto multiplex_indicator = (('m' >> long_) | attr(-1)) >> (('M' >> attr(true)) | attr(false));
 const auto signal_name = lexeme[c_identifier];
 const auto quoted_string = lexeme['"' >> *(latin1::char_ - '"') >> '"'];
 
@@ -98,7 +98,7 @@ const auto quoted_string = lexeme['"' >> *(latin1::char_ - '"') >> '"'];
 x3::rule<class signal, dbc::Signal_def> const signal = "signal";
 const auto signal_def =
     lit("SG_")
-    >> signal_name >> multiplexing_info >> ':'
+    >> signal_name >> multiplex_indicator >> ':'
     >> ulong_ >> '|' >> ulong_ >> '@'
     >> orders >> signs
     >> '(' >> double_ >> ',' >> double_ >> ')'

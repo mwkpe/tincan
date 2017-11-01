@@ -28,8 +28,8 @@ struct Signal_meta_data
 struct Signal_def
 {
   std::string name;
-  bool multiplex_switch;
   std::int32_t multiplex_value;
+  bool multiplex_switch;
   std::uint32_t pos;
   std::uint32_t len;
   Byte_order order;
