@@ -3,6 +3,10 @@
 
 #include <memory>
 
+#include <QSize>
+#include <QColor>
+#include <QBrush>
+
 #include "tincan/bussignaldef.h"
 #include "tincan/canframedef.h"
 #include "tincan/canbusdef.h"
@@ -21,8 +25,29 @@ tin::Can_bus_def_model::Can_bus_def_model(QObject* parent) : Tree_model{parent}
 void tin::Can_bus_def_model::construct()
 {
   root_item_ = std::make_unique<Tree_item>(Item_id::Root);
-  column_headers_ = {"Object", "ID / Pos", "Len", "Mplex", "Value", "Order", "Factor", "Offset",
+  column_headers_ = {"Object", "ID/Pos", "Len", "Mux", "Value", "Order", "Factor", "Offset",
       "Min", "Max", "Unit"};
+  column_widths_ = { 200, 80, 40, 40, 70, 60, 140, 140, 140, 140, 80 };
+}
+
+
+QVariant tin::Can_bus_def_model::data(const QModelIndex& index, int role) const
+{
+  if (!index.isValid())
+    return QVariant{};
+
+  switch (role) {
+    case Qt::SizeHintRole: return QSize{column_widths_[index.column()], row_height_};
+    case Qt::ForegroundRole: {
+      auto* item = static_cast<Tree_item*>(index.internalPointer());
+      auto id = item->id();
+      if (id == Item_id::Can_frame_def)
+        return QBrush{QColor{"#33E7F7"}};
+      return Tree_model::data(index, role);
+    }
+  }
+
+  return Tree_model::data(index, role);
 }
 
 
