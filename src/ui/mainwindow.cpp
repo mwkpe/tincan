@@ -13,6 +13,7 @@
 #include <QLineSeries>
 #include <QPainter>
 #include <QFont>
+#include <QFontMetrics>
 #include <QGraphicsLayout>
 #include <QMargins>
 #include <QMenu>
@@ -47,19 +48,25 @@ Main_window::Main_window(QWidget* parent)
   // Qt Designer bug keeps setting this false
   ui->treeFrameView->header()->setVisible(true);
 
+  QFont view_font{"Consolas"};
+  QFont trace_font{"Consolas", 10};
+
+  // Set default value for size hint
+  can_bus_def_model_.set_row_height(QFontMetrics{view_font}.height() - 4);
+
   ui->treeFrameView->setModel(&can_bus_model_);
   ui->treeViewBusDef->setModel(&can_bus_def_model_);
   ui->treeFrameView->setAlternatingRowColors(true);
   ui->treeViewBusDef->setAlternatingRowColors(true);
-  ui->treeViewBusDef->setFont(QFont{"Consolas"});
-  ui->treeFrameView->setFont(QFont{"Consolas"});
+  ui->treeViewBusDef->setFont(view_font);
+  ui->treeFrameView->setFont(view_font);
   ui->treeViewBusDef->setUniformRowHeights(true);
   ui->treeFrameView->setUniformRowHeights(true);
   ui->treeFrameView->setContextMenuPolicy(Qt::CustomContextMenu);
 
   ui->plainTrace->setLineWrapMode(QPlainTextEdit::NoWrap);
   ui->plainTrace->setMaximumBlockCount(256);
-  ui->plainTrace->setFont(QFont{"Consolas", 10});
+  ui->plainTrace->setFont(trace_font);
   //ui->plainTrace->setCenterOnScroll(true);
 
   ui->splitter->setStretchFactor(0, 3);
@@ -151,6 +158,8 @@ Main_window::Main_window(QWidget* parent)
       can_bus_def_ = tin::to_can_bus_def(dbc_file_);
       can_bus_.set_definition(&can_bus_def_);
       can_bus_def_model_.set(&can_bus_def_);
+      for (int i=0; i<can_bus_def_model_.columnCount(); ++i)
+        ui->treeViewBusDef->resizeColumnToContents(i);
       ui->lineBusDefFile->setText(QString::fromStdString(can_bus_def_.source_name));
     }
     catch (const dbc::Parse_error& e) {
