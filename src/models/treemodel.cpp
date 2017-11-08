@@ -73,6 +73,6 @@ QVariant tin::Tree_model::data(const QModelIndex& index, int role) const
   if (role != Qt::DisplayRole)
     return QVariant{};
 
-  Tree_item* item = static_cast<Tree_item*>(index.internalPointer());
+  auto* item = static_cast<Tree_item*>(index.internalPointer());
   return item->data(index.column());
 }
