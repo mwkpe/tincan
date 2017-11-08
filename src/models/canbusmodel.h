@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <QVariant>
+#include <QModelIndex>
+
 #include "canframeitem.h"
 #include "treemodel.h"
 
@@ -24,6 +27,7 @@ class Can_bus_model final : public Tree_model
 public:
   explicit Can_bus_model(const Can_bus* can_bus, QObject* parent = nullptr);
   virtual void construct() override;
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
   void reset();
 
 public slots:

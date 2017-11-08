@@ -2,7 +2,11 @@
 
 
 #include <memory>
+
 #include <QTimer>
+#include <QColor>
+#include <QBrush>
+
 #include "tincan/bussignal.h"
 #include "tincan/canframe.h"
 #include "tincan/canbus.h"
@@ -34,6 +38,24 @@ void tin::Can_bus_model::construct()
 {
   root_item_ = std::make_unique<Tree_item>(Item_id::Root);
   column_headers_ = {"Object", "ID / Phys", "Time / Unit", "Cycle", "Data"};
+}
+
+
+QVariant tin::Can_bus_model::data(const QModelIndex& index, int role) const
+{
+  if (!index.isValid())
+    return QVariant{};
+
+  switch (role) {
+    case Qt::ForegroundRole: {
+      auto* item = static_cast<Tree_item*>(index.internalPointer());
+      if (item->id() == Item_id::Can_frame && item->child_count() > 0)
+        return QBrush{QColor{"#33E7F7"}};
+      return Tree_model::data(index, role);
+    }
+  }
+
+  return Tree_model::data(index, role);
 }
 
 
