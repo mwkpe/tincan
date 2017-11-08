@@ -37,12 +37,15 @@ BOOST_FUSION_ADAPT_STRUCT(
   (std::string, name)
   (std::uint32_t, dlc)
   (std::string, transmitter)
+  (bool, multiplexer)
+  (bool, multiplexer_extended)
   (std::vector<dbc::Signal_def>, signal_defs)
 )
 
 
 namespace fs = std::experimental::filesystem;
 namespace x3 = boost::spirit::x3;
+namespace ascii = boost::spirit::x3::ascii;
 namespace latin1 = boost::spirit::x3::iso8859_1;
 
 
@@ -89,9 +92,9 @@ using x3::attr;
 using x3::lexeme;
 
 
-const auto c_identifier = +char_("a-zA-Z0-9_");
+const auto identifier = +char_("a-zA-Z0-9_");
 const auto multiplex_indicator = (('m' >> long_) | attr(-1)) >> (('M' >> attr(true)) | attr(false));
-const auto signal_name = lexeme[c_identifier];
+const auto signal_name = lexeme[identifier];
 const auto quoted_string = lexeme['"' >> *(latin1::char_ - '"') >> '"'];
 
 
@@ -104,14 +107,14 @@ const auto signal_def =
     >> '(' >> double_ >> ',' >> double_ >> ')'
     >> '[' >> double_ >> '|' >> double_ >> ']'
     >> quoted_string
-    >> c_identifier % ','
+    >> identifier % ','
     >> attr(dbc::Signal_meta_data{})
     ;
 BOOST_SPIRIT_DEFINE(signal);
 
-x3::rule<class message, dbc::Frame_def> const frame = "frame";
-const auto frame_def = lit("BO_") >> ulong_ >> c_identifier >> ':' >> ulong_ >> c_identifier
-  >> attr(std::vector<dbc::Signal_def>{});
+x3::rule<class frame, dbc::Frame_def> const frame = "frame";
+const auto frame_def = lit("BO_") >> ulong_ >> identifier >> ':' >> ulong_ >> identifier
+  >> attr(false) >> attr(false) >> attr(std::vector<dbc::Signal_def>{});
 BOOST_SPIRIT_DEFINE(frame);
 
 
@@ -120,6 +123,31 @@ BOOST_SPIRIT_DEFINE(frame);
 
 namespace
 {
+
+
+inline void parse_nodes(std::string_view line, std::vector<std::string>& nodes)
+{
+  x3::phrase_parse(std::begin(line), std::end(line),
+      x3::lit("BU_:") >> parsers::identifier % ',', ascii::space, nodes);
+}
+
+
+std::tuple<bool, dbc::Signal_def> parse_signal_def(std::string_view line)
+{
+  dbc::Signal_def signal;
+  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, ascii::space,
+      signal);
+  return {success, signal};
+}
+
+
+std::tuple<bool, dbc::Frame_def> parse_frame_def(std::string_view line)
+{ 
+  dbc::Frame_def message;
+  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::frame, ascii::space,
+      message);
+  return {success, message};
+}
 
 
 inline bool messages_block_done(std::string_view line)
@@ -132,28 +160,28 @@ inline bool messages_block_done(std::string_view line)
 }
 
 
-std::tuple<bool, dbc::Signal_def> parse_signal_def(std::string_view line)
-{
-  dbc::Signal_def signal;
-  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::signal, latin1::space,
-      signal);
-  return {success, signal};
-}
-
-
-std::tuple<bool, dbc::Frame_def> parse_frame_def(std::string_view line)
-{ 
-  dbc::Frame_def message;
-  bool success = x3::phrase_parse(std::begin(line), std::end(line), parsers::frame, latin1::space,
-      message);
-  return {success, message};
-}
-
-
 [[maybe_unused]] void sort_signals(dbc::Frame_def& frame_def)
 {
   std::sort(std::begin(frame_def.signal_defs), std::end(frame_def.signal_defs),
       [](const auto& a, const auto& b){ return a.pos < b.pos; });
+}
+
+
+void mark_multiplexer(std::vector<dbc::Frame_def>& frame_defs)
+{
+  // Frames with multiple switch signals or multiplexed switch signals are extended multiplexer
+  for (auto& fd : frame_defs) {
+    int switch_signals = 0;
+    for (const auto& sd : fd.signal_defs) {
+      if (sd.multiplex_switch)
+        switch_signals++;
+      if (!fd.multiplexer_extended && sd.multiplex_switch && sd.multiplex_value > -1)
+        fd.multiplexer_extended = true;
+    }
+    fd.multiplexer = switch_signals > 0;
+    if (!fd.multiplexer_extended)
+      fd.multiplexer_extended = switch_signals > 1;
+  }
 }
 
 
@@ -172,9 +200,12 @@ dbc::File dbc::parse(std::string_view filepath)
 
   std::string line;
   while (std::getline(fs, line)) {
+    if (dbc_file.nodes.empty())
+      parse_nodes(line, dbc_file.nodes);
+    
     if (auto [success, signal_def] = parse_signal_def(line); success) {
       if (dbc_file.frame_defs.empty()) {
-        throw Parse_error{"Format error"};
+        throw Parse_error{"Signal defined before frame"};
       }
       else {
         dbc_file.frame_defs.back().signal_defs.push_back(signal_def);
@@ -187,6 +218,12 @@ dbc::File dbc::parse(std::string_view filepath)
     else if (messages_block_done(line)) {
       break;
     }
+  }
+
+  mark_multiplexer(dbc_file.frame_defs);
+  for (auto& fd : dbc_file.frame_defs) {
+    if (fd.multiplexer_extended)
+      throw Parse_error{"Extended multiplexing not supported"};
   }
 
   return dbc_file;

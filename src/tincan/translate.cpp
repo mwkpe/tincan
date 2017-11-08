@@ -9,6 +9,7 @@ tin::Can_bus_def tin::to_can_bus_def(const dbc::File& file)
 {
   tin::Can_bus_def bus_def;
   bus_def.source_name = file.name;
+  bus_def.nodes = file.nodes;
 
   for (const auto& fd : file.frame_defs) {
     bus_def.frame_defs.emplace_back();
@@ -17,6 +18,7 @@ tin::Can_bus_def tin::to_can_bus_def(const dbc::File& file)
     frame_def.dlc = fd.dlc;
     frame_def.name = fd.name;
     frame_def.transmitter = fd.transmitter;
+    frame_def.multiplexer = fd.multiplexer;
 
     for (const auto& sd : fd.signal_defs) {
       frame_def.bus_signal_defs.emplace_back();
@@ -50,6 +52,7 @@ tin::Can_bus_def tin::to_can_bus_def(const dbc::File& file)
 dbc::File tin::to_dbc_file(const tin::Can_bus_def& bus_def)
 {
   dbc::File dbc_file;
+  dbc_file.nodes = bus_def.nodes;
 
   for (const auto& fd : bus_def.frame_defs) {
     dbc_file.frame_defs.emplace_back();
@@ -58,6 +61,7 @@ dbc::File tin::to_dbc_file(const tin::Can_bus_def& bus_def)
     frame_def.dlc = fd.dlc;
     frame_def.name = fd.name;
     frame_def.transmitter = fd.transmitter;
+    frame_def.multiplexer = fd.multiplexer;
 
     for (const auto& sd : fd.bus_signal_defs) {
       frame_def.signal_defs.emplace_back();

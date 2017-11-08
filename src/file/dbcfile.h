@@ -49,6 +49,8 @@ struct Frame_def
   std::string name;
   std::uint32_t dlc;
   std::string transmitter;
+  bool multiplexer;
+  bool multiplexer_extended;
   std::vector<Signal_def> signal_defs;
 };
 
