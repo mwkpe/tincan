@@ -24,7 +24,15 @@ inline void write_header(std::ofstream& fs)
 
 inline void write_nodes(std::ofstream& fs, const std::vector<std::string> nodes)
 {
-  fs << "BU_: Vector__XXX\n\n";
+  fs << "BU_:";
+  if (!nodes.empty()) {
+    fs << " ";
+    auto last = std::end(nodes) - 1;
+    for (auto it = std::begin(nodes); it != last; ++it)
+      fs << *it << ',';
+    fs << *last;
+  }
+  fs << "\n\n";
 }
 
 
