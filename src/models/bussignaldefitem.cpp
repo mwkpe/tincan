@@ -14,7 +14,7 @@ QVariant tin::Bus_signal_def_item::data(int column) const
     case 2: return signal->len;
     case 3: {
       if (signal->multiplex_switch)
-        return "switch";
+        return "S";
       else if (signal->multiplex_value != -1)
         return signal->multiplex_value;
       return "";
