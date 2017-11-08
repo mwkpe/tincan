@@ -16,6 +16,7 @@ namespace tin
 struct Can_bus_def
 {
   std::string source_name;
+  std::vector<std::string> nodes;
   std::vector<Can_frame_def> frame_defs;
 };
 
