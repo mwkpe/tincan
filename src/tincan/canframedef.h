@@ -19,6 +19,7 @@ struct Can_frame_def
   std::string name;
   std::uint32_t dlc;
   std::string transmitter;
+  bool multiplexer;
   std::vector<Bus_signal_def> bus_signal_defs;
 };
 
