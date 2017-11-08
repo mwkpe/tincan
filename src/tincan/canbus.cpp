@@ -1,6 +1,8 @@
 #include "canbus.h"
 
 
+#include <algorithm>
+
 #include "canbusdef.h"
 #include "signalutil.h"
 
@@ -11,10 +13,29 @@ namespace
 
 void calculate_signal_values(tin::Can_frame& frame)
 {
-  for (auto& signal : frame.bus_signals) {
-    const auto* def = signal.signal_def;
-    signal.raw = tin::build_raw_value(frame.raw_data, def->pos, def->len, def->order, def->sign);
-    signal.phys = tin::calc_phys_value(signal.raw, def->factor, def->offset);
+  if (frame.frame_def->multiplexer) {
+    std::int32_t switch_value = -1;
+    auto it = std::find_if(std::begin(frame.bus_signals), std::end(frame.bus_signals),
+        [&](auto&& s) { return s.signal_def->multiplex_switch; });
+    if (it != std::end(frame.bus_signals)) {
+      const auto* def = it->signal_def;
+      auto raw = tin::build_raw_value(frame.raw_data, def->pos, def->len, def->order, def->sign);
+      switch_value = static_cast<std::int32_t>(std::get<std::uint64_t>(raw));
+    }
+    for (auto& signal : frame.bus_signals) {
+      const auto* def = signal.signal_def;
+      if (def->multiplex_value == -1 || def->multiplex_value == switch_value) {
+        signal.raw = tin::build_raw_value(frame.raw_data, def->pos, def->len, def->order, def->sign);
+        signal.phys = tin::calc_phys_value(signal.raw, def->factor, def->offset);
+      }
+    }
+  }
+  else {
+    for (auto& signal : frame.bus_signals) {
+      const auto* def = signal.signal_def;
+      signal.raw = tin::build_raw_value(frame.raw_data, def->pos, def->len, def->order, def->sign);
+      signal.phys = tin::calc_phys_value(signal.raw, def->factor, def->offset);
+    }
   }
 }
 
