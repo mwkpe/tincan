@@ -22,7 +22,7 @@ inline void write_header(std::ofstream& fs)
 }
 
 
-inline void write_nodes(std::ofstream& fs, const std::vector<std::string> nodes)
+inline void write_nodes(std::ofstream& fs, const std::vector<std::string>& nodes)
 {
   fs << "BU_:";
   if (!nodes.empty()) {
