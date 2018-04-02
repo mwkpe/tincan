@@ -1,5 +1,5 @@
 # Tincan
-<p align="center"><img src="https://github.com/jwkpeter/tincan/blob/master/tincan.png" alt="tincan banner" width="300"></p>
+<p align="center"><img src="https://github.com/mwkpe/tincan/blob/master/tincan.png" alt="tincan banner" width="300"></p>
 <p align="center">Visualization of CAN bus traffic via UDP interface</p>
 
 Description
