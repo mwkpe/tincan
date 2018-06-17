@@ -3,7 +3,6 @@
 
 
 #include <QMainWindow>
-#include <QChartView>
 
 #include "network/canudpreceiver.h"
 #include "tincan/canbus.h"
@@ -29,7 +28,6 @@ private:
   void reset();
 
   Ui::MainWindow* ui;
-  QtCharts::QChartView chart_view_;
   can::Udp_receiver can_udp_receiver_;
   dbc::File dbc_file_;
   tin::Can_bus can_bus_;

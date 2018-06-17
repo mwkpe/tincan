@@ -69,7 +69,7 @@ Main_window::Main_window(QWidget* parent)
   ui->plainTrace->setFont(trace_font);
   //ui->plainTrace->setCenterOnScroll(true);
 
-  ui->splitter->setStretchFactor(0, 3);
+  ui->splitter->setStretchFactor(0, 2);
   ui->splitter->setStretchFactor(1, 1);
 
   connect(ui->treeFrameView, &QTreeView::customContextMenuRequested, this, [this]{
@@ -169,38 +169,8 @@ Main_window::Main_window(QWidget* parent)
   connect(ui->pushClearBusDef, &QPushButton::clicked,
       &can_bus_def_model_, &tin::Can_bus_def_model::reset);
   connect(ui->pushClearBusDef, &QPushButton::clicked, ui->lineBusDefFile, &QLineEdit::clear);
-
   connect(ui->pushClearBusFrames, &QPushButton::clicked,
       &can_bus_model_, &tin::Can_bus_model::reset);
-
-  chart_view_.setChart(new QtCharts::QChart{});  // QChartView takes ownership
-  //chart_view_.setRenderHint(QPainter::Antialiasing, true);
-  QtCharts::QChart* chart = chart_view_.chart();
-  chart->layout()->setContentsMargins(0, 0, 0, 0);
-  chart->setBackgroundRoundness(0);
-  chart->setTheme(QtCharts::QChart::ChartTheme::ChartThemeDark);
-  //chart->setTitle("CRC");
-  chart->setMargins(QMargins{4, 4, 4, 4});
-  QtCharts::QLineSeries* series = new QtCharts::QLineSeries{};
-  series->setUseOpenGL();
-  series->setName("CRC");
-  series->setColor(QColor{51,231,247});
-//  std::uint8_t val = 0;
-//  for (int i=0; i<512; i++)
-//    series->append(i, val++);
-  series->append(0, 0);
-  series->append(255, 255);
-  series->append(256, 0);
-  series->append(511, 255);
-  chart->addSeries(series);
-  //chart->setBackgroundVisible(false);
-  chart->setBackgroundBrush(QBrush{QColor{25, 25, 25}});
-  chart->createDefaultAxes();
-  chart->axisX()->setGridLineVisible(false);
-  chart->axisY()->setGridLineVisible(false);
-  chart->axisX()->setMax(128);
-  chart->axisY()->setMax(64);
-  ui->verticalChartLayout->addWidget(&chart_view_);
 }
 
 
