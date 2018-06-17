@@ -8,8 +8,12 @@
 *.h text
 *.hh text
 *.hpp text
+*.pro text
+*.qrc text
+*.conf text
 *.md text
 
 # Denote all files that are truly binary and should not be modified
 *.png binary
 *.jpg binary
+*.ico binary
