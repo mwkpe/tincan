@@ -58,7 +58,7 @@ inline void write_signal_def(std::ofstream& fs, const dbc::Signal_def& sd)
   // SG_ name : pos|len@order_and_type (factor,offset) [min|max] "unit" receiver{, receiver}
   fs << fmt::format(R"(  SG_ {} {}: {}|{}@{}{} ({:.{}f},{:.{}f}) [{:.{}f}|{:.{}f}] "{}" {})",
       sd.name,
-      sd.multiplex_switch ? "M " : sd.multiplex_value > 0 ? "m{} "_format(sd.multiplex_value) : "",
+      sd.multiplex_switch ? "M " : sd.multiplex_value >= 0 ? "m{} "_format(sd.multiplex_value) : "",
       sd.pos,
       sd.len,
       static_cast<int>(sd.order),
