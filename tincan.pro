@@ -9,7 +9,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 QT += network
 QT += charts
 
-CONFIG += c++1z
+CONFIG += c++17
 CONFIG(release, debug|release) {
     CONFIG += optimize_full
 }
@@ -19,8 +19,8 @@ TEMPLATE = app
 
 INCLUDEPATH += $$PWD/src \
     $$PWD/ext \
-    C:/dev/boost_1_67_0 \
-    C:/dev/asio-1.12.1/include
+    C:/dev/boost_1_71_0 \
+    C:/dev/asio-1.12.2/include
 
 LIBS += -lstdc++fs \
     -lws2_32
