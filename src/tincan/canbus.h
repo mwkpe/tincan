@@ -24,7 +24,7 @@ class Can_bus : public QObject
   Q_OBJECT
 
 public:
-  void set_definition(const Can_bus_def* bus_def) { bus_def_ = bus_def; };
+  void set_definition(const Can_bus_def* bus_def) { bus_def_ = bus_def; }
   void reset_frames() { frames_.clear(); }
   const tin::Can_frame* frame(std::uint32_t id) const;
 

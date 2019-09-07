@@ -17,6 +17,6 @@ void can::Udp_receiver::handle_receive(gsl::span<std::uint8_t> buffer)
     using namespace std::chrono;
     auto time = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
     auto* frame = reinterpret_cast<can::Raw_frame*>(buffer.data());
-    emit received_frame(time, *frame);
+    emit received_frame(static_cast<std::uint64_t>(time), *frame);
   }
 }
