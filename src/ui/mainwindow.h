@@ -6,6 +6,7 @@
 
 #include "network/canudpreceiver.h"
 #include "tincan/canbus.h"
+#include "tincan/simulator.h"
 #include "tincan/canbusdef.h"
 #include "tincan/cantracer.h"
 #include "file/dbcfile.h"
@@ -31,6 +32,7 @@ private:
   can::Udp_receiver can_udp_receiver_;
   dbc::File dbc_file_;
   tin::Can_bus can_bus_;
+  tin::Simulator simulator_;
   tin::Can_bus_def can_bus_def_;
   tin::Can_bus_model can_bus_model_;
   tin::Can_bus_def_model can_bus_def_model_;

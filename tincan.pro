@@ -7,7 +7,6 @@
 QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 QT += network
-QT += charts
 
 CONFIG += c++17
 CONFIG(release, debug|release) {
@@ -48,6 +47,7 @@ SOURCES += src/main.cpp \
     src/models/treemodel.cpp \
     src/models/bussignalitem.cpp \
     src/tincan/canbus.cpp \
+    src/tincan/simulator.cpp \
     src/tincan/translate.cpp \
     ext/fmt/fmtlib.cc \
     src/models/bussignaldefitem.cpp \
@@ -75,6 +75,7 @@ HEADERS += src/ui/mainwindow.h \
     src/tincan/bussignal.h \
     src/tincan/bussignaldef.h \
     src/tincan/canbus.h \
+    src/tincan/simulator.h \
     src/tincan/canbusdef.h \
     src/tincan/canframe.h \
     src/tincan/canframedef.h \

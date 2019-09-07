@@ -9,8 +9,6 @@
 #include <pthread.h>
 
 #include <QFileDialog>
-#include <QChart>
-#include <QLineSeries>
 #include <QPainter>
 #include <QFont>
 #include <QFontMetrics>
@@ -116,22 +114,27 @@ Main_window::Main_window(QWidget* parent)
   connect(ui->checkPauseTrace, &QCheckBox::toggled, this, [this](bool paused){
       if (paused) ui->plainTrace->appendHtml("Paused"); });
 
-  connect(ui->pushOpenClose, &QPushButton::clicked, this, [this]{
+  connect(ui->pushOpenCloseUdpGateway, &QPushButton::clicked, this, [this]{
     if (can_udp_receiver_.is_running()) {
       can_udp_receiver_.stop();
       using namespace std::chrono_literals;
       std::this_thread::sleep_for(50ms);
-      ui->pushOpenClose->setText("Open");
+      ui->pushOpenCloseUdpGateway->setText("Open");
       reset();
     }
     else {
       std::thread{&can::Udp_receiver::start, &can_udp_receiver_, ui->lineIp->text().toStdString(),
           ui->linePort->text().toUShort()}.detach();
-      ui->pushOpenClose->setText("Close");
+      ui->pushOpenCloseUdpGateway->setText("Close");
     }
   });
 
+  connect(ui->pushStartSimulator, &QPushButton::clicked, &simulator_, &tin::Simulator::start);
+  connect(ui->pushStopSimulator, &QPushButton::clicked, &simulator_, &tin::Simulator::stop);
+
   connect(&can_udp_receiver_, &can::Udp_receiver::received_frame,
+      &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
+  connect(&simulator_, &tin::Simulator::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
 
   connect(&can_bus_, &tin::Can_bus::data_changed, &can_tracer_, &tin::Can_tracer::update_data);
