@@ -27,7 +27,21 @@ float util::Timer::stop_seconds()
 }
 
 
+std::int64_t util::Timer::stop_milliseconds()
+{
+  stop();
+  return milliseconds();
+}
+
+
 float util::Timer::seconds()
 {
   return std::chrono::duration<float>(stop_time - start_time).count();
+}
+
+
+std::int64_t util::Timer::milliseconds()
+{
+  auto d = stop_time - start_time;
+  return std::chrono::duration_cast<std::chrono::milliseconds>(d).count();
 }

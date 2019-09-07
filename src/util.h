@@ -2,6 +2,7 @@
 #define UTIL_H
 
 
+#include <cstdint>
 #include <chrono>
 #include <numeric>
 #include <iterator>
@@ -24,6 +25,8 @@ public:
   void stop();
   float stop_seconds();
   float seconds();
+  std::int64_t stop_milliseconds();
+  std::int64_t milliseconds();
 
 private:
   std::chrono::high_resolution_clock::time_point start_time;
