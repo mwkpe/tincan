@@ -31,7 +31,8 @@ signals:
 private:
   void run();
   std::atomic<bool> stop_ = false;
-  std::int64_t accumulator_ = 0;
+  std::int64_t accumulator1_ = 0;
+  std::int64_t accumulator2_ = 0;
 };
 
 
