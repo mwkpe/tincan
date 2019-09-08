@@ -3,6 +3,7 @@
 
 
 #include <QMainWindow>
+#include <QTimer>
 
 #include "network/canudpreceiver.h"
 #include "tincan/canbus.h"
@@ -29,6 +30,7 @@ private:
   void reset();
 
   Ui::MainWindow* ui;
+  QTimer update_timer_;
   can::Udp_receiver can_udp_receiver_;
   dbc::File dbc_file_;
   tin::Can_bus can_bus_;

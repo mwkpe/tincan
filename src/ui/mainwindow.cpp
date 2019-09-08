@@ -137,6 +137,9 @@ Main_window::Main_window(QWidget* parent)
   connect(&simulator_, &tin::Simulator::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
 
+  connect(&update_timer_, &QTimer::timeout, &can_bus_, &tin::Can_bus::update_frames);
+  update_timer_.start(100);
+
   connect(&can_bus_, &tin::Can_bus::data_changed, &can_tracer_, &tin::Can_tracer::update_data);
   connect(&can_bus_, &tin::Can_bus::data_changed, &can_bus_model_,
       &tin::Can_bus_model::update_data_deferred);

@@ -59,8 +59,11 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
     auto& frame = it->second;
     frame.raw_data = raw_frame.data;
     frame.receive_time = time;
+    frame.last_receive_system_time = timer_.system_now();
+    frame.alive = true;
     auto& prev_time = prev_frame_time_[frame.id];
-    frame.cycle_times.push_back(time - prev_time);
+    frame.cycle_times.push_back(static_cast<std::int32_t>(time - prev_time));
+    frame.mean_cycle_time = util::math::mean(frame.cycle_times);
     prev_time = time;
     if (frame.frame_def)
       calculate_signal_values(frame);
@@ -70,6 +73,8 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
     frame.id = raw_frame.id;
     frame.raw_data = raw_frame.data;
     frame.receive_time = time;
+    frame.last_receive_system_time = timer_.system_now();
+    frame.alive = true;
     prev_frame_time_[frame.id] = time;
     if (bus_def_) {
       if (frame.frame_def = find_frame_def(*bus_def_, raw_frame.id); frame.frame_def) {
@@ -84,4 +89,18 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
   }
 
   emit data_changed(raw_frame.id);
+}
+
+
+void tin::Can_bus::update_frames()
+{
+  for (auto& [key, frame] : frames_) {
+    if (frame.alive) {
+      auto delta = timer_.system_now() - frame.last_receive_system_time;
+      if (delta > frame.mean_cycle_time * 3) {
+        frame.alive = false;
+        emit data_changed(frame.id);
+      }
+    }
+  }
 }

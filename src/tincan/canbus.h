@@ -10,6 +10,7 @@
 
 #include "canframe.h"
 #include "network/canrawframe.h"
+#include "util.h"
 
 
 namespace tin
@@ -33,11 +34,13 @@ signals:
 
 public slots:
   void add_frame(std::uint64_t time, can::Raw_frame bus_frame);
+  void update_frames();
 
 private:
   const Can_bus_def* bus_def_ = nullptr;
   std::unordered_map<std::uint32_t, Can_frame> frames_;
   std::unordered_map<std::uint32_t, std::uint64_t> prev_frame_time_;
+  util::Timer timer_;
 };
 
 

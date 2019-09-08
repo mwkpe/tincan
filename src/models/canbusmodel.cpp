@@ -49,6 +49,9 @@ QVariant tin::Can_bus_model::data(const QModelIndex& index, int role) const
   switch (role) {
     case Qt::ForegroundRole: {
       auto* item = static_cast<Tree_item*>(index.internalPointer());
+      const auto* frame_item = reinterpret_cast<const Can_frame_item*>(item);
+      if (!frame_item->frame()->alive)
+        return QBrush{QColor{"#787878"}};
       if (item->id() == Item_id::Can_frame && item->child_count() > 0)
         return QBrush{QColor{"#33E7F7"}};
       return Tree_model::data(index, role);
