@@ -94,9 +94,11 @@ void tin::Can_bus::add_frame(std::uint64_t time, can::Raw_frame raw_frame)
 
 void tin::Can_bus::update_frames()
 {
-  for (auto& [key, frame] : frames_) {
+  auto now = timer_.system_now();
+  for (auto& p : frames_) {
+    auto& frame = p.second;
     if (frame.alive) {
-      auto delta = timer_.system_now() - frame.last_receive_system_time;
+      auto delta = now - frame.last_receive_system_time;
       if (delta > frame.mean_cycle_time * 3) {
         frame.alive = false;
         emit data_changed(frame.id);
