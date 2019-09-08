@@ -86,7 +86,7 @@
          <item>
           <widget class="QGroupBox" name="groupBox">
            <property name="title">
-            <string>UPD Gateway</string>
+            <string>UDP Gateway</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
