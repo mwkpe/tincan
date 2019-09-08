@@ -43,6 +43,13 @@ void calculate_signal_values(tin::Can_frame& frame)
 }  // namespace
 
 
+void tin::Can_bus::reset()
+{
+  set_definition(nullptr);
+  reset_frames();
+}
+
+
 const tin::Can_frame* tin::Can_bus::frame(std::uint32_t id) const
 {
   auto it = frames_.find(id);
@@ -99,7 +106,7 @@ void tin::Can_bus::update_frames()
     auto& frame = p.second;
     if (frame.alive) {
       auto delta = now - frame.last_receive_system_time;
-      if (delta > frame.mean_cycle_time * 3) {
+      if (frame.mean_cycle_time > 0 && delta > frame.mean_cycle_time * 3) {
         frame.alive = false;
         emit data_changed(frame.id);
       }

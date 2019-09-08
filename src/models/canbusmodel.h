@@ -28,9 +28,9 @@ public:
   explicit Can_bus_model(const Can_bus* can_bus, QObject* parent = nullptr);
   virtual void construct() override;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-  void reset();
 
 public slots:
+  void reset();
   void update_data_deferred(std::uint32_t frame_id);
   void update_data(std::uint32_t frame_id);
 

@@ -79,7 +79,6 @@ Main_window::Main_window(QWidget* parent)
     QMenu menu;
     QAction trace_frame{"Trace frame"};
     QAction trace_signal{"Trace signal"};
-    QAction plot_signal{"Plot signal"};
     switch (item->id()) {
       case tin::Item_id::Can_frame: {
         menu.addAction(&trace_frame);
@@ -87,7 +86,6 @@ Main_window::Main_window(QWidget* parent)
       break;
       case tin::Item_id::Bus_signal: {
         menu.addAction(&trace_signal);
-        menu.addAction(&plot_signal);
       }
       break;
       default:
@@ -161,6 +159,9 @@ Main_window::Main_window(QWidget* parent)
       util::Timer timer{true};
       dbc_file_ = dbc::parse(filepath.toStdString());
       std::cout << dbc_file_.frame_defs.size() << '\n' << timer.stop_seconds() << std::endl;
+      // Frames may have pointer to old definition object
+      can_bus_.reset();
+      can_bus_model_.reset();
       can_bus_def_ = tin::to_can_bus_def(dbc_file_);
       can_bus_.set_definition(&can_bus_def_);
       can_bus_def_model_.set(&can_bus_def_);
@@ -172,6 +173,9 @@ Main_window::Main_window(QWidget* parent)
       std::cerr << e.what() << std::endl;
     }
   });
+  // Frames may have pointer to old definition object
+  connect(ui->pushClearBusDef, &QPushButton::clicked, &can_bus_, &tin::Can_bus::reset);
+  connect(ui->pushClearBusDef, &QPushButton::clicked, &can_bus_model_, &tin::Can_bus_model::reset);
   connect(ui->pushClearBusDef, &QPushButton::clicked,
       &can_bus_def_model_, &tin::Can_bus_def_model::reset);
   connect(ui->pushClearBusDef, &QPushButton::clicked, ui->lineBusDefFile, &QLineEdit::clear);

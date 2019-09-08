@@ -33,6 +33,7 @@ signals:
   void data_changed(std::uint32_t);
 
 public slots:
+  void reset();
   void add_frame(std::uint64_t time, can::Raw_frame bus_frame);
   void update_frames();
 
