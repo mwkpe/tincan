@@ -21,6 +21,7 @@ public:
   explicit Timer(bool start_running);
   ~Timer() = default;
 
+  std::int64_t system_now() const;
   void start();
   void stop();
   float stop_seconds();

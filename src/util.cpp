@@ -8,6 +8,13 @@ util::Timer::Timer(bool start_running)
 }
 
 
+std::int64_t util::Timer::system_now() const
+{
+  auto d = std::chrono::system_clock::now().time_since_epoch();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(d).count();
+}
+
+
 void util::Timer::start()
 {
   start_time = std::chrono::high_resolution_clock::now();
