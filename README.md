@@ -4,7 +4,7 @@
 
 Description
 ---
-Tincan displays CAN frames received from an UDP socket and therefore requires a gateway device, e.g. a Raspberry Pi 3 with a PiCAN2 HAT running [cangw](https://github.com/jwkpeter/cantools).
+Tincan decodes and displays CAN frames. The default interface is via UDP socket and requires a gateway device, e.g. a Raspberry Pi 3 with a PiCAN2 HAT running [cangw](https://github.com/mwkpe/cantools), or any CAN to UDP gateway that sends raw frames. Adding other interfaces can be done by adapting the [dummy receiver](src/network/dummy_receiver.h).
 
 Status
 ---
@@ -12,9 +12,9 @@ WIP
 
 Features
 ---
-* Live view of received frames and signals in a tree view
-* Trace view of frame data and signal values
-* Import of frame and signal definitions from DBC files
+* Import of frame, signal and value definitions from DBC files
+* Live view of received frames and signals in a [tree view](tincan_treeview.png).
+* Simple trace view of frame and signal data
 
 Build
 ---

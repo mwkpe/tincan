@@ -1,5 +1,5 @@
-#ifndef NET_UDPSOCKETGUARD_H
-#define NET_UDPSOCKETGUARD_H
+#ifndef NETWORK_UDP_SOCKETGUARD_H
+#define NETWORK_UDP_SOCKETGUARD_H
 
 
 /* RAII wrapper for an ASIO UDP socket */
@@ -8,8 +8,7 @@
 #include <asio.hpp>
 
 
-namespace net::udp
-{
+namespace network::udp {
 
 
 class Socket_guard final
@@ -28,7 +27,7 @@ private:
 };
 
 
-}  // namespace net::udp
+}  // namespace network::udp
 
 
-#endif  // NET_UDPSOCKETGUARD_H
+#endif  // NETWORK_UDP_SOCKETGUARD_H

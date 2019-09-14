@@ -1,5 +1,5 @@
-#ifndef TIN_FRAMEITEM_H
-#define TIN_FRAMEITEM_H
+#ifndef TIN_CANFRAMEITEM_H
+#define TIN_CANFRAMEITEM_H
 
 
 #include <cstdint>
@@ -7,12 +7,11 @@
 
 #include <QVariant>
 
-#include "treeitem.h"
-#include "treeitemid.h"
+#include "models/treeitem.h"
+#include "models/treeitemid.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 struct Can_frame;
@@ -34,4 +33,4 @@ private:
 }  // namespace tin
 
 
-#endif  // TIN_FRAMEITEM_H
+#endif  // TIN_CANFRAMEITEM_H

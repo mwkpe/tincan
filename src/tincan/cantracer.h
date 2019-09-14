@@ -1,18 +1,19 @@
-#ifndef TIN_TRACER_H
-#define TIN_TRACER_H
+#ifndef TIN_CANTRACER_H
+#define TIN_CANTRACER_H
 
 
 #include <cstdint>
 #include <string>
+
 #include <QObject>
-#include "canframe.h"
+
+#include "tincan/canframe.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
-class Bus_signal;
+class Can_signal;
 
 
 class Can_tracer : public QObject
@@ -22,7 +23,7 @@ class Can_tracer : public QObject
 public:
   void set_frame(const Can_frame* trace_frame) { trace_frame_ = trace_frame;
       prev_frame_.receive_time = 0; trace_signal_ = nullptr; }
-  void set_signal(const Bus_signal* trace_signal, const Can_frame* trace_frame) {
+  void set_signal(const Can_signal* trace_signal, const Can_frame* trace_frame) {
       trace_signal_ = trace_signal; trace_frame_ = trace_frame; prev_frame_.receive_time = 0; }
 
 signals:
@@ -35,7 +36,7 @@ public slots:
 
 private:
   const Can_frame* trace_frame_ = nullptr;
-  const Bus_signal* trace_signal_ = nullptr;
+  const Can_signal* trace_signal_ = nullptr;
   Can_frame prev_frame_;
   bool paused_ = false;
 };
@@ -44,4 +45,4 @@ private:
 }  // namespace tin
 
 
-#endif  // TIN_TRACER_H
+#endif  // TIN_CANTRACER_H

@@ -11,8 +11,7 @@
 using namespace fmt::literals;
 
 
-namespace
-{
+namespace {
 
 
 inline void write_header(std::ofstream& fs)

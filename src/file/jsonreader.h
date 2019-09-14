@@ -8,8 +8,7 @@
 #include "tincan/canbusdef.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 tin::Can_bus_def read_json(std::string_view filepath);

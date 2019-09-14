@@ -31,7 +31,7 @@ private:
 
   Ui::MainWindow* ui;
   QTimer update_timer_;
-  can::Udp_receiver can_udp_receiver_;
+  network::Can_udp_receiver can_udp_receiver_;
   dbc::File dbc_file_;
   tin::Can_bus can_bus_;
   tin::Simulator simulator_;

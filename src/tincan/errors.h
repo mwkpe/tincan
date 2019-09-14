@@ -6,8 +6,7 @@
 #include <string>
 
 
-namespace tin
-{
+namespace tin {
 
 
 class File_error : public std::runtime_error

@@ -4,11 +4,21 @@ NS_:
 
 BS_:
 
-BU_: Vector__XXX, VEHICLE, HMI, FLUX_CAPACITOR, TIME_CIRCUITS, RADAR_DEVICE
+BU_: Vector__XXX VEHICLE HMI FLUX_CAPACITOR TIME_CIRCUITS RADAR_DEVICE
+
+BO_ 100 TEST_FRAME: 8 VEHICLE
+  SG_ CRC : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+  SG_ ALIVE : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+  SG_ COUNTER : 12|12@1+ (1,0) [0|4095] "" Vector__XXX
+  SG_ SINE : 24|11@1+ (0.001,-1.0) [-1.0|1.0] "" Vector__XXX
+  SG_ LIGHT : 36|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ COLOR : 37|3@1+ (1,0) [0|15] "" Vector__XXX
+  SG_ BRIGHTNESS : 40|7@1+ (1,0) [0|100] "%" Vector__XXX
+  SG_ ALTITUDE : 48|16@1+ (0.001,0) [0|65535] "km" Vector__XXX
 
 BO_ 201 VEH_STATE: 8 VEHICLE
   SG_ CRC : 0|8@1+ (1,0) [0|255] "" Vector__XXX
-  SG_ ALIV : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+  SG_ ALIVE : 8|4@1+ (1,0) [0|15] "" Vector__XXX
   SG_ VELOCITY : 12|14@1+ (0.01,0) [0|140] "mph" Vector__XXX
   SG_ WIPER_POSITION : 26|16@1+ (0.010986328125,0) [0|180] "deg" Vector__XXX
 
@@ -40,3 +50,6 @@ BO_ 502 FUEL: 5 VEHICLE
   SG_ BAT_VOLT m0 : 26|12@1+ (0.1,0) [0|400] "V" HMI
   SG_ CHARGING m0 : 38|1@1+ (1,0) [0|0] "" HMI
   SG_ SUPER_CHARGING m0 : 39|1@1+ (1,0) [0|0] "" HMI
+
+VAL_ 100 LIGHT 0 "OFF" 1 "ON" ;
+VAL_ 100 COLOR 0 "UNDEFINED" 1 "RED" 2 "ORANGE" 3 "BLUE" 4 "YELLOW" 5 "GREEN" 6 "VIOLET" 7 "FUCHSIA" ;

@@ -10,8 +10,7 @@
 #include <algorithm>
 
 
-namespace util
-{
+namespace util {
 
 
 class Timer
@@ -21,7 +20,8 @@ public:
   explicit Timer(bool start_running);
   ~Timer() = default;
 
-  std::int64_t system_now() const;
+  template<typename T = std::int64_t> static T system_now();
+  template<typename T = std::int64_t> static T high_res_now();
   void start();
   void stop();
   float stop_seconds();
@@ -35,8 +35,7 @@ private:
 };
 
 
-namespace math
-{
+namespace math {
 
 
 template<typename T> int mean(T collection)

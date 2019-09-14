@@ -7,13 +7,13 @@
 #include <QColor>
 #include <QBrush>
 
-#include "tincan/bussignal.h"
+#include "tincan/cansignal.h"
 #include "tincan/canframe.h"
 #include "tincan/canbus.h"
-#include "treeitemid.h"
-#include "treeitem.h"
-#include "bussignalitem.h"
-#include "canframeitem.h"
+#include "models/treeitemid.h"
+#include "models/treeitem.h"
+#include "models/cansignalitem.h"
+#include "models/canframeitem.h"
 
 
 tin::Can_bus_model::Can_bus_model(const Can_bus* can_bus, QObject* parent)
@@ -37,7 +37,7 @@ tin::Can_bus_model::Can_bus_model(const Can_bus* can_bus, QObject* parent)
 void tin::Can_bus_model::construct()
 {
   root_item_ = std::make_unique<Tree_item>(Item_id::Root);
-  column_headers_ = {"Object", "ID / Phys", "Time / Unit", "Cycle", "Data"};
+  column_headers_ = {"Object", "ID / Phys", "Time / Unit", "Cycle", "Length", "Data"};
 }
 
 
@@ -68,7 +68,7 @@ void tin::Can_bus_model::reset()
 {
   beginResetModel();
   frame_items_.clear();
-  root_item_ = std::make_unique<Tree_item>();
+  root_item_ = std::make_unique<Tree_item>(Item_id::Root);
   endResetModel();
 }
 
@@ -89,8 +89,8 @@ void tin::Can_bus_model::update_data(std::uint32_t frame_id)
   else {  // Add new frame
     if (auto* frame = can_bus_->frame(frame_id); frame) {
       auto frame_item = std::make_unique<Can_frame_item>(frame, root_item_.get());
-      for (const auto& signal : frame->bus_signals)
-        frame_item->add_child(std::make_unique<Bus_signal_item>(&signal, frame_item.get()));
+      for (const auto& signal : frame->can_signals)
+        frame_item->add_child(std::make_unique<Can_signal_item>(&signal, frame_item.get()));
       frame_items_.insert({frame_id, frame_item.get()});
       beginInsertRows(QModelIndex{}, rowCount(), rowCount());
       root_item_->add_child(std::move(frame_item));

@@ -6,15 +6,16 @@
 #include <tuple>
 #include <unordered_map>
 
+#include <boost/circular_buffer.hpp>
+
 #include <QObject>
 
-#include "canframe.h"
-#include "network/canrawframe.h"
-#include "util.h"
+#include "tincan/canframe.h"
+#include "tincan/canrawframe.h"
+#include "tincan/cansignal.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 struct Can_bus_def;
@@ -34,14 +35,14 @@ signals:
 
 public slots:
   void reset();
-  void add_frame(std::uint64_t time, can::Raw_frame bus_frame);
+  void add_frame(std::uint64_t time, tin::Can_raw_frame raw_frame);
   void update_frames();
 
 private:
   const Can_bus_def* bus_def_ = nullptr;
   std::unordered_map<std::uint32_t, Can_frame> frames_;
   std::unordered_map<std::uint32_t, std::uint64_t> prev_frame_time_;
-  util::Timer timer_;
+  std::unordered_map<std::uint32_t, boost::circular_buffer<std::int32_t>> cycle_times_;
 };
 
 

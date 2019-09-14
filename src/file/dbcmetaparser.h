@@ -6,11 +6,10 @@
 
 
 #include <string>
-#include "dbcfile.h"
+#include "file/dbcfile.h"
 
 
-namespace dbc::meta
-{
+namespace dbc::meta {
 
 
 Signal_meta_data parse_signal(const std::string& line);

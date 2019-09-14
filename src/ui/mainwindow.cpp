@@ -18,19 +18,23 @@
 #include <QAction>
 
 #include "util.h"
-#include "network/canrawframe.h"
+#include "tincan/canrawframe.h"
 #include "file/dbcparser.h"
 #include "file/dbcwriter.h"
 #include "file/jsonreader.h"
 #include "file/jsonwriter.h"
 #include "tincan/errors.h"
+#include "tincan/helper.h"
 #include "tincan/translate.h"
+#include "tincan/cansignaldef.h"
 #include "models/treeitemid.h"
-#include "models/bussignalitem.h"
+#include "models/cansignalitem.h"
 #include "models/canframeitem.h"
+#include "models/cansignaldefitem.h"
+#include "ui/treeviewdialog.h"
 
 
-Q_DECLARE_METATYPE(can::Raw_frame)
+Q_DECLARE_METATYPE(tin::Can_raw_frame)
 
 
 Main_window::Main_window(QWidget* parent)
@@ -41,7 +45,7 @@ Main_window::Main_window(QWidget* parent)
   ui->tabWidgetMain->setCurrentIndex(0);
   ui->tabWidgetDetail->setCurrentIndex(0);
 
-  qRegisterMetaType<can::Raw_frame>("Raw_frame");
+  qRegisterMetaType<tin::Can_raw_frame>("Can_raw_frame");
 
   // Qt Designer bug keeps setting this false
   ui->treeFrameView->header()->setVisible(true);
@@ -84,7 +88,7 @@ Main_window::Main_window(QWidget* parent)
         menu.addAction(&trace_frame);
       }
       break;
-      case tin::Item_id::Bus_signal: {
+      case tin::Item_id::Can_signal: {
         menu.addAction(&trace_signal);
       }
       break;
@@ -98,9 +102,35 @@ Main_window::Main_window(QWidget* parent)
       std::cout << "Tracing frame" << std::endl;
     }
     else if (action == &trace_signal) {
-      can_tracer_.set_signal(static_cast<const tin::Bus_signal_item*>(item)->signal(),
+      can_tracer_.set_signal(static_cast<const tin::Can_signal_item*>(item)->signal(),
           static_cast<const tin::Can_frame_item*>(item->parent())->frame());
       std::cout << "Tracing signal" << std::endl;
+    }
+  });
+
+  connect(ui->treeViewBusDef, &QTreeView::customContextMenuRequested, this, [this]{
+    auto index = ui->treeViewBusDef->currentIndex();
+    if (!index.isValid())
+      return;
+
+    auto* item = static_cast<tin::Tree_item*>(index.internalPointer());
+    if (item->id() != tin::Item_id::Can_signal_def)
+      return;
+
+    auto* def = static_cast<const tin::Can_signal_def_item*>(item)->signal_def();
+    if (!def || def->value_definitions.empty())
+      return;
+
+    QAction view_value_definitions{"Value definitions"};
+    QMenu menu;
+    menu.addAction(&view_value_definitions);
+    QAction* action = menu.exec(QCursor::pos());
+
+    if (action == &view_value_definitions) {
+      QString title = QString::fromStdString(def->name) + " value definitions";
+      auto* dialog = new Tree_view_dialog{title, this};
+      dialog->set_data(def->value_definitions);
+      dialog->show();
     }
   });
 
@@ -121,7 +151,7 @@ Main_window::Main_window(QWidget* parent)
       reset();
     }
     else {
-      std::thread{&can::Udp_receiver::start, &can_udp_receiver_, ui->lineIp->text().toStdString(),
+      std::thread{&network::Can_udp_receiver::start, &can_udp_receiver_, ui->lineIp->text().toStdString(),
           ui->linePort->text().toUShort()}.detach();
       ui->pushOpenCloseUdpGateway->setText("Close");
     }
@@ -130,7 +160,7 @@ Main_window::Main_window(QWidget* parent)
   connect(ui->pushStartSimulator, &QPushButton::clicked, &simulator_, &tin::Simulator::start);
   connect(ui->pushStopSimulator, &QPushButton::clicked, &simulator_, &tin::Simulator::stop);
 
-  connect(&can_udp_receiver_, &can::Udp_receiver::received_frame,
+  connect(&can_udp_receiver_, &network::Can_udp_receiver::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
   connect(&simulator_, &tin::Simulator::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
@@ -142,13 +172,10 @@ Main_window::Main_window(QWidget* parent)
   connect(&can_bus_, &tin::Can_bus::data_changed, &can_bus_model_,
       &tin::Can_bus_model::update_data_deferred);
 
-  connect(ui->pushSaveAsBusDef, &QPushButton::clicked, this, [this]{
-    auto filepath = QFileDialog::getSaveFileName(this, tr("Save bus definition"), QString{},
-      tr("DBC (*.dbc)"));
-    try {
-      dbc::write(tin::to_dbc_file(can_bus_def_), filepath.toStdString());
-    } catch (const dbc::Write_error& e) {
-      std::cerr << e.what() << std::endl;
+  // Handle CAN events
+  connect(&can_bus_, &tin::Can_bus::data_changed, this, [this](auto frame_id){
+    if (auto* frame = can_bus_.frame(frame_id); frame) {
+      // Do something
     }
   });
 

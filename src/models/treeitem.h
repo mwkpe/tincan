@@ -4,12 +4,13 @@
 
 #include <memory>
 #include <vector>
+
 #include <QVariant>
-#include "treeitemid.h"
+
+#include "models/treeitemid.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 class Tree_item

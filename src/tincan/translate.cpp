@@ -1,8 +1,8 @@
 #include "translate.h"
 
 
-#include "bussignaldef.h"
-#include "canframedef.h"
+#include "tincan/cansignaldef.h"
+#include "tincan/canframedef.h"
 
 
 tin::Can_bus_def tin::to_can_bus_def(const dbc::File& file)
@@ -21,8 +21,8 @@ tin::Can_bus_def tin::to_can_bus_def(const dbc::File& file)
     frame_def.multiplexer = fd.multiplexer;
 
     for (const auto& sd : fd.signal_defs) {
-      frame_def.bus_signal_defs.emplace_back();
-      auto& signal_def = frame_def.bus_signal_defs.back();
+      frame_def.can_signal_defs.emplace_back();
+      auto& signal_def = frame_def.can_signal_defs.back();
       signal_def.order = sd.order == dbc::Byte_order::Intel ? tin::Byte_order::Intel :
           tin::Byte_order::Moto;
       signal_def.sign = sd.sign == dbc::Value_sign::Signed ? tin::Value_sign::Signed :
@@ -38,6 +38,7 @@ tin::Can_bus_def tin::to_can_bus_def(const dbc::File& file)
       signal_def.unit = sd.unit;
       signal_def.name = sd.name;
       signal_def.receiver = sd.receiver;
+      signal_def.value_definitions = sd.value_definitions;
       signal_def.meta_data.factor_precision = sd.meta_data.factor_precision;
       signal_def.meta_data.offset_precision = sd.meta_data.offset_precision;
       signal_def.meta_data.minimum_precision = sd.meta_data.minimum_precision;
@@ -63,7 +64,7 @@ dbc::File tin::to_dbc_file(const tin::Can_bus_def& bus_def)
     frame_def.transmitter = fd.transmitter;
     frame_def.multiplexer = fd.multiplexer;
 
-    for (const auto& sd : fd.bus_signal_defs) {
+    for (const auto& sd : fd.can_signal_defs) {
       frame_def.signal_defs.emplace_back();
       auto& signal_def = frame_def.signal_defs.back();
       signal_def.order = sd.order == tin::Byte_order::Intel ? dbc::Byte_order::Intel :
@@ -81,6 +82,7 @@ dbc::File tin::to_dbc_file(const tin::Can_bus_def& bus_def)
       signal_def.unit = sd.unit;
       signal_def.name = sd.name;
       signal_def.receiver = sd.receiver;
+      signal_def.value_definitions = sd.value_definitions;
       signal_def.meta_data.factor_precision = sd.meta_data.factor_precision;
       signal_def.meta_data.offset_precision = sd.meta_data.offset_precision;
       signal_def.meta_data.minimum_precision = sd.meta_data.minimum_precision;

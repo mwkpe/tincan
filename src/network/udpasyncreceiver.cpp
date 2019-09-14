@@ -2,16 +2,16 @@
 
 
 #include <iostream>
-#include "udpsocketguard.h"
+#include "network/udpsocketguard.h"
 
 
-net::udp::Async_receiver::~Async_receiver()
+network::udp::Async_receiver::~Async_receiver()
 {
   stop();
 }
 
 
-void net::udp::Async_receiver::stop()
+void network::udp::Async_receiver::stop()
 {
   // Cancel async handlers
   if (is_running())
@@ -19,7 +19,7 @@ void net::udp::Async_receiver::stop()
 }
 
 
-void net::udp::Async_receiver::start(const std::string& ip, std::uint16_t port)
+void network::udp::Async_receiver::start(const std::string& ip, std::uint16_t port)
 {
   if (is_running())
     return;
@@ -48,7 +48,7 @@ void net::udp::Async_receiver::start(const std::string& ip, std::uint16_t port)
 }
 
 
-void net::udp::Async_receiver::start_async_receive()
+void network::udp::Async_receiver::start_async_receive()
 {
   // Start async receives until stop() is called
   socket_.async_receive(asio::buffer(buffer_),

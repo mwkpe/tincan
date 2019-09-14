@@ -7,7 +7,7 @@
 
 #include "tincan/errors.h"
 #include "tincan/canframedef.h"
-#include "tincan/bussignaldef.h"
+#include "tincan/cansignaldef.h"
 
 
 namespace fs = std::experimental::filesystem;
@@ -39,8 +39,8 @@ tin::Can_bus_def tin::read_json(std::string_view filepath)
     frame_def.name = f["name"];
 
     for (const auto& s : f["signals"]) {
-      frame_def.bus_signal_defs.emplace_back();
-      auto& signal_def = frame_def.bus_signal_defs.back();
+      frame_def.can_signal_defs.emplace_back();
+      auto& signal_def = frame_def.can_signal_defs.back();
       signal_def.order = static_cast<tin::Byte_order>(s["byte_order"]);
       signal_def.sign = static_cast<tin::Value_sign>(s["value_sign"]);
       signal_def.pos = s["pos"];

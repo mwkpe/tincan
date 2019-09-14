@@ -9,11 +9,10 @@
 #include <QModelIndex>
 #include <QAbstractItemModel>
 
-#include "treeitem.h"
+#include "models/treeitem.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 class Tree_model : public QAbstractItemModel

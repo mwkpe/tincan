@@ -6,11 +6,10 @@
 #include <vector>
 #include <algorithm>
 
-#include "canframedef.h"
+#include "tincan/canframedef.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 struct Can_bus_def
@@ -29,6 +28,7 @@ inline const Can_frame_def* find_frame_def(const Can_bus_def& bus_def, std::uint
     return &*it;
   return nullptr;
 }
+
 
 inline const Can_frame_def* find_frame_def(const Can_bus_def& bus_def, std::string_view name)
 {

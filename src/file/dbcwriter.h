@@ -9,8 +9,7 @@
 #include "file/dbcfile.h"
 
 
-namespace dbc
-{
+namespace dbc {
 
 
 class Write_error : public std::runtime_error

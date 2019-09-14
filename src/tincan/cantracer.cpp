@@ -3,13 +3,12 @@
 
 #include "fmt/fmtlib.h"
 
-#include "bussignal.h"
-#include "canframe.h"
-#include "canbus.h"
+#include "tincan/cansignal.h"
+#include "tincan/canframe.h"
+#include "tincan/canbus.h"
 
 
-namespace
-{
+namespace {
 
 
 using namespace std::string_literals;
@@ -66,7 +65,7 @@ std::string to_string(const tin::Can_frame* frame, const tin::Can_frame* prev_fr
 
 
 std::string to_string(const tin::Can_frame* frame, const tin::Can_frame* prev_frame,
-    const tin::Bus_signal* signal)
+    const tin::Can_signal* signal)
 {
   std::string physical_value;
   if (std::holds_alternative<std::uint64_t>(signal->phys))

@@ -6,11 +6,14 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <map>
 #include <algorithm>
 
 
-namespace dbc
-{
+namespace dbc {
+
+
+using Value_map = std::map<std::int32_t, std::string>;
 
 
 enum class Byte_order { Moto, Intel };
@@ -24,6 +27,15 @@ struct Signal_meta_data
   std::int8_t minimum_precision = 7;
   std::int8_t maximum_precision = 7;
 };
+
+
+struct Value_def
+{
+  std::uint32_t frame_id;
+  std::string signal_name;
+  std::map<std::int32_t, std::string> value_definitions;
+};
+
 
 struct Signal_def
 {
@@ -40,8 +52,10 @@ struct Signal_def
   double maximum;
   std::string unit;
   std::vector<std::string> receiver;
+  Value_map value_definitions;
   Signal_meta_data meta_data;
 };
+
 
 struct Frame_def
 {
@@ -53,6 +67,7 @@ struct Frame_def
   bool multiplexer_extended;
   std::vector<Signal_def> signal_defs;
 };
+
 
 struct File
 {
@@ -71,6 +86,7 @@ inline const Frame_def* find_frame_def(const File& f, std::uint32_t id)
   return nullptr;
 }
 
+
 inline const Frame_def* find_frame_def(const File& f, std::string_view name)
 {
   auto it = std::find_if(std::begin(f.frame_defs), std::end(f.frame_defs),
@@ -80,11 +96,12 @@ inline const Frame_def* find_frame_def(const File& f, std::string_view name)
   return nullptr;
 }
 
-inline const Signal_def* find_signal_def(const Frame_def& m, std::string_view name)
+
+inline const Signal_def* find_signal_def(const Frame_def& f, std::string_view name)
 {
-  auto it = std::find_if(std::begin(m.signal_defs), std::end(m.signal_defs),
+  auto it = std::find_if(std::begin(f.signal_defs), std::end(f.signal_defs),
       [name](const auto& s){ return s.name == name; });
-  if (it != std::end(m.signal_defs))
+  if (it != std::end(f.signal_defs))
     return &*it;
   return nullptr;
 }

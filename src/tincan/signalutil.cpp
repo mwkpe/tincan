@@ -8,11 +8,10 @@
   #include <stdlib.h>
 #endif
 
-#include "bussignaldef.h"
+#include "tincan/cansignaldef.h"
 
 
-namespace
-{
+namespace {
 
 
 inline bool is_fraction(double val)

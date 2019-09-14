@@ -6,11 +6,10 @@
 #include <array>
 #include <variant>
 
-#include "bussignaldef.h"
+#include "tincan/cansignaldef.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 using raw_val = std::variant<uint64_t, int64_t>;

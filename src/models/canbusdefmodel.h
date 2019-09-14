@@ -9,11 +9,10 @@
 #include <QVariant>
 #include <QModelIndex>
 
-#include "treemodel.h"
+#include "models/treemodel.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 class Can_bus_def;

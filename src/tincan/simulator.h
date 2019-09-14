@@ -4,12 +4,13 @@
 
 #include <cstdint>
 #include <atomic>
+
 #include <QObject>
-#include "network/canrawframe.h"
+
+#include "tincan/canrawframe.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 class Simulator final : public QObject
@@ -23,16 +24,17 @@ public:
   Simulator& operator=(const Simulator&) = delete;
   Simulator& operator=(Simulator&&) = delete;
   void start();
-  void stop() { stop_.store(true); }
+  void stop() { running_.store(false); }
 
 signals:
-  void received_frame(std::uint64_t, can::Raw_frame);
+  void received_frame(std::uint64_t, tin::Can_raw_frame);
 
 private:
   void run();
-  std::atomic<bool> stop_ = false;
+  std::atomic<bool> running_ = false;
   std::int64_t accumulator1_ = 0;
   std::int64_t accumulator2_ = 0;
+  std::int64_t accumulator3_ = 0;
 };
 
 

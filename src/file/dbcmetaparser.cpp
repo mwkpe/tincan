@@ -4,14 +4,14 @@
 #include <cstdint>
 #include <string>
 #include <stdexcept>
+
 #include <boost/xpressive/xpressive_static.hpp>
 
 
 namespace xpr = boost::xpressive;
 
 
-namespace
-{
+namespace {
 
 
 using namespace xpr;

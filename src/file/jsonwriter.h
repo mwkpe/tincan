@@ -6,8 +6,7 @@
 #include "tincan/canbusdef.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 void write_json(const tin::Can_bus_def& bus_def, std::string_view filename);

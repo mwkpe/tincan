@@ -1,15 +1,14 @@
-#ifndef TIN_FRAMEDEFITEM_H
-#define TIN_FRAMEDEFITEM_H
+#ifndef TIN_CANFRAMEDEFITEM_H
+#define TIN_CANFRAMEDEFITEM_H
 
 
 #include <QVariant>
 #include "tincan/canframedef.h"
-#include "treeitem.h"
-#include "treeitemid.h"
+#include "models/treeitem.h"
+#include "models/treeitemid.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 class Can_frame_def_item final : public Tree_item
@@ -27,4 +26,4 @@ private:
 }  // namespace tin
 
 
-#endif  // TIN_FRAMEDEFITEM_H
+#endif  // TIN_CANFRAMEDEFITEM_H

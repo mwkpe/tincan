@@ -8,11 +8,22 @@ util::Timer::Timer(bool start_running)
 }
 
 
-std::int64_t util::Timer::system_now() const
+template<typename T> T util::Timer::system_now()
 {
   auto d = std::chrono::system_clock::now().time_since_epoch();
-  return std::chrono::duration_cast<std::chrono::milliseconds>(d).count();
+  return static_cast<T>(std::chrono::duration_cast<std::chrono::milliseconds>(d).count());
 }
+template std::int64_t util::Timer::system_now();
+template std::uint64_t util::Timer::system_now();
+
+
+template<typename T> T util::Timer::high_res_now()
+{
+  auto d = std::chrono::high_resolution_clock::now().time_since_epoch();
+  return static_cast<T>(std::chrono::duration_cast<std::chrono::milliseconds>(d).count());
+}
+template std::int64_t util::Timer::high_res_now();
+template std::uint64_t util::Timer::high_res_now();
 
 
 void util::Timer::start()

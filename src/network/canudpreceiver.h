@@ -1,38 +1,37 @@
-#ifndef CAN_UDPRECEIVER_H
-#define CAN_UDPRECEIVER_H
+#ifndef NETWORK_CANUDPRECEIVER_H
+#define NETWORK_CANUDPRECEIVER_H
 
 
 #include <cstdint>
 #include <gsl/gsl>
 #include <QObject>
 
-#include "canrawframe.h"
-#include "udpasyncreceiver.h"
+#include "tincan/canrawframe.h"
+#include "network/udpasyncreceiver.h"
 
 
-namespace can
-{
+namespace network {
 
 
-class Udp_receiver final : public QObject, public net::udp::Async_receiver
+class Can_udp_receiver final : public QObject, public udp::Async_receiver
 {
   Q_OBJECT
 
 public:
-  Udp_receiver() = default;
-  Udp_receiver(const Udp_receiver&) = delete;
-  Udp_receiver(Udp_receiver&&) = delete;
-  Udp_receiver& operator=(const Udp_receiver&) = delete;
-  Udp_receiver& operator=(Udp_receiver&&) = delete;
+  Can_udp_receiver() = default;
+  Can_udp_receiver(const Can_udp_receiver&) = delete;
+  Can_udp_receiver(Can_udp_receiver&&) = delete;
+  Can_udp_receiver& operator=(const Can_udp_receiver&) = delete;
+  Can_udp_receiver& operator=(Can_udp_receiver&&) = delete;
 
   void handle_receive(gsl::span<std::uint8_t> buffer) override;
 
 signals:
-  void received_frame(std::uint64_t, can::Raw_frame);
+  void received_frame(std::uint64_t, tin::Can_raw_frame);
 };
 
 
-}  // namespace can
+}  // namespace network
 
 
-#endif  // CAN_UDPRECEIVER_H
+#endif  // NETWORK_CANUDPRECEIVER_H

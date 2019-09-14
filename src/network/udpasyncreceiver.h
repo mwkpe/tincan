@@ -1,5 +1,5 @@
-#ifndef NET_UDP_ASYNCRECEIVER_H
-#define NET_UDP_ASYNCRECEIVER_H
+#ifndef NETWORK_UDP_ASYNCRECEIVER_H
+#define NETWORK_UDP_ASYNCRECEIVER_H
 
 
 /* Base class for implementing an asynchronous UDP receiver. A derived class must implement
@@ -15,11 +15,7 @@
 #include <asio.hpp>
 
 
-// Telling MOC to skip this since it leads to a random parse error at "net"
-#ifndef Q_MOC_RUN
-namespace net::udp
-{
-#endif
+namespace network::udp {
 
 
 class Async_receiver
@@ -46,7 +42,7 @@ private:
 };
 
 
-} // namespace net::udp
+}  // namespace network::udp
 
 
-#endif  // NET_UDP_ASYNCRECEIVER_H
+#endif  // NETWORK_UDP_ASYNCRECEIVER_H

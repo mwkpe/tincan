@@ -38,19 +38,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += src/main.cpp \
+    src/models/cansignaldefitem.cpp \
+    src/models/cansignalitem.cpp \
+    src/models/valuedefitem.cpp \
+    src/models/valuedefmodel.cpp \
     src/ui/mainwindow.cpp \
+    src/ui/treeviewdialog.cpp \
     src/util.cpp \
     src/file/dbcparser.cpp \
     src/models/canbusmodel.cpp \
     src/models/canframeitem.cpp \
     src/models/treeitem.cpp \
     src/models/treemodel.cpp \
-    src/models/bussignalitem.cpp \
     src/tincan/canbus.cpp \
     src/tincan/simulator.cpp \
     src/tincan/translate.cpp \
     ext/fmt/fmtlib.cc \
-    src/models/bussignaldefitem.cpp \
     src/models/canbusdefmodel.cpp \
     src/models/canframedefitem.cpp \
     src/network/udpasyncreceiver.cpp \
@@ -63,6 +66,16 @@ SOURCES += src/main.cpp \
     src/file/dbcmetaparser.cpp
 
 HEADERS += src/ui/mainwindow.h \
+    src/models/cansignaldefitem.h \
+    src/models/cansignalitem.h \
+    src/models/treeitemid.h \
+    src/models/valuedefitem.h \
+    src/models/valuedefmodel.h \
+    src/network/dummyreceiver.h \
+    src/tincan/canrawframe.h \
+    src/tincan/cansignal.h \
+    src/tincan/cansignaldef.h \
+    src/ui/treeviewdialog.h \
     src/util.h \
     src/file/dbcfile.h \
     src/file/dbcparser.h \
@@ -70,10 +83,6 @@ HEADERS += src/ui/mainwindow.h \
     src/models/canframeitem.h \
     src/models/treeitem.h \
     src/models/treemodel.h \
-    src/network/canrawframe.h \
-    src/models/bussignalitem.h \
-    src/tincan/bussignal.h \
-    src/tincan/bussignaldef.h \
     src/tincan/canbus.h \
     src/tincan/simulator.h \
     src/tincan/canbusdef.h \
@@ -81,7 +90,6 @@ HEADERS += src/ui/mainwindow.h \
     src/tincan/canframedef.h \
     src/tincan/translate.h \
     ext/fmt/fmtlib.h \
-    src/models/bussignaldefitem.h \
     src/models/canbusdefmodel.h \
     src/models/canframedefitem.h \
     src/tincan/errors.h \
@@ -95,4 +103,5 @@ HEADERS += src/ui/mainwindow.h \
     src/file/dbcwriter.h \
     src/file/dbcmetaparser.h
 
-FORMS += ui/mainwindow.ui
+FORMS += ui/mainwindow.ui \
+    ui/treeviewdialog.ui

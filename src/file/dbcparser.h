@@ -6,11 +6,10 @@
 #include <string_view>
 #include <stdexcept>
 
-#include "dbcfile.h"
+#include "file/dbcfile.h"
 
 
-namespace dbc
-{
+namespace dbc {
 
 
 class Parse_error : public std::runtime_error

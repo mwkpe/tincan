@@ -2,11 +2,18 @@
 #define TIN_TREEITEMID_H
 
 
-namespace tin
-{
+namespace tin {
 
 
-enum class Item_id { Unspecified, Root, Can_frame, Bus_signal, Can_frame_def, Bus_signal_def };
+enum class Item_id {
+  Unspecified,
+  Root,
+  Can_frame,
+  Can_signal,
+  Can_frame_def,
+  Can_signal_def,
+  Value_def
+};
 
 
 }  // namespace tin

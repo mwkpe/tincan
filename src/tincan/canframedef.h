@@ -6,11 +6,10 @@
 #include <string>
 #include <vector>
 
-#include "bussignaldef.h"
+#include "tincan/cansignaldef.h"
 
 
-namespace tin
-{
+namespace tin {
 
 
 struct Can_frame_def
@@ -20,7 +19,7 @@ struct Can_frame_def
   std::uint32_t dlc;
   std::string transmitter;
   bool multiplexer;
-  std::vector<Bus_signal_def> bus_signal_defs;
+  std::vector<Can_signal_def> can_signal_defs;
 };
 
 
