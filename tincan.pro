@@ -18,8 +18,8 @@ TEMPLATE = app
 
 INCLUDEPATH += $$PWD/src \
     $$PWD/ext \
-    C:/dev/boost_1_71_0 \
-    C:/dev/asio-1.12.2/include
+    C:/libs/boost_1_88_0 \
+    C:/libs/asio-1.30.2/include
 
 LIBS += -lstdc++fs \
     -lws2_32
