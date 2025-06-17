@@ -22,7 +22,8 @@ INCLUDEPATH += $$PWD/src \
     C:/libs/asio-1.30.2/include
 
 LIBS += -lstdc++fs \
-    -lws2_32
+    -lws2_32 \
+    -L$$PWD/ext/pcan-usb -lPCANBasic
 
 DEFINES += ASIO_STANDALONE
 
@@ -42,6 +43,7 @@ SOURCES += src/main.cpp \
     src/models/cansignalitem.cpp \
     src/models/valuedefitem.cpp \
     src/models/valuedefmodel.cpp \
+    src/network/pcanusbtransceiver.cpp \
     src/ui/mainwindow.cpp \
     src/ui/treeviewdialog.cpp \
     src/util.cpp \
@@ -72,6 +74,7 @@ HEADERS += src/ui/mainwindow.h \
     src/models/valuedefitem.h \
     src/models/valuedefmodel.h \
     src/network/dummyreceiver.h \
+    src/network/pcanusbtransceiver.h \
     src/tincan/canrawframe.h \
     src/tincan/cansignal.h \
     src/tincan/cansignaldef.h \

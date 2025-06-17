@@ -3,7 +3,6 @@
 
 
 #include <iostream>
-#include <chrono>
 #include <thread>
 
 #include <pthread.h>
@@ -20,11 +19,6 @@
 #include "util.h"
 #include "tincan/canrawframe.h"
 #include "file/dbcparser.h"
-#include "file/dbcwriter.h"
-#include "file/jsonreader.h"
-#include "file/jsonwriter.h"
-#include "tincan/errors.h"
-#include "tincan/helper.h"
 #include "tincan/translate.h"
 #include "tincan/cansignaldef.h"
 #include "models/treeitemid.h"
@@ -157,10 +151,66 @@ Main_window::Main_window(QWidget* parent)
     }
   });
 
+  connect(ui->pushOpenClosePcanChannel, &QPushButton::clicked, this, [this]{
+    if (pcan_usb_transceiver_.is_connected()) {
+      pcan_usb_transceiver_.stop();
+      reset();
+    }
+    else {
+      reset();
+
+      auto baudrate = network::Pcan_baudrate::Baud_500k;
+
+      switch (ui->comboPcanBaudrate->currentIndex()) {
+        case 0: baudrate = network::Pcan_baudrate::Baud_100k; break;
+        case 1: baudrate = network::Pcan_baudrate::Baud_125k; break;
+        case 2: baudrate = network::Pcan_baudrate::Baud_250k; break;
+        case 3: baudrate = network::Pcan_baudrate::Baud_500k; break;
+        case 4: baudrate = network::Pcan_baudrate::Baud_800k; break;
+        case 5: baudrate = network::Pcan_baudrate::Baud_1m; break;
+      }
+
+      int index = ui->comboPcanChannels->currentIndex();
+
+      if (index > -1 && static_cast<std::size_t>(index) < pcan_channels_.size()) {
+        pcan_usb_transceiver_.start(pcan_channels_[index], baudrate);
+      }
+    }
+  });
+
+  connect(&pcan_usb_transceiver_, &network::Pcan_usb_transceiver::started, this, [this]{
+    ui->pushOpenClosePcanChannel->setText("Close");
+  }, Qt::QueuedConnection);
+
+  connect(&pcan_usb_transceiver_, &network::Pcan_usb_transceiver::stopped, this, [this]{
+    ui->pushOpenClosePcanChannel->setText("Open");
+  }, Qt::QueuedConnection);
+
+  connect(&pcan_usb_transceiver_, &network::Pcan_usb_transceiver::connected, this, [this]{
+    ui->linePcanChannelConnection->setText("Connected");
+  }, Qt::QueuedConnection);
+
+  connect(&pcan_usb_transceiver_, &network::Pcan_usb_transceiver::disconnected, this, [this]{
+    ui->linePcanChannelConnection->setText("Offline");
+  }, Qt::QueuedConnection);
+
+  connect(ui->pushRefreshPcanChannels, &QPushButton::clicked, this, [this]{
+    if (!pcan_usb_transceiver_.is_alive()) {
+      pcan_channels_ = pcan_usb_transceiver_.channels();
+      ui->comboPcanChannels->clear();
+
+      for (const auto& channel : pcan_channels_) {
+        ui->comboPcanChannels->addItem(QString::fromStdString(channel.name));
+      }
+    }
+  });
+
   connect(ui->pushStartSimulator, &QPushButton::clicked, &simulator_, &tin::Simulator::start);
   connect(ui->pushStopSimulator, &QPushButton::clicked, &simulator_, &tin::Simulator::stop);
 
   connect(&can_udp_receiver_, &network::Can_udp_receiver::received_frame,
+      &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
+  connect(&pcan_usb_transceiver_, &network::Pcan_usb_transceiver::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
   connect(&simulator_, &tin::Simulator::received_frame,
       &can_bus_, &tin::Can_bus::add_frame, Qt::QueuedConnection);
@@ -208,6 +258,17 @@ Main_window::Main_window(QWidget* parent)
   connect(ui->pushClearBusDef, &QPushButton::clicked, ui->lineBusDefFile, &QLineEdit::clear);
   connect(ui->pushClearBusFrames, &QPushButton::clicked,
       &can_bus_model_, &tin::Can_bus_model::reset);
+
+  ui->comboPcanBaudrate->setCurrentIndex(3);
+
+  pcan_channels_ = pcan_usb_transceiver_.channels();
+  ui->comboPcanChannels->clear();
+
+  for (const auto& channel : pcan_channels_) {
+    ui->comboPcanChannels->addItem(QString::fromStdString(channel.name));
+  }
+
+  ui->linePcanChannelConnection->setText("Offline");
 }
 
 
@@ -218,6 +279,12 @@ Main_window::~Main_window()
     can_udp_receiver_.stop();
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(100ms);
+  }
+
+  if (pcan_usb_transceiver_.is_alive()) {
+    pcan_usb_transceiver_.stop();
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(20ms);
   }
 
   delete ui;

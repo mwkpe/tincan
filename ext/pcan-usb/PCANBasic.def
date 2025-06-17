@@ -1,0 +1,16 @@
+LIBRARY PCANBasic.dll
+EXPORTS
+  CAN_FilterMessages
+  CAN_GetErrorText
+  CAN_GetStatus
+  CAN_GetValue
+  CAN_Initialize
+  CAN_InitializeFD
+  CAN_LookUpChannel
+  CAN_Read
+  CAN_ReadFD
+  CAN_Reset
+  CAN_SetValue
+  CAN_Uninitialize
+  CAN_Write
+  CAN_WriteFD

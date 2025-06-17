@@ -2,10 +2,13 @@
 #define MAIN_WINDOW_H
 
 
+#include <vector>
+
 #include <QMainWindow>
 #include <QTimer>
 
 #include "network/canudpreceiver.h"
+#include "network/pcanusbtransceiver.h"
 #include "tincan/canbus.h"
 #include "tincan/simulator.h"
 #include "tincan/canbusdef.h"
@@ -32,6 +35,8 @@ private:
   Ui::MainWindow* ui;
   QTimer update_timer_;
   network::Can_udp_receiver can_udp_receiver_;
+  network::Pcan_usb_transceiver pcan_usb_transceiver_;
+  std::vector<network::Pcan_channel> pcan_channels_;
   dbc::File dbc_file_;
   tin::Can_bus can_bus_;
   tin::Simulator simulator_;
