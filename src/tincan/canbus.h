@@ -31,6 +31,7 @@ public:
   const tin::Can_frame* frame(std::uint32_t id) const;
 
 signals:
+  void frame_received(std::uint32_t);
   void data_changed(std::uint32_t);
 
 public slots:

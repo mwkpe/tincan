@@ -53,8 +53,11 @@ void tin::Can_bus::reset()
 const tin::Can_frame* tin::Can_bus::frame(std::uint32_t id) const
 {
   auto it = frames_.find(id);
-  if (it != std::end(frames_))
+
+  if (it != std::end(frames_)) {
     return &it->second;
+  }
+
   return nullptr;
 }
 
@@ -80,8 +83,9 @@ void tin::Can_bus::add_frame(std::uint64_t time, tin::Can_raw_frame raw_frame)
     cycle_times.push_back(static_cast<std::int32_t>(time - prev_time));
     frame.mean_cycle_time = util::math::mean(cycle_times);
     prev_time = time;
-    if (frame.frame_def)
+    if (frame.frame_def) {
       calculate_signal_values(frame);
+    }
   }
   else {  // A new frame, add to bus
     Can_frame frame;
@@ -94,8 +98,10 @@ void tin::Can_bus::add_frame(std::uint64_t time, tin::Can_raw_frame raw_frame)
     frame.receive_time = time;
     frame.last_receive_system_time = util::Timer::system_now();
     frame.alive = true;
+
     prev_frame_time_[frame.id] = time;
     cycle_times_[frame.id] = boost::circular_buffer<std::int32_t>{20};
+
     if (bus_def_) {
       if (frame.frame_def = find_frame_def(*bus_def_, raw_frame.id); frame.frame_def) {
         for (const auto& signal_def : frame.frame_def->can_signal_defs) {
@@ -105,20 +111,25 @@ void tin::Can_bus::add_frame(std::uint64_t time, tin::Can_raw_frame raw_frame)
         calculate_signal_values(frame);
       }
     }
+
     frames_[frame.id] = frame;
   }
 
-  emit data_changed(raw_frame.id);
+  emit frame_received(frame.id);
+  emit data_changed(frame.id);
 }
 
 
 void tin::Can_bus::update_frames()
 {
   auto now = util::Timer::system_now();
+
   for (auto& p : frames_) {
     auto& frame = p.second;
+
     if (frame.alive) {
       auto delta = now - frame.last_receive_system_time;
+
       if (frame.mean_cycle_time > 0 && delta > frame.mean_cycle_time * 3) {
         frame.alive = false;
         emit data_changed(frame.id);
