@@ -21,6 +21,9 @@ struct Can_frame
   std::int64_t last_receive_system_time = 0;
   std::array<std::uint8_t, 8> raw_data;
   std::uint8_t length = 0;
+  bool extended = false;
+  bool rtr = false;
+  bool error = false;
   std::vector<Can_signal> can_signals;
   const Can_frame_def* frame_def = nullptr;
   bool alive = false;
