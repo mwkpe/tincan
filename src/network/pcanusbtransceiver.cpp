@@ -92,6 +92,14 @@ void network::Pcan_usb_transceiver::stop()
 }
 
 
+void network::Pcan_usb_transceiver::transmit(const tin::Can_raw_frame& frame)
+{
+  if (!is_connected_.load()) {
+    return;
+  }
+}
+
+
 auto network::Pcan_usb_transceiver::channels() -> std::vector<Pcan_channel>
 {
   std::array<TPCANChannelInformation, 16> channels;

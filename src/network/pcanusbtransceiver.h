@@ -38,6 +38,7 @@ public:
   void start(const Pcan_channel& channel, Pcan_baudrate baudrate);
   void run(const Pcan_channel& channel, Pcan_baudrate baudrate);
   void stop();
+  void transmit(const tin::Can_raw_frame& frame);
 
   std::vector<Pcan_channel> channels();
   bool is_alive() const { return is_alive_.load(); }
