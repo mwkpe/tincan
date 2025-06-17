@@ -219,8 +219,8 @@ Main_window::Main_window(QWidget* parent)
       &tin::Can_bus_model::update_data_deferred);
 
   // Handle CAN events
-  connect(&can_bus_, &tin::Can_bus::data_changed, this, [this](auto frame_id){
-    if (auto* frame = can_bus_.frame(frame_id); frame) {
+  connect(&can_bus_, &tin::Can_bus::frame_received, this, [this](auto frame_id){
+    if (auto* frame = can_bus_.get_frame(frame_id); frame) {
       // Do something
     }
   });

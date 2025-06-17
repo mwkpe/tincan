@@ -50,7 +50,7 @@ void tin::Can_bus::reset()
 }
 
 
-const tin::Can_frame* tin::Can_bus::frame(std::uint32_t id) const
+const tin::Can_frame* tin::Can_bus::get_frame(std::uint32_t id) const
 {
   auto it = frames_.find(id);
 
@@ -68,7 +68,10 @@ void tin::Can_bus::add_frame(std::uint64_t time, tin::Can_raw_frame raw_frame)
   constexpr std::uint32_t CAN_FLAG_RTR = 1u << 30;
   constexpr std::uint32_t CAN_FLAG_ERR = 1u << 29;
 
-  auto it = frames_.find(raw_frame.id & 0x1fffffff);
+  auto frame_id = raw_frame.id & 0x1fffffff;
+
+  auto it = frames_.find(frame_id);
+
   if (it != std::end(frames_)) {  // Frame was received previously, update data
     auto& frame = it->second;
     frame.raw_data = raw_frame.data;
@@ -89,7 +92,7 @@ void tin::Can_bus::add_frame(std::uint64_t time, tin::Can_raw_frame raw_frame)
   }
   else {  // A new frame, add to bus
     Can_frame frame;
-    frame.id = raw_frame.id & 0x1fffffff;
+    frame.id = frame_id;
     frame.length = raw_frame.dlc;
     frame.raw_data = raw_frame.data;
     frame.extended = (raw_frame.id & CAN_FLAG_EXT) != 0;
@@ -115,8 +118,8 @@ void tin::Can_bus::add_frame(std::uint64_t time, tin::Can_raw_frame raw_frame)
     frames_[frame.id] = frame;
   }
 
-  emit frame_received(frame.id);
-  emit data_changed(frame.id);
+  emit frame_received(frame_id);
+  emit data_changed(frame_id);
 }
 
 

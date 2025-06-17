@@ -125,7 +125,7 @@ void tin::Can_bus_model::update_data(std::uint32_t frame_id)
     }
   }
   else {  // Add new frame
-    if (auto* frame = can_bus_->frame(frame_id); frame) {
+    if (auto* frame = can_bus_->get_frame(frame_id); frame) {
       if (is_empty_) {
         is_empty_ = false;
         clear();

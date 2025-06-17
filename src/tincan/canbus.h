@@ -12,7 +12,6 @@
 
 #include "tincan/canframe.h"
 #include "tincan/canrawframe.h"
-#include "tincan/cansignal.h"
 
 
 namespace tin {
@@ -28,7 +27,7 @@ class Can_bus : public QObject
 public:
   void set_definition(const Can_bus_def* bus_def) { bus_def_ = bus_def; }
   void reset_frames() { frames_.clear(); }
-  const tin::Can_frame* frame(std::uint32_t id) const;
+  const tin::Can_frame* get_frame(std::uint32_t id) const;
 
 signals:
   void frame_received(std::uint32_t);
