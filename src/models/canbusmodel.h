@@ -28,6 +28,7 @@ public:
   explicit Can_bus_model(const Can_bus* can_bus, QObject* parent = nullptr);
   virtual void construct() override;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+  void set_row_height(int h) { row_height_ = h; }
 
 public slots:
   void reset();
@@ -42,6 +43,7 @@ private:
   std::unordered_map<std::uint32_t, Can_frame_item*> frame_items_;
   std::unordered_set<std::uint32_t> deferred_updates_;
   std::vector<int> column_widths_;
+  int row_height_ = 20;
   bool is_empty_ = true;
 };
 

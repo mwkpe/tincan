@@ -47,7 +47,9 @@ Main_window::Main_window(QWidget* parent)
   QFont trace_font{"Consolas", 10};
 
   // Set default value for size hint
-  can_bus_def_model_.set_row_height(QFontMetrics{view_font}.height() - 4);
+  auto row_height = QFontMetrics{view_font}.height() - 4;
+  can_bus_model_.set_row_height(row_height);
+  can_bus_def_model_.set_row_height(row_height);
 
   ui->treeFrameView->setModel(&can_bus_model_);
   ui->treeViewBusDef->setModel(&can_bus_def_model_);

@@ -37,7 +37,8 @@ QVariant tin::Can_bus_def_model::data(const QModelIndex& index, int role) const
     return QVariant{};
 
   switch (role) {
-    case Qt::SizeHintRole: return QSize{column_widths_[static_cast<std::size_t>(index.column())], row_height_};
+    case Qt::SizeHintRole:
+      return QSize{column_widths_[static_cast<std::size_t>(index.column())], row_height_};
     case Qt::ForegroundRole: {
       auto* item = static_cast<Tree_item*>(index.internalPointer());
       auto id = item->id();

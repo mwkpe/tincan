@@ -53,7 +53,7 @@ QVariant tin::Can_bus_model::data(const QModelIndex& index, int role) const
 
   switch (role) {
     case Qt::SizeHintRole: {
-      return QSize{column_widths_[static_cast<std::size_t>(index.column())], 20};
+      return QSize{column_widths_[static_cast<std::size_t>(index.column())], row_height_};
     }
     break;
     case Qt::ForegroundRole: {
