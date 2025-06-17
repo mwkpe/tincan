@@ -37,7 +37,6 @@ Main_window::Main_window(QWidget* parent)
   ui->setupUi(this);
   setWindowTitle("Tincan");
   ui->tabWidgetMain->setCurrentIndex(0);
-  ui->tabWidgetDetail->setCurrentIndex(0);
 
   qRegisterMetaType<tin::Can_raw_frame>("Can_raw_frame");
 
@@ -65,9 +64,6 @@ Main_window::Main_window(QWidget* parent)
   ui->plainTrace->setFont(trace_font);
   //ui->plainTrace->setCenterOnScroll(true);
 
-  ui->splitter->setStretchFactor(0, 2);
-  ui->splitter->setStretchFactor(1, 1);
-
   connect(ui->treeFrameView, &QTreeView::customContextMenuRequested, this, [this]{
     auto index = ui->treeFrameView->currentIndex();
     if (!index.isValid())
@@ -78,11 +74,11 @@ Main_window::Main_window(QWidget* parent)
     QAction trace_frame{"Trace frame"};
     QAction trace_signal{"Trace signal"};
     switch (item->id()) {
-      case tin::Item_id::Can_frame: {
+      case tin::Tree_item_id::Can_frame: {
         menu.addAction(&trace_frame);
       }
       break;
-      case tin::Item_id::Can_signal: {
+      case tin::Tree_item_id::Can_signal: {
         menu.addAction(&trace_signal);
       }
       break;
@@ -108,7 +104,7 @@ Main_window::Main_window(QWidget* parent)
       return;
 
     auto* item = static_cast<tin::Tree_item*>(index.internalPointer());
-    if (item->id() != tin::Item_id::Can_signal_def)
+    if (item->id() != tin::Tree_item_id::Can_signal_def)
       return;
 
     auto* def = static_cast<const tin::Can_signal_def_item*>(item)->signal_def();
@@ -242,8 +238,11 @@ Main_window::Main_window(QWidget* parent)
       can_bus_def_ = tin::to_can_bus_def(dbc_file_);
       can_bus_.set_definition(&can_bus_def_);
       can_bus_def_model_.set(&can_bus_def_);
-      for (int i=0; i<can_bus_def_model_.columnCount(); ++i)
+
+      for (int i=0; i<can_bus_def_model_.columnCount(); ++i) {
         ui->treeViewBusDef->resizeColumnToContents(i);
+      }
+
       ui->lineBusDefFile->setText(QString::fromStdString(can_bus_def_.source_name));
     }
     catch (const dbc::Parse_error& e) {
@@ -269,6 +268,10 @@ Main_window::Main_window(QWidget* parent)
   }
 
   ui->linePcanChannelConnection->setText("Offline");
+
+  for (int i=0; i<can_bus_model_.columnCount(); ++i) {
+    ui->treeFrameView->resizeColumnToContents(i);
+  }
 }
 
 

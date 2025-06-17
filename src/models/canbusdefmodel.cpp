@@ -24,7 +24,7 @@ tin::Can_bus_def_model::Can_bus_def_model(QObject* parent) : Tree_model{parent}
 
 void tin::Can_bus_def_model::construct()
 {
-  root_item_ = std::make_unique<Tree_item>(Item_id::Root);
+  root_item_ = std::make_unique<Tree_item>(Tree_item_id::Root);
   column_headers_ = {"Object", "ID / Pos", "Len", "Mux", "Value", "Order", "Factor", "Offset",
       "Min", "Max", "Unit"};
   column_widths_ = { 200, 80, 40, 40, 70, 60, 140, 140, 140, 140, 80 };
@@ -41,7 +41,7 @@ QVariant tin::Can_bus_def_model::data(const QModelIndex& index, int role) const
     case Qt::ForegroundRole: {
       auto* item = static_cast<Tree_item*>(index.internalPointer());
       auto id = item->id();
-      if (id == Item_id::Can_frame_def)
+      if (id == Tree_item_id::Can_frame_def)
         return QBrush{QColor{"#33E7F7"}};
       return Tree_model::data(index, role);
     }
@@ -54,7 +54,7 @@ QVariant tin::Can_bus_def_model::data(const QModelIndex& index, int role) const
 void tin::Can_bus_def_model::reset()
 {
   beginResetModel();
-  root_item_ = std::make_unique<Tree_item>(Item_id::Root);
+  root_item_ = std::make_unique<Tree_item>(Tree_item_id::Root);
   endResetModel();
 }
 
@@ -65,7 +65,7 @@ void tin::Can_bus_def_model::set(const Can_bus_def* bus_def)
     return;
 
   beginResetModel();
-  root_item_ = std::make_unique<Tree_item>(Item_id::Root);
+  root_item_ = std::make_unique<Tree_item>(Tree_item_id::Root);
   for (const auto& frame_def : bus_def->frame_defs) {
     auto frame_def_item = std::make_unique<Can_frame_def_item>(&frame_def, root_item_.get());
     for (const auto& signal_def : frame_def.can_signal_defs) {

@@ -16,11 +16,11 @@ namespace tin {
 class Tree_item
 {
 public:
-  Tree_item(Item_id id = Item_id::Unspecified, Tree_item* parent = nullptr)
+  Tree_item(Tree_item_id id = Tree_item_id::Unspecified, Tree_item* parent = nullptr)
       : id_{id}, parent_{parent} {}
   virtual ~Tree_item() {}
 
-  Item_id id() const { return id_; }
+  Tree_item_id id() const { return id_; }
 
   int row() const;
   int row(const Tree_item* item) const;
@@ -35,7 +35,7 @@ public:
   virtual QVariant data([[maybe_unused]] int column) const { return QVariant{}; }
 
 protected:
-  Item_id id_;
+  Tree_item_id id_;
   Tree_item* parent_;
   std::vector<std::unique_ptr<Tree_item>> children_;
 };

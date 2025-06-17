@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 #include <QVariant>
 #include <QModelIndex>
@@ -30,6 +31,7 @@ public:
 
 public slots:
   void reset();
+  void clear();
   void update_data_deferred(std::uint32_t frame_id);
   void update_data(std::uint32_t frame_id);
 
@@ -39,6 +41,8 @@ private:
   const Can_bus* can_bus_;
   std::unordered_map<std::uint32_t, Can_frame_item*> frame_items_;
   std::unordered_set<std::uint32_t> deferred_updates_;
+  std::vector<int> column_widths_;
+  bool is_empty_ = true;
 };
 
 

@@ -1,6 +1,6 @@
 #include "canbusmodel.h"
 
-
+#include <iostream>
 #include <memory>
 
 #include <QTimer>
@@ -39,8 +39,9 @@ tin::Can_bus_model::Can_bus_model(const Can_bus* can_bus, QObject* parent)
 
 void tin::Can_bus_model::construct()
 {
-  root_item_ = std::make_unique<Tree_item>(Item_id::Root);
-  column_headers_ = {"Object", "Value", "Unit", "Cycle", "Length", "Data"};
+  reset();
+  column_headers_ = {"Object", "Value", "Time / Unit", "Cycle", "Length", "Data"};
+  column_widths_ = {240, 160, 120, 80, 70, 120};
 }
 
 
@@ -51,9 +52,13 @@ QVariant tin::Can_bus_model::data(const QModelIndex& index, int role) const
   }
 
   switch (role) {
+    case Qt::SizeHintRole: {
+      return QSize{column_widths_[static_cast<std::size_t>(index.column())], 20};
+    }
+    break;
     case Qt::ForegroundRole: {
       auto* item = reinterpret_cast<Tree_item*>(index.internalPointer());
-      if (item->id() == Item_id::Can_frame) {
+      if (item->id() == Tree_item_id::Can_frame) {
         const auto* frame_item = reinterpret_cast<const Can_frame_item*>(item);
 
         if (!frame_item->frame()->alive) {
@@ -64,8 +69,11 @@ QVariant tin::Can_bus_model::data(const QModelIndex& index, int role) const
           return QBrush{QColor{0x33E7F7}};
         }
       }
+
       return Tree_model::data(index, role);
     }
+    break;
+    default:;
   }
 
   return Tree_model::data(index, role);
@@ -76,7 +84,20 @@ void tin::Can_bus_model::reset()
 {
   beginResetModel();
   frame_items_.clear();
-  root_item_ = std::make_unique<Tree_item>(Item_id::Root);
+  root_item_ = std::make_unique<Tree_item>(Tree_item_id::Root);
+  auto empty_item = std::make_unique<Tree_item>(Tree_item_id::Empty, root_item_.get());
+  root_item_->add_child(std::move(empty_item));
+  endResetModel();
+
+  is_empty_ = true;
+}
+
+
+void tin::Can_bus_model::clear()
+{
+  beginResetModel();
+  frame_items_.clear();
+  root_item_ = std::make_unique<Tree_item>(Tree_item_id::Root);
   endResetModel();
 }
 
@@ -105,6 +126,11 @@ void tin::Can_bus_model::update_data(std::uint32_t frame_id)
   }
   else {  // Add new frame
     if (auto* frame = can_bus_->frame(frame_id); frame) {
+      if (is_empty_) {
+        is_empty_ = false;
+        clear();
+      }
+
       auto frame_item = std::make_unique<Can_frame_item>(frame, root_item_.get());
       for (const auto& signal : frame->can_signals) {
         frame_item->add_child(std::make_unique<Can_signal_item>(&signal, frame_item.get()));

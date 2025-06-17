@@ -5,9 +5,10 @@
 namespace tin {
 
 
-enum class Item_id {
+enum class Tree_item_id {
   Unspecified,
   Root,
+  Empty,
   Can_frame,
   Can_signal,
   Can_frame_def,
