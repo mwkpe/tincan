@@ -1,6 +1,6 @@
 #include "canbusmodel.h"
 
-#include <iostream>
+
 #include <memory>
 
 #include <QTimer>
